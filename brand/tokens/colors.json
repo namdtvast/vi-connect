@@ -1,0 +1,22 @@
+{
+  "brand": "VI-CONNECT",
+  "version": "3.1",
+  "status": "proposed — chờ VAST/HTIC phê duyệt chính thức và kiểm tra khả năng đăng ký bảo hộ",
+  "colors": {
+    "vietnamRed": { "hex": "#D62828", "rgb": "214,40,40", "use": "Chữ V trong wordmark/logo — VI = Việt Nam. Không dùng làm nền diện rộng hay văn bản dài." },
+    "nationalGold": { "hex": "#F7C948", "rgb": "247,201,72", "use": "Ngôi sao, điểm khởi phát trên vòng C, KPI Impact." },
+    "viNavy": { "hex": "#092B4C", "rgb": "9,43,76", "use": "Chữ I, nền reverse, văn bản nhấn mạnh — tin cậy/khoa học." },
+    "connectBlue": { "hex": "#0067B9", "rgb": "0,103,185", "use": "Vòng C trên nền sáng, KPI Connect, CTA chính." },
+    "dataCyan": { "hex": "#00A6C8", "rgb": "0,166,200", "use": "Vòng C trên nền tối (thay Connect Blue để đủ tương phản), KPI Match, tagline trên nền navy." },
+    "mobilizeGreen": { "hex": "#37B878", "rgb": "55,184,120", "use": "Đầu vòng C dưới, KPI Mobilize, trạng thái tăng trưởng/thành công." },
+    "ink": { "hex": "#142433", "rgb": "20,36,51", "use": "Văn bản nội dung trên nền sáng." },
+    "cloud": { "hex": "#F4F7F9", "rgb": "244,247,249", "use": "Nền phụ, khối card nhạt." }
+  },
+  "ratioGuidance": "Navy/White 55% · Blue/Cyan 20% · Red 12% · Green 8% · Gold 5%. Đỏ và vàng là dấu hiệu Việt Nam trong logo/điểm nhấn — không dùng làm nền diện rộng hay văn bản dài.",
+  "typography": {
+    "primary": "Arial",
+    "fallback": ["Helvetica", "sans-serif"],
+    "note": "Arial là bộ chữ mặc định chuẩn (phủ tốt hệ thống công vụ, hỗ trợ tiếng Việt ổn định). Sản phẩm web hiện dùng Geist Sans (next/font/google, app/layout.tsx) — dùng Inter/Geist làm nâng cấp có kiểm soát, cần đội sản phẩm xác nhận trước khi phát hành chính thức theo đúng brand guidelines v3.1."
+  },
+  "sourceOfTruth": "vi-connect/brand/guidelines/VI_CONNECT_Brand_Guidelines_v3_1.pdf — tài liệu chiến lược gốc. File này chỉ tóm tắt phần màu sắc để dùng trong code."
+}

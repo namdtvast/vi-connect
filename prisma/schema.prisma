@@ -1,0 +1,419 @@
+// VI CONNECT — Phase 1 (Nam 1) data model
+// Mapped to the "5 domains" the proposal itself proposes to consolidate the 11 modules into:
+// A. CONNECT (Organization, ExpertProfile, membership)
+// B. DISCOVER & MATCH (Need, Supply, Match, Challenge, Solution)
+// D. EXECUTE (Project, Milestone, Deliverable, Agreement)
+// E. IMPACT (KpiSnapshot)
+// C. MOBILIZE (FundingSource/FundingApplication) intentionally left out of Phase 1 —
+// documented as backlog in README per the roadmap's own stage-gate principle.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- CONNECT: identity & ecosystem ----------
+
+enum OrganizationType {
+  HOI_THANH_VIEN // hoi nganh / lien hiep hoi dia phuong
+  TO_CHUC_KHCN // vien/trung tam truc thuoc
+  DOANH_NGHIEP
+  QUY_DAU_TU
+  CO_QUAN_QUAN_LY
+  KHAC
+}
+
+enum OrgStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+model Organization {
+  id          String           @id @default(cuid())
+  name        String
+  shortName   String?
+  type        OrganizationType
+  province    String?
+  description String?
+  website     String?
+  status      OrgStatus        @default(PENDING)
+  parentId    String?
+  parent      Organization?    @relation("OrgHierarchy", fields: [parentId], references: [id])
+  children    Organization[]   @relation("OrgHierarchy")
+
+  identifiers Identifier[]
+  members     ExpertProfile[]
+  users       User[]
+  supplies    Supply[]
+  needs       Need[]
+  challenges  Challenge[]
+  fundingSources FundingSource[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, status])
+}
+
+enum Role {
+  VAST_ADMIN // quan tri toan he thong
+  HOI_ADMIN // delegated admin cua 1 hoi/to chuc (10.6)
+  EXPERT
+  ENTERPRISE
+  VIEWER
+}
+
+model User {
+  id             String        @id @default(cuid())
+  email          String        @unique
+  passwordHash   String
+  name           String
+  role           Role          @default(VIEWER)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  expertProfile  ExpertProfile?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  auditLogs AuditLog[]
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model ExpertProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  title       String? // hoc ham/hoc vi
+  headline    String?
+  bio         String?
+  fields      String[] // linh vuc chuyen mon (taxonomy code)
+  skills      String[]
+  experienceYears Int?
+  publications Int?      @default(0)
+  patents      Int?      @default(0)
+
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  verifiedById       String?
+  verifiedAt         DateTime?
+  verificationNote   String?
+
+  identifiers Identifier[]
+  supplies    Supply[]
+  matchesAsExpert Match[] @relation("ExpertMatches")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([verificationStatus])
+}
+
+enum IdentifierType {
+  VAST_ID
+  ORCID
+  ISNI
+  ROR
+  DOI
+}
+
+model Identifier {
+  id              String          @id @default(cuid())
+  type            IdentifierType
+  value           String
+  expertProfileId String?
+  expertProfile   ExpertProfile?  @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([type, value])
+}
+
+// ---------- DISCOVER & MATCH ----------
+
+enum NeedStatus {
+  DRAFT
+  PUBLISHED
+  MATCHED
+  CLOSED
+}
+
+model Need {
+  id             String       @id @default(cuid())
+  title          String
+  description    String
+  fields         String[]
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  budgetVnd      BigInt?
+  status         NeedStatus   @default(DRAFT)
+  matches        Match[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+enum SupplyType {
+  TECHNOLOGY
+  SOLUTION
+  EXPERT_SERVICE
+  PATENT
+}
+
+enum SupplyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Supply {
+  id              String        @id @default(cuid())
+  title           String
+  description     String
+  type            SupplyType
+  fields          String[]
+  trl             Int? // technology readiness level 1-9
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  expertProfileId String?
+  expertProfile   ExpertProfile? @relation(fields: [expertProfileId], references: [id])
+  status          SupplyStatus  @default(DRAFT)
+  matches         Match[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, type])
+}
+
+enum MatchStage {
+  SUGGESTED
+  VIEWED
+  ACCEPTED
+  CONTACTED
+  COLLABORATING
+  CONVERTED_PROJECT
+  REJECTED
+}
+
+model Match {
+  id     String @id @default(cuid())
+  needId String
+  need   Need   @relation(fields: [needId], references: [id])
+
+  supplyId String?
+  supply   Supply? @relation(fields: [supplyId], references: [id])
+
+  expertProfileId String?
+  expertProfile   ExpertProfile? @relation("ExpertMatches", fields: [expertProfileId], references: [id])
+
+  score      Float // 0..1 explainable score
+  reasons    Json // structured explanation, e.g. [{factor:"field_overlap", weight:0.4, detail:"..."}]
+  stage      MatchStage @default(SUGGESTED)
+
+  project Project?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([needId, stage])
+}
+
+enum ChallengeStatus {
+  INTAKE
+  STANDARDIZING
+  PUBLISHED
+  SOLUTION_REVIEW
+  MATCHED
+  CLOSED
+}
+
+model Challenge {
+  id             String          @id @default(cuid())
+  title          String
+  problem        String
+  goal           String?
+  constraints    String?
+  fields         String[]
+  trl            Int?
+  budgetVnd      BigInt?
+  hasBudget      Boolean         @default(false)
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  status         ChallengeStatus @default(INTAKE)
+  solutions      Solution[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+enum SolutionStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  SELECTED
+  REJECTED
+}
+
+model Solution {
+  id              String         @id @default(cuid())
+  challengeId     String
+  challenge       Challenge      @relation(fields: [challengeId], references: [id])
+  submittedById   String
+  summary         String
+  approach        String
+  status          SolutionStatus @default(SUBMITTED)
+  reviewScore     Float?
+  reviewNote      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([challengeId, status])
+}
+
+// ---------- EXECUTE ----------
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  TERMINATED
+}
+
+model Project {
+  id      String        @id @default(cuid())
+  matchId String?       @unique
+  match   Match?        @relation(fields: [matchId], references: [id])
+  title   String
+  summary String?
+  status  ProjectStatus @default(PLANNING)
+
+  milestones  Milestone[]
+  agreement   Agreement?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+enum MilestoneStatus {
+  PLANNED
+  IN_PROGRESS
+  SUBMITTED
+  ACCEPTED
+  OVERDUE
+}
+
+model Milestone {
+  id          String          @id @default(cuid())
+  projectId   String
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  dueDate     DateTime?
+  status      MilestoneStatus @default(PLANNED)
+  deliverables Deliverable[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, status])
+}
+
+model Deliverable {
+  id          String    @id @default(cuid())
+  milestoneId String
+  milestone   Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  title       String
+  fileUrl     String?
+  accepted    Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+enum AgreementType {
+  MOU
+  NDA
+  RESEARCH_AGREEMENT
+  SERVICE_CONTRACT
+  TECH_TRANSFER
+}
+
+enum AgreementStatus {
+  DRAFT
+  SIGNED
+  COMPLETED
+  TERMINATED
+}
+
+model Agreement {
+  id         String          @id @default(cuid())
+  projectId  String          @unique
+  project    Project         @relation(fields: [projectId], references: [id])
+  type       AgreementType
+  status     AgreementStatus @default(DRAFT)
+  valueVnd   BigInt?
+  signedAt   DateTime?
+  note       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- MOBILIZE (stub only — full module is Phase 2 backlog) ----------
+
+model FundingSource {
+  id             String       @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  fields         String[]
+  note           String?
+
+  createdAt DateTime @default(now())
+}
+
+// ---------- IMPACT ----------
+
+model KpiSnapshot {
+  id           String   @id @default(cuid())
+  capturedAt   DateTime @default(now())
+  connectCount Int
+  matchCount   Int
+  mobilizeVnd  BigInt
+  impactCount  Int
+  raw          Json
+}
+
+// ---------- GOVERNANCE / AUDIT ----------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+}

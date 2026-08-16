@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540">
+  <rect width="900" height="540" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="900" height="10" fill="#0067B9"/>
+  <rect x="0" y="0" width="675" height="10" fill="#00A6C8"/>
+  <rect x="0" y="0" width="450" height="10" fill="#37B878"/>
+  <rect x="0" y="0" width="225" height="10" fill="#F7C948"/>
+
+  <svg x="370" y="150" width="160" height="160" viewBox="0 0 530 530">
+    <g transform="translate(-24,-35)">
+      <path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/>
+      <circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/>
+      <path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/>
+      <path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/>
+    </g>
+  </svg>
+
+  <text x="450" y="370" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" letter-spacing="1"><tspan fill="#D62828">VI</tspan><tspan fill="#092B4C" dx="14">CONNECT</tspan></text>
+  <text x="450" y="400" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" letter-spacing="2.4" fill="#00A6C8">VIỆT NAM · KẾT NỐI TRI THỨC VÀ CÔNG NGHỆ</text>
+  <text x="450" y="450" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#6b7280" letter-spacing="1">vi-connect.vn</text>
+</svg>

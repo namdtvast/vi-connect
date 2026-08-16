@@ -1,0 +1,63 @@
+{
+  "brand": "VI-CONNECT",
+  "meaning": "VI = Việt Nam",
+  "tagline": "Kết nối trí tuệ - Kiến tạo giá trị",
+  "logo_concept": "Chữ C dạng vòng tròn mở bao trùm VI; C = Connect, VI = Việt Nam. Phiên bản 3.1 tối giản không dùng đường nối và ba nút bên trong.",
+  "positioning": "Nền tảng số kết nối và kích hoạt nguồn lực khoa học, công nghệ và đổi mới sáng tạo.",
+  "colors": {
+    "Vietnam Red": {
+      "hex": "#D62828",
+      "use": "VI = Việt Nam; nhận diện cốt lõi"
+    },
+    "National Gold": {
+      "hex": "#F7C948",
+      "use": "Ngôi sao Việt Nam; điểm kích hoạt"
+    },
+    "Navy": {
+      "hex": "#092B4C",
+      "use": "Tin cậy, khoa học"
+    },
+    "Blue": {
+      "hex": "#0067B9",
+      "use": "Kết nối, công nghệ"
+    },
+    "Cyan": {
+      "hex": "#00A6C8",
+      "use": "Dữ liệu, khám phá"
+    },
+    "Green": {
+      "hex": "#37B878",
+      "use": "Huy động, tăng trưởng"
+    },
+    "Ink": {
+      "hex": "#142433",
+      "use": "Văn bản"
+    },
+    "Cloud": {
+      "hex": "#F4F7F9",
+      "use": "Nền phụ"
+    }
+  },
+  "typography": {
+    "primary": "Arial",
+    "fallback": [
+      "Helvetica",
+      "sans-serif"
+    ],
+    "word_title": "Arial Bold",
+    "data": "Arial"
+  },
+  "voice": [
+    "Tin cậy",
+    "Rõ ràng",
+    "Kết nối",
+    "Hướng hành động",
+    "Dựa trên bằng chứng"
+  ],
+  "architecture": [
+    "Connect",
+    "Match",
+    "Mobilize",
+    "Impact"
+  ]
+}

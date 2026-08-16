@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f8fa;
+  --foreground: #142433;
+  --surface: #ffffff;
+  --border: #e3e6eb;
+  --muted: #6b7280;
+
+  /* VI CONNECT brand tokens — v3.1 (xem vi-connect/brand/) */
+  --brand: #0067b9; /* Connect Blue */
+  --brand-dark: #092b4c; /* VI Navy */
+  --brand-light: #eaf3fc;
+  --brand-foreground: #ffffff;
+  --accent: #37b878; /* Mobilize Green */
+  --accent-dark: #0e7a54;
+  --accent-light: #e4f7ef;
+  --gold: #f7c948; /* National Gold */
+  --gold-light: #fbf1dc;
+  --red: #d62828; /* Vietnam Red — VI wordmark, dùng tiết chế ngoài logo */
+  --cyan: #00a6c8; /* Data Cyan — ring/tagline trên nền tối, KPI Match */
+  --danger: #d1453b;
+  --warning: #b8890a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-light: var(--accent-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-red: var(--red);
+  --color-cyan: var(--cyan);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

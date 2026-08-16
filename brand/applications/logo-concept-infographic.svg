@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <rect width="1600" height="1000" fill="#F4F7F9"/><rect x="70" y="70" width="1460" height="860" rx="36" fill="#FFFFFF"/>
+  <text x="120" y="150" font-family="Arial" font-size="30" font-weight="700" fill="#37B878">PHƯƠNG ÁN LOGO V3.1 · TỐI GIẢN</text>
+  <text x="120" y="215" font-family="Arial" font-size="54" font-weight="700" fill="#092B4C">Chữ C bao trùm VI</text>
+  <text x="120" y="260" font-family="Arial" font-size="24" fill="#5D7083">Đã bỏ đường nối và ba nút tròn bên trong để VI rõ và cân bằng hơn</text>
+  <image href="vi-connect-circle-symbol-primary.svg" x="90" y="310" width="580" height="580"/>
+  <line x1="515" y1="395" x2="850" y2="330" stroke="#0067B9" stroke-width="3"/><circle cx="515" cy="395" r="8" fill="#0067B9"/>
+  <text x="880" y="320" font-family="Arial" font-size="30" font-weight="700" fill="#092B4C">C — CONNECT</text>
+  <text x="880" y="358" font-family="Arial" font-size="23" fill="#5D7083">Vòng tròn bảo chứng, bao quanh và kết nối.</text>
+  <line x1="365" y1="585" x2="850" y2="520" stroke="#D62828" stroke-width="3"/><circle cx="365" cy="585" r="8" fill="#D62828"/>
+  <text x="880" y="510" font-family="Arial" font-size="30" font-weight="700" fill="#D62828">VI — VIỆT NAM</text>
+  <text x="880" y="548" font-family="Arial" font-size="23" fill="#5D7083">Lõi năng lực, trí tuệ và công nghệ Việt Nam.</text>
+  <line x1="515" y1="735" x2="850" y2="710" stroke="#37B878" stroke-width="3"/><circle cx="515" cy="735" r="8" fill="#37B878"/>
+  <text x="880" y="700" font-family="Arial" font-size="30" font-weight="700" fill="#37B878">VÒNG MỞ — KẾT NỐI</text>
+  <text x="880" y="738" font-family="Arial" font-size="23" fill="#5D7083">Hai đầu vòng C đủ biểu thị luồng vào, luồng ra và tác động.</text>
+  <text x="880" y="835" font-family="Arial" font-size="24" font-weight="700" fill="#092B4C">CONNECT → MATCH → MOBILIZE → IMPACT</text>
+</svg>

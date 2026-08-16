@@ -1,0 +1,33 @@
+# systemd unit cho VI CONNECT (Next.js production server)
+#
+# Cài đặt:
+#   sudo cp deploy/vi-connect.service /etc/systemd/system/vi-connect.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now vi-connect
+#   sudo systemctl status vi-connect
+#   sudo journalctl -u vi-connect -f     # xem log
+#
+# Sửa User=/WorkingDirectory= nếu bạn deploy ở user hoặc đường dẫn khác.
+
+[Unit]
+Description=VI CONNECT (Next.js production server)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/vi-connect
+EnvironmentFile=/var/www/vi-connect/.env
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+RestartSec=5
+# Next.js mặc định chạy port 3000, chỉ nghe nội bộ vì Nginx đứng trước
+Environment=PORT=3000
+Environment=NODE_ENV=production
+
+# Hạn chế quyền truy cập hệ thống ở mức hợp lý
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

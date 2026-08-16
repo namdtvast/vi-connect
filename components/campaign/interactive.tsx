@@ -153,7 +153,11 @@ export function StickyCTA({ sentinelId }: { sentinelId: string }) {
     const el = document.getElementById(sentinelId);
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setShow(!entry.isIntersecting),
+      ([entry]) => {
+        // Only show once the sentinel has scrolled above the viewport (top < 0) —
+        // not merely because the hero is taller than the viewport on first paint.
+        setShow(entry.isIntersecting ? false : entry.boundingClientRect.top < 0);
+      },
       { threshold: 0 }
     );
     observer.observe(el);

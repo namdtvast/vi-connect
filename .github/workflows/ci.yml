@@ -12,6 +12,10 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Prisma generate/build cần chuỗi kết nối hợp lệ về cú pháp nhưng CI không truy cập DB.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vi_connect_ci
+      AUTH_SECRET: ci-only-not-for-production
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

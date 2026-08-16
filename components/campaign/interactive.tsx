@@ -29,8 +29,8 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
     if (prefersReducedMotion()) {
-      setVisible(true);
-      return;
+      const frame = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(frame);
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -76,8 +76,8 @@ export function CountUp({
     const el = ref.current;
     if (!el) return;
     if (prefersReducedMotion()) {
-      setDisplay(value);
-      return;
+      const frame = requestAnimationFrame(() => setDisplay(value));
+      return () => cancelAnimationFrame(frame);
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -135,7 +135,7 @@ export function RotatingWords({
 
   return (
     <span
-      className={`inline-block transition-opacity duration-250 ${
+      className={`inline-block transition-opacity duration-300 ${
         visible ? "opacity-100" : "opacity-0"
       } ${className}`}
     >

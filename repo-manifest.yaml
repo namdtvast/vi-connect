@@ -1,0 +1,16 @@
+schema: vi-connect/repo-manifest@1.0
+product: VI CONNECT
+description: Nền tảng kết nối tri thức, công nghệ và nguồn lực đầu tư
+stage: phase-1-mvp
+runtime:
+  node: "22"
+  framework: nextjs-16
+  database: postgresql
+agents:
+  claude_code: CLAUDE.md
+  codex: AGENTS.md
+quality_gate: npm run check
+integration:
+  manlab_aios: contract-only
+  reference_architecture: "4.1"
+data_classification: demo-only

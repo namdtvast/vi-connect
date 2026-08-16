@@ -1,0 +1,612 @@
+<meta charset="utf-8">
+<title>VI CONNECT Brand Guidelines</title>
+<style>
+  :root{
+    --page-bg:#F6F8FB;
+    --surface:#FFFFFF;
+    --surface-2:#EEF2F7;
+    --surface-3:#E4EAF2;
+    --border:#DCE3EC;
+    --text:#142433;
+    --text-muted:#55606E;
+    --text-faint:#8592A3;
+
+    --brand:#0067B9;      /* Connect Blue */
+    --brand-dark:#092B4C; /* VI Navy */
+    --brand-light:#EAF3FC;
+    --accent:#37B878;     /* Mobilize Green */
+    --accent-dark:#1F8F5C;
+    --accent-light:#E4F7EF;
+    --gold:#F7C948;       /* National Gold */
+    --gold-light:#FBF1DC;
+    --red:#D62828;        /* Vietnam Red */
+    --cyan:#00A6C8;       /* Data Cyan */
+    --danger:#D1453B;
+    --warning:#B8890A;
+
+    --shadow: 0 1px 2px rgba(9,43,76,.05), 0 8px 24px -12px rgba(9,43,76,.14);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --font-display: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    --font-body: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page-bg:#081420;
+      --surface:#0F1E2E;
+      --surface-2:#132537;
+      --surface-3:#1A2E42;
+      --border:#213A52;
+      --text:#E7EEF5;
+      --text-muted:#93A6BA;
+      --text-faint:#647889;
+
+      --brand:#4FA3DE;
+      --brand-dark:#8FC4EE;
+      --brand-light:#12283F;
+      --accent:#4FCB98;
+      --accent-dark:#7EDBB2;
+      --accent-light:#0E2A20;
+      --gold:#F2C558;
+      --gold-light:#2B2313;
+      --red:#F0645F;
+      --cyan:#3FC3DE;
+      --danger:#FF8079;
+      --warning:#E3B458;
+
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --page-bg:#081420;
+    --surface:#0F1E2E;
+    --surface-2:#132537;
+    --surface-3:#1A2E42;
+    --border:#213A52;
+    --text:#E7EEF5;
+    --text-muted:#93A6BA;
+    --text-faint:#647889;
+
+    --brand:#4FA3DE;
+    --brand-dark:#8FC4EE;
+    --brand-light:#12283F;
+    --accent:#4FCB98;
+    --accent-dark:#7EDBB2;
+    --accent-light:#0E2A20;
+    --gold:#F2C558;
+    --gold-light:#2B2313;
+    --red:#F0645F;
+    --cyan:#3FC3DE;
+    --danger:#FF8079;
+    --warning:#E3B458;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--page-bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  ::selection{background:var(--brand);color:#fff}
+  a{color:var(--brand)}
+  h1,h2,h3,h4{font-family:var(--font-display);text-wrap:balance;margin:0}
+  p{margin:0}
+  img,svg{display:block;max-width:100%}
+  code{font-family:var(--font-mono);background:var(--surface-2);padding:1px 6px;border-radius:4px;font-size:.92em}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .u-tabular{font-variant-numeric:tabular-nums}
+
+  .topnav{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .topnav-inner{max-width:1120px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:28px;height:56px;overflow-x:auto}
+  .topnav-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;letter-spacing:.02em;white-space:nowrap}
+  .topnav-brand .vi-mark{width:22px;height:22px;flex:none}
+  .topnav-links{display:flex;gap:20px;white-space:nowrap}
+  .topnav-links a{color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.01em;padding:6px 0;border-bottom:2px solid transparent}
+  .topnav-links a:hover{color:var(--text);border-color:var(--border)}
+
+  .cover{padding:88px 0 64px;border-bottom:1px solid var(--border);background:radial-gradient(560px 320px at 88% -10%, color-mix(in srgb, var(--brand) 14%, transparent), transparent 70%),var(--page-bg)}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);background:var(--gold-light);padding:6px 12px;border-radius:999px;margin-bottom:24px;border:1px solid color-mix(in srgb, var(--gold) 40%, transparent)}
+  .cover-top{display:flex;align-items:center;gap:20px;margin-bottom:32px}
+  .cover-top .vi-mark{width:64px;height:64px}
+  .cover h1{font-size:clamp(34px,5vw,52px);font-weight:800;letter-spacing:-.01em}
+  .cover h1 .r{color:var(--red)}
+  .cover-tagline{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
+  .cover-sub{margin-top:20px;max-width:660px;font-size:16.5px;color:var(--text-muted)}
+  .cover-meta{display:flex;gap:32px;margin-top:40px;flex-wrap:wrap}
+  .cover-meta div{display:flex;flex-direction:column;gap:4px}
+  .cover-meta .k{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);font-weight:700}
+  .cover-meta .v{font-size:14px;color:var(--text);font-weight:600}
+
+  section.block{padding:76px 0;border-bottom:1px solid var(--border)}
+  section.block:last-of-type{border-bottom:none}
+  .section-head{display:flex;align-items:baseline;gap:16px;margin-bottom:40px}
+  .section-num{font-family:var(--font-mono);font-size:13px;color:var(--brand);font-weight:600;letter-spacing:.04em}
+  .section-head h2{font-size:28px;font-weight:800;letter-spacing:-.01em}
+  .section-intro{max-width:700px;color:var(--text-muted);font-size:15px;margin-bottom:36px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+
+  table.spec{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.spec th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);font-weight:700;padding:0 0 10px;border-bottom:1px solid var(--border)}
+  table.spec td{padding:12px 14px 12px 0;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+  table.spec td:first-child{color:var(--text);font-weight:700;white-space:nowrap}
+  table.spec tr:last-child td{border-bottom:none}
+
+  /* mark */
+  .vi-mark{display:block}
+  .word{font-family:var(--font-display);font-weight:800;letter-spacing:-.01em}
+  .word .r{color:var(--red)}
+  .word .n{color:var(--brand-dark)}
+  .word--reverse .n{color:#fff}
+  .word--reverse .r{color:#F04444}
+  .tagline{font-family:var(--font-display);font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);font-size:11px}
+
+  .logo-hero{display:flex;align-items:center;justify-content:center;gap:22px;padding:56px 40px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border)}
+  .logo-hero .vi-mark{width:96px;height:96px}
+  .logo-hero .word{font-size:44px}
+  .logo-hero .tagline{font-size:12px;margin-top:6px}
+
+  .idea-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+  .idea-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .idea{padding:20px;border-radius:var(--radius-md);background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--brand)}
+  .idea.i2{border-top-color:var(--red)}
+  .idea.i3{border-top-color:var(--accent)}
+  .idea h4{font-size:14px;font-weight:800;margin-bottom:6px}
+  .idea p{font-size:12.5px;color:var(--text-muted)}
+
+  .bg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+  .bg-swatch{border-radius:var(--radius-md);padding:26px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:130px}
+  .bg-swatch .lbl{font-family:var(--font-mono);font-size:10.5px}
+  .bg-swatch.bs-white{background:#fff;border:1px solid #E3E6EB}
+  .bg-swatch.bs-white .lbl{color:#8592A3}
+  .bg-swatch.bs-cloud{background:#F4F7F9}
+  .bg-swatch.bs-cloud .lbl{color:#5B6B78}
+  .bg-swatch.bs-navy{background:#092B4C}
+  .bg-swatch.bs-navy .lbl{color:#89A6C2}
+  .bg-swatch.bs-red{background:#D62828}
+  .bg-swatch.bs-red .lbl{color:#FBD8D8}
+
+  .dont-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .dont-card{border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:12px}
+  .dont-card .demo{height:88px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:var(--surface-2);overflow:hidden}
+  .dont-card p{font-size:12.5px;color:var(--text-muted)}
+  .tagx{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--danger)}
+
+  .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .color-card{border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+  .color-swatch{height:88px}
+  .color-info{padding:13px 15px}
+  .color-info .name{font-weight:700;font-size:13.5px;margin-bottom:2px}
+  .color-info .hex{font-family:var(--font-mono);font-size:12px;color:var(--text-muted)}
+  .color-info .role{font-size:11.5px;color:var(--text-faint);margin-top:8px;line-height:1.5}
+  .ratio-bar{display:flex;height:40px;border-radius:var(--radius-sm);overflow:hidden;margin-top:18px;border:1px solid var(--border)}
+  .ratio-bar div{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10.5px;color:#fff}
+
+  .type-specimen{padding:32px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border)}
+  .type-scale-row{display:flex;align-items:baseline;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--border)}
+  .type-scale-row:last-child{border-bottom:none}
+  .type-scale-row .sample{font-family:var(--font-display);font-weight:700;color:var(--text)}
+  .type-scale-row .meta{font-family:var(--font-mono);font-size:11.5px;color:var(--text-faint);white-space:nowrap;padding-left:16px}
+  .note-box{margin-top:20px;padding:16px 18px;border-radius:var(--radius-sm);background:var(--gold-light);border:1px solid color-mix(in srgb, var(--gold) 35%, transparent);font-size:13px;color:var(--text)}
+  .note-box b{color:color-mix(in srgb, var(--gold) 70%, var(--text))}
+
+  .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .app-card{border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);padding:18px;box-shadow:var(--shadow)}
+  .app-card .cap{font-size:11.5px;color:var(--text-faint);margin-top:12px;font-family:var(--font-mono)}
+  .fixed-badge{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-dark);background:var(--accent-light);padding:2px 7px;border-radius:999px;margin-left:8px}
+
+  .biz-card{aspect-ratio:1.667/1;border-radius:14px;position:relative;overflow:hidden;background:#092B4C;padding:7% 7%;display:flex;flex-direction:column;justify-content:space-between}
+  .biz-card .deco1{position:absolute;right:-12%;top:-18%;width:46%;aspect-ratio:1;border-radius:50%;background:#0067B9;opacity:.22}
+  .biz-card .deco2{position:absolute;right:-8%;bottom:-22%;width:40%;aspect-ratio:1;border-radius:50%;background:#37B878;opacity:.16}
+  .biz-card .top{display:flex;align-items:center;gap:10px;position:relative}
+  .biz-card .top .vi-mark{width:15%;aspect-ratio:1}
+  .biz-card .top .word{font-size:17px;color:#fff}
+  .biz-card .top .word .n{color:#fff}
+  .biz-card .bottom{position:relative}
+  .biz-card .bottom .nm{font-size:16px;font-weight:700;color:#fff}
+  .biz-card .bottom .rl{font-size:11.5px;color:#3FC3DE;margin-top:2px}
+  .biz-card .bottom .ct{font-size:10px;opacity:.7;margin-top:10px;color:#fff;font-family:var(--font-mono)}
+
+  .biz-card-back{aspect-ratio:1.667/1;border-radius:14px;background:#fff;border:1px solid #E3E6EB;padding:7%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+  .biz-card-back .stripe{position:absolute;top:0;left:0;right:0;height:4%;display:flex}
+  .biz-card-back .stripe div{flex:1}
+  .biz-card-back .vi-mark{width:22%;aspect-ratio:1}
+  .biz-card-back .word{font-size:15px}
+  .biz-card-back .url{font-family:var(--font-mono);font-size:10px;color:#8592A3}
+
+  .li-cover{aspect-ratio:4/1;border-radius:12px;overflow:hidden;position:relative;background:#092B4C}
+  .li-cover .deco1{position:absolute;right:-6%;top:-40%;width:36%;aspect-ratio:1;border-radius:50%;background:#0067B9;opacity:.3}
+  .li-cover .deco2{position:absolute;right:2%;bottom:-45%;width:38%;aspect-ratio:1;border-radius:50%;background:#37B878;opacity:.22}
+  .li-cover .content{position:absolute;left:5%;top:16%;display:flex;align-items:center;gap:14px}
+  .li-cover .vi-mark{width:44px;height:44px}
+  .li-cover .word{font-size:24px}
+  .li-cover .tagline{font-size:9px;margin-top:3px}
+  .li-cover .arch{position:absolute;left:5%;bottom:14%;color:#fff;font-size:12px}
+
+  .slide{aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#092B4C;padding:6%;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .slide .deco1{position:absolute;right:-8%;top:-20%;width:34%;aspect-ratio:1;border-radius:50%;background:#0067B9;opacity:.3}
+  .slide .deco2{position:absolute;right:-4%;bottom:-22%;width:34%;aspect-ratio:1;border-radius:50%;background:#37B878;opacity:.18}
+  .slide .top{display:flex;align-items:center;gap:8px;position:relative}
+  .slide .top .vi-mark{width:18px;height:18px}
+  .slide .top .word{font-size:12px}
+  .slide h3{position:relative;font-size:min(3.2vw,24px);font-weight:800;color:#fff;max-width:80%;line-height:1.3}
+  .slide .kpis{position:relative;display:flex;gap:6%}
+  .slide .kpis div{font-family:var(--font-mono);font-size:8.5px;color:#8AA0B8}
+  .slide .kpis b{display:block;font-size:14px;color:#fff;font-family:var(--font-display)}
+
+  .avatar-tile{width:96px;height:96px;border-radius:22px;background:#092B4C;display:flex;align-items:center;justify-content:center}
+  .avatar-tile .vi-mark{width:58%;height:58%}
+
+  .icon-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .icon-cap{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .icon-cap span{font-family:var(--font-mono);font-size:10px;color:var(--text-faint)}
+  .icon-tile{background:#fff;border:1px solid #E3E6EB;display:flex;align-items:center;justify-content:center}
+  .icon-tile .vi-mark{width:80%;height:80%}
+  .icon-tile.sz-16{width:16px;height:16px;border-radius:4px}
+  .icon-tile.sz-32{width:32px;height:32px;border-radius:7px}
+  .icon-tile.sz-48{width:48px;height:48px;border-radius:10px}
+  .icon-tile.sz-96{width:96px;height:96px;border-radius:20px}
+
+  .sig-mock{border-radius:12px;background:#fff;border:1px solid #E3E6EB;padding:20px;display:flex;gap:14px;color:#142433}
+  .sig-mock .vi-mark{width:40px;height:40px;flex:none}
+  .sig-mock .sname{font-weight:700;font-size:13.5px;color:#092B4C}
+  .sig-mock .srole{font-size:11.5px;color:#6b7280;margin-top:1px}
+  .sig-mock .sdiv{height:1px;background:#E3E6EB;margin:7px 0;width:65%}
+  .sig-mock .sword{font-size:11px;font-weight:800;color:#00A6C8;letter-spacing:.4px}
+  .sig-mock .slinks{font-size:11px;color:#0067B9;margin-top:4px}
+
+  .kpi-mockup{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .kpi-tile{border-radius:var(--radius-sm);padding:14px;background:var(--surface-2);border:1px solid var(--border)}
+  .kpi-tile .k{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint)}
+  .kpi-tile .v{font-family:var(--font-display);font-size:21px;font-weight:800;margin-top:6px}
+  .kpi-tile.c .v{color:var(--brand)}
+  .kpi-tile.m .v{color:var(--cyan)}
+  .kpi-tile.mo .v{color:var(--accent)}
+  .kpi-tile.i .v{color:color-mix(in srgb, var(--gold) 78%, var(--text) 15%)}
+
+  .rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .rule{display:flex;gap:11px;padding:15px;border-radius:var(--radius-md);background:var(--surface);border:1px solid var(--border)}
+  .rule .mk{flex:none;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+  .rule.ok .mk{background:var(--accent)}
+  .rule.bad .mk{background:var(--danger)}
+  .rule p{font-size:12.5px;color:var(--text-muted)}
+  .rule b{color:var(--text);display:block;font-size:13px;margin-bottom:2px}
+
+  .voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+  .voice-col{padding:16px 18px}
+  .voice-col:first-child{background:var(--accent-light);border-right:1px solid var(--border)}
+  .voice-col:last-child{background:var(--gold-light)}
+  .voice-col .h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+  .voice-col:first-child .h{color:var(--accent-dark)}
+  .voice-col:last-child .h{color:color-mix(in srgb, var(--gold) 65%, var(--text) 20%)}
+  .voice-col p{font-size:13px;margin-bottom:8px;color:var(--text)}
+  .voice-col p:last-child{margin-bottom:0}
+
+  footer{padding:44px 0 76px}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer p{font-size:12px;color:var(--text-faint)}
+  footer .vi-mark{width:16px;height:16px}
+  footer .fl{display:flex;align-items:center;gap:8px}
+
+  @media (max-width:860px){
+    .idea-grid,.color-grid,.app-grid,.rules-grid,.bg-grid,.voice-grid{grid-template-columns:repeat(2,1fr)}
+    .cover{padding:56px 0 40px}
+    section.block{padding:52px 0}
+  }
+  @media (max-width:560px){
+    .idea-grid,.color-grid,.app-grid,.rules-grid,.bg-grid,.dont-grid,.voice-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-brand">
+      <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+      VI CONNECT — BRAND
+    </div>
+    <div class="topnav-links">
+      <a href="#overview">Tổng quan</a>
+      <a href="#logo">Logo</a>
+      <a href="#color">Màu sắc</a>
+      <a href="#type">Typography</a>
+      <a href="#apps">Ứng dụng</a>
+      <a href="#voice">Giọng điệu</a>
+      <a href="#rules">Quy tắc</a>
+      <a href="#status">Trạng thái</a>
+    </div>
+  </div>
+</nav>
+
+<header class="cover">
+  <div class="wrap">
+    <span class="status-pill">● Đề xuất v3.1 — chờ VAST/HTIC phê duyệt</span>
+    <div class="cover-top">
+      <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+      <div>
+        <h1><span class="r">VI</span> CONNECT</h1>
+        <div class="cover-tagline">Việt Nam · Kết nối tri thức và công nghệ</div>
+      </div>
+    </div>
+    <p class="cover-sub">Bộ nhận diện thương hiệu v3.1 cho nền tảng số kết nối tri thức, công nghệ và nguồn lực đầu tư — do Trung tâm Đổi mới sáng tạo công nghệ cao (HTIC), Viện Hàn lâm Khoa học và Công nghệ Việt Nam (VAST) đề xuất. Tài liệu này hoàn thiện lớp ứng dụng thị giác (business card, letterhead, slide, chữ ký email, favicon) trên nền chiến lược thương hiệu đã có, và sửa lỗi kỹ thuật ở hai file xuất bản trước đó.</p>
+    <div class="cover-meta">
+      <div><span class="k">Phiên bản</span><span class="v">3.1</span></div>
+      <div><span class="k">Chủ quản</span><span class="v">HTIC / VAST</span></div>
+      <div><span class="k">Tagline</span><span class="v">Kết nối trí tuệ - Kiến tạo giá trị</span></div>
+      <div><span class="k">Nguồn</span><span class="v">vi-connect/brand/</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="overview">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">01</span><h2>Định vị thương hiệu</h2></div>
+    <p class="section-intro">VI-CONNECT được định vị là <b>lớp liên kết và điều phối năng lực nghiên cứu</b> do VAST chủ trì — không phải cơ sở dữ liệu thay thế hệ thống nguồn, cũng không tự nhận là sàn giao dịch công nghệ. Trọng tâm là biến dữ liệu thành quan hệ, cơ hội hợp tác, dự án, chuyển giao và tác động có bằng chứng. Vận hành theo bốn bước liền mạch — cấu trúc này lặp lại xuyên suốt logo, màu sắc và bố cục KPI dashboard.</p>
+    <div class="idea-grid">
+      <div class="idea"><h4>01 · Connect</h4><p>Khám phá · Xác minh · Kết nối — liên kết con người, tổ chức, tài sản và cơ hội.</p></div>
+      <div class="idea i2"><h4>02 · Match</h4><p>Đề xuất · So khớp · Thẩm định — chuẩn hóa đầu bài và đề xuất phương án phù hợp.</p></div>
+      <div class="idea i3"><h4>03 · Mobilize</h4><p>Hợp tác · Cam kết · Huy động — hình thành nhóm, dự án và huy động nguồn lực.</p></div>
+      <div class="idea"><h4>04 · Impact</h4><p>Thực hiện · Chuyển giao · Đo lường — nghiệm thu, chuyển giao và đo tác động thật.</p></div>
+    </div>
+    <div class="note-box"><b>Giá trị cốt lõi:</b> Tin cậy (dữ liệu có nguồn gốc, xác minh) · Kết nối (hợp tác liên ngành) · Hành động (mọi kết nối dẫn đến dự án/giao dịch thật) · Minh bạch (vai trò, mốc, bằng chứng rõ ràng) · Tác động (đo Output/Outcome/Impact).</div>
+  </div>
+</section>
+
+<section class="block" id="logo">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">02</span><h2>Logo — Chữ C bao trùm VI</h2></div>
+    <p class="section-intro">Việt Nam trong hệ sinh thái kết nối: chữ <b>C</b> dạng vòng tròn mở bao trùm <b>VI</b> — C là Connect và hệ sinh thái kết nối, VI đặt ở lõi trung tâm mang nghĩa kép: <b>VI = Việt Nam</b>, và riêng chữ <b>I</b> còn là <b>Innovation — Đổi mới sáng tạo</b>, đúng tinh thần HTIC (Trung tâm Đổi mới sáng tạo công nghệ cao). Chữ V đỏ và ngôi sao vàng tạo dấu hiệu quốc kỳ; hai đầu vòng C màu vàng và xanh lục biểu thị điểm khởi phát và tác động. Phiên bản 3.1 đã bỏ đường nối cùng ba nút bên trong của phương án trước để VI rõ và cân bằng hơn, dễ thu nhỏ hơn.</p>
+
+    <div class="logo-hero">
+      <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+      <div>
+        <div class="word"><span class="r">VI</span> <span class="n">CONNECT</span></div>
+        <div class="tagline">Việt Nam · Kết nối tri thức và công nghệ</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:13px;margin:36px 0 12px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Giải mã hình tượng</h3>
+    <div class="idea-grid">
+      <div class="idea"><h4>C — Connect</h4><p>Vòng tròn bảo chứng, bao quanh và kết nối. Xanh Connect Blue trên nền sáng, Data Cyan trên nền tối.</p></div>
+      <div class="idea i2"><h4>V — Việt Nam</h4><p>Chữ V đỏ + ngôi sao vàng phía trên chữ I = dấu hiệu quốc kỳ, đại diện Việt Nam.</p></div>
+      <div class="idea i2"><h4>I — Việt Nam &amp; Innovation</h4><p>Vừa tiếp nối "Việt Nam", vừa là <b>Innovation — Đổi mới sáng tạo</b>: đầu mối khoa học tin cậy, đúng tinh thần HTIC.</p></div>
+      <div class="idea i3"><h4>Vòng mở — Kết nối</h4><p>Hai đầu vòng C màu vàng (khởi phát) và xanh lục (tác động) — đủ biểu thị luồng vào/ra, không cần đường nối phụ.</p></div>
+    </div>
+
+    <h3 style="font-size:13px;margin:36px 0 12px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Trên các nền khác nhau</h3>
+    <div class="bg-grid">
+      <div class="bg-swatch bs-white"><svg class="vi-mark" style="width:46px;height:46px" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="lbl">nền trắng — primary</span></div>
+      <div class="bg-swatch bs-cloud"><svg class="vi-mark" style="width:46px;height:46px" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="lbl">nền Cloud — primary</span></div>
+      <div class="bg-swatch bs-navy"><svg class="vi-mark" style="width:46px;height:46px" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#00A6C8" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#F04444" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="lbl">nền Navy — reverse</span></div>
+      <div class="bg-swatch bs-red"><svg class="vi-mark" style="width:46px;height:46px" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#092B4C"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#092B4C" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="lbl">nền đỏ — không khuyến nghị</span></div>
+    </div>
+
+    <h3 style="font-size:13px;margin:36px 0 12px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Không được phép</h3>
+    <div class="dont-grid">
+      <div class="dont-card"><span class="tagx">✕ Không</span><div class="demo"><div class="word" style="font-size:22px;transform:scaleX(1.6)"><span class="r">VI</span> <span class="n">CONNECT</span></div></div><p>Kéo giãn, xoay hoặc thay đổi tỷ lệ logo theo bất kỳ trục nào.</p></div>
+      <div class="dont-card"><span class="tagx">✕ Không</span><div class="demo" style="background:#0067B9"><svg class="vi-mark" style="width:40px;height:40px" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><p>Dùng bản primary (vòng Connect Blue) trên nền cùng tông xanh — đổi sang bản reverse (vòng Cyan) để đủ tương phản.</p></div>
+      <div class="dont-card"><span class="tagx">✕ Không</span><div class="demo"><svg class="vi-mark" style="width:40px;height:40px;filter:drop-shadow(3px 4px 3px rgba(0,0,0,.5))" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><p>Thêm đổ bóng, viền hoặc hiệu ứng 3D lên biểu tượng.</p></div>
+      <div class="dont-card"><span class="tagx">✕ Không</span><div class="demo"><div class="word" style="font-size:20px"><span class="n">CONNECT</span></div></div><p>Tách tagline khỏi logo để ghép lại bằng font khác, hoặc dùng biểu tượng thay huy hiệu/công nhận chính thức của VAST.</p></div>
+    </div>
+
+    <table class="spec" style="margin-top:32px">
+      <tr><th>Quy tắc</th><th>Chuẩn áp dụng</th></tr>
+      <tr><td>Khoảng an toàn</td><td>Tối thiểu bằng đường kính nút trung tâm (x) ở cả bốn phía.</td></tr>
+      <tr><td>Kích thước in</td><td>Logo ngang ≥ 35mm; biểu tượng ≥ 10mm.</td></tr>
+      <tr><td>Kích thước số</td><td>Logo ngang ≥ 180px; biểu tượng ≥ 32px.</td></tr>
+      <tr><td>Nền sáng / tối</td><td>Bản primary trên trắng/Cloud; bản reverse trên Navy hoặc ảnh phủ Navy ≥ 75%.</td></tr>
+      <tr><td>Đồng thương hiệu</td><td>Ngăn cách bằng đường mảnh; hai logo có chiều cao thị giác tương đương (VAST/HTIC).</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="color">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">03</span><h2>Màu sắc</h2></div>
+    <p class="section-intro">Tin cậy khoa học, chuyển động và tác động. Đỏ và vàng là dấu hiệu Việt Nam, tập trung tại logo và điểm nhấn — <b>không dùng làm nền diện rộng hay văn bản dài</b>. Navy/trắng là hai màu chủ đạo cho 55% diện tích thiết kế.</p>
+
+    <div class="color-grid">
+      <div class="color-card"><div class="color-swatch" style="background:#D62828"></div><div class="color-info"><div class="name">Vietnam Red</div><div class="hex">#D62828 · RGB 214,40,40</div><div class="role">Chữ V trong VI = Việt Nam; nhận diện cốt lõi trong logo.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#F7C948"></div><div class="color-info"><div class="name">National Gold</div><div class="hex">#F7C948 · RGB 247,201,72</div><div class="role">Ngôi sao; điểm kích hoạt; KPI Impact.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#092B4C"></div><div class="color-info"><div class="name">VI Navy</div><div class="hex">#092B4C · RGB 9,43,76</div><div class="role">Tin cậy; khoa học; nền reverse.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#0067B9"></div><div class="color-info"><div class="name">Connect Blue</div><div class="hex">#0067B9 · RGB 0,103,185</div><div class="role">Kết nối; công nghệ; KPI Connect.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#00A6C8"></div><div class="color-info"><div class="name">Data Cyan</div><div class="hex">#00A6C8 · RGB 0,166,200</div><div class="role">Dữ liệu; khám phá; KPI Match; vòng C trên nền tối.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#37B878"></div><div class="color-info"><div class="name">Mobilize Green</div><div class="hex">#37B878 · RGB 55,184,120</div><div class="role">Nguồn lực; tăng trưởng; KPI Mobilize.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#142433"></div><div class="color-info"><div class="name">Ink</div><div class="hex">#142433 · RGB 20,36,51</div><div class="role">Văn bản nội dung trên nền sáng.</div></div></div>
+      <div class="color-card"><div class="color-swatch" style="background:#F4F7F9;border-bottom:1px solid #eee"></div><div class="color-info"><div class="name">Cloud</div><div class="hex">#F4F7F9 · RGB 244,247,249</div><div class="role">Nền phụ, khối card nhạt.</div></div></div>
+    </div>
+
+    <h3 style="font-size:13px;margin:32px 0 10px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Tỷ lệ gợi ý theo diện tích thiết kế</h3>
+    <div class="ratio-bar">
+      <div style="width:55%;background:#092B4C">Navy/White 55%</div>
+      <div style="width:20%;background:#0067B9">Blue/Cyan 20%</div>
+      <div style="width:12%;background:#D62828">Red 12%</div>
+      <div style="width:8%;background:#37B878">Green 8%</div>
+      <div style="width:5%;background:#C8951B">Gold 5%</div>
+    </div>
+    <div class="note-box"><b>Khả năng tiếp cận:</b> Văn bản thân bài ưu tiên Ink/Navy trên nền trắng. Trạng thái (thành công/cảnh báo/lỗi) phải có nhãn hoặc biểu tượng đi kèm, không chỉ dựa vào màu sắc.</div>
+  </div>
+</section>
+
+<section class="block" id="type">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">04</span><h2>Typography</h2></div>
+    <p class="section-intro">Bộ chữ mặc định là <b>Arial</b> — phủ tốt hệ thống công vụ, hỗ trợ tiếng Việt ổn định trên mọi nền tảng. Không dùng quá ba cấp độ đậm trên cùng một mặt; ưu tiên câu ngắn, nhãn hành động rõ, dấu tiếng Việt đầy đủ.</p>
+
+    <div class="type-specimen">
+      <div class="type-scale-row"><span class="sample" style="font-size:44px">Kết nối tri thức</span><span class="meta">40–56px / Bold / Display</span></div>
+      <div class="type-scale-row"><span class="sample" style="font-size:32px">Ngân hàng bài toán</span><span class="meta">30–36px / Bold / H1 — Navy</span></div>
+      <div class="type-scale-row"><span class="sample" style="font-size:24px;font-weight:700">AI Matching giải thích được</span><span class="meta">22–28px / Bold / H2 — Navy/Blue</span></div>
+      <div class="type-scale-row"><span class="sample" style="font-size:17px;font-weight:400;color:var(--text-muted)">Đăng ký hồ sơ chuyên gia và tổ chức KH&amp;CN.</span><span class="meta">16–18px / Regular / Body — Ink</span></div>
+      <div class="type-scale-row"><span class="sample" style="font-size:13px;font-weight:400;color:var(--text-faint)">Connect · Match · Mobilize · Impact</span><span class="meta">12–14px / Caption — Muted</span></div>
+      <div class="type-scale-row"><span class="sample u-tabular" style="font-size:16px;font-weight:400">1.284 · 392 · ₫18,4 tỷ</span><span class="meta">14–16px / Dữ liệu bảng — canh phải khi cần</span></div>
+    </div>
+
+    <div class="note-box"><b>Ghi chú tích hợp code:</b> sản phẩm web hiện dùng Geist Sans/Geist Mono qua <code>next/font/google</code> trong <code>app/layout.tsx</code> — đúng theo nguyên tắc "web có thể dùng Inter, Arial là fallback" của guidelines v3.1, nhưng cần đội sản phẩm xác nhận trước khi phát hành chính thức (đổi từ Inter/Geist ↔ Arial tùy quyết định cuối). <code>app/layout.tsx</code> hiện chỉ khai báo <code>subsets:["latin"]</code> — nên bổ sung subset tiếng Việt/latin-ext để dấu thanh hiển thị đúng bằng đúng font thay vì rơi về font hệ thống.</div>
+  </div>
+</section>
+
+<section class="block" id="apps">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">05</span><h2>Ứng dụng nhận diện</h2></div>
+    <p class="section-intro">Toàn bộ tệp nguồn (SVG/PNG) nằm trong <code>vi-connect/brand/</code>. Các mục có nhãn <span class="fixed-badge">Đã sửa lỗi</span> trước đó xuất PNG rỗng do tham chiếu <code>&lt;image href&gt;</code> chéo file SVG không được nhúng khi rasterize — nay đã inline trực tiếp vector nên luôn hiển thị đúng.</p>
+
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="biz-card">
+          <div class="deco1"></div><div class="deco2"></div>
+          <div class="top"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#00A6C8" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#F04444" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="word word--reverse"><span class="r">VI</span> <span class="n">CONNECT</span></span></div>
+          <div class="bottom"><div class="nm">Nguyễn Văn A</div><div class="rl">Chuyên viên Hợp tác &amp; Đầu tư</div><div class="ct">a.nguyen@vi-connect.vn · vi-connect.vn</div></div>
+        </div>
+        <div class="cap">Business card — mặt trước · 90×54mm · <b>mới</b></div>
+      </div>
+
+      <div class="app-card">
+        <div class="biz-card-back">
+          <div class="stripe"><div style="background:#F7C948"></div><div style="background:#37B878"></div><div style="background:#00A6C8"></div><div style="background:#0067B9"></div></div>
+          <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+          <span class="word"><span class="r">VI</span> <span class="n">CONNECT</span></span>
+          <span class="url">vi-connect.vn</span>
+        </div>
+        <div class="cap">Business card — mặt sau · dải màu Connect→Match→Mobilize→Impact · <b>mới</b></div>
+      </div>
+
+      <div class="app-card" style="grid-column:1/-1">
+        <div class="li-cover">
+          <div class="deco1"></div><div class="deco2"></div>
+          <div class="content"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#00A6C8" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#F04444" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><div><div class="word word--reverse" style="font-size:22px"><span class="r">VI</span> <span class="n">CONNECT</span></div><div class="tagline">Việt Nam · Kết nối tri thức và công nghệ</div></div></div>
+          <div class="arch">Connect · Match · Mobilize · Impact</div>
+        </div>
+        <div class="cap" style="text-align:center">applications/linkedin-cover.svg · 1584×396 <span class="fixed-badge">Đã sửa lỗi</span></div>
+      </div>
+
+      <div class="app-card">
+        <div class="avatar-tile" style="margin:0 auto"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#00A6C8" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#F04444" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div>
+        <div class="cap" style="text-align:center">applications/profile-avatar.svg · 800×800 <span class="fixed-badge">Đã sửa lỗi</span></div>
+      </div>
+
+      <div class="app-card">
+        <div class="icon-row" style="justify-content:center">
+          <div class="icon-cap"><div class="icon-tile sz-16"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><span>16×16</span></div>
+          <div class="icon-cap"><div class="icon-tile sz-32"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><span>32×32</span></div>
+          <div class="icon-cap"><div class="icon-tile sz-48"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><span>48×48</span></div>
+          <div class="icon-cap"><div class="icon-tile sz-96"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg></div><span>96×96 / apple-touch</span></div>
+        </div>
+        <div class="cap" style="text-align:center">favicon/ — đã cài vào app/favicon.ico, app/icon.png, app/apple-icon.png <span class="fixed-badge">Mới</span></div>
+      </div>
+
+      <div class="app-card" style="grid-column:1/-1">
+        <div class="slide">
+          <div class="deco1"></div><div class="deco2"></div>
+          <div class="top"><svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#00A6C8" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#F04444" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#FFFFFF" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg><span class="word word--reverse"><span class="r">VI</span> <span class="n">CONNECT</span></span></div>
+          <h3>Báo cáo tiến độ<br/>Giai đoạn 1 — Năm 1</h3>
+          <div class="kpis">
+            <div><b>1.284</b>CONNECT</div>
+            <div><b>392</b>MATCH</div>
+            <div><b>₫18,4 tỷ</b>MOBILIZE</div>
+            <div><b>+12,6%</b>IMPACT</div>
+          </div>
+        </div>
+        <div class="cap">Slide tiêu đề thuyết trình · 16:9 · <b>mới</b></div>
+      </div>
+
+      <div class="app-card" style="grid-column:1/-1">
+        <div class="sig-mock">
+          <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+          <div>
+            <div class="sname">Trần Thị B</div>
+            <div class="srole">Điều phối Ngân hàng bài toán</div>
+            <div class="sdiv"></div>
+            <div class="sword"><span style="color:#D62828">VI</span> CONNECT <span style="color:#8AA0B8;font-weight:400">· HTIC – VAST</span></div>
+            <div class="slinks">vi-connect.vn · b.tran@vi-connect.vn</div>
+          </div>
+        </div>
+        <div class="cap">Chữ ký email — HTML thật (table + inline style), không phải ảnh chụp · cip/email-signature.html · <b>mới</b></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:13px;margin:40px 0 12px;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Màu sắc trong sản phẩm — ví dụ KPI dashboard</h3>
+    <div class="kpi-mockup">
+      <div class="kpi-tile c"><div class="k">Connect</div><div class="v u-tabular">1.284</div></div>
+      <div class="kpi-tile m"><div class="k">Match</div><div class="v u-tabular">392</div></div>
+      <div class="kpi-tile mo"><div class="k">Mobilize</div><div class="v u-tabular">₫18,4 tỷ</div></div>
+      <div class="kpi-tile i"><div class="k">Impact</div><div class="v u-tabular">+12,6%</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="voice">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">06</span><h2>Ngôn ngữ thương hiệu</h2></div>
+    <p class="section-intro">Tin cậy, rõ việc, có bằng chứng. Ưu tiên câu ngắn, động từ hành động rõ, không phóng đại.</p>
+    <div class="voice-grid">
+      <div class="voice-col">
+        <div class="h">✓ Nên viết</div>
+        <p>"Hồ sơ đã được đơn vị xác minh."</p>
+        <p>"Gửi bài toán để được chuẩn hóa và ghép nối."</p>
+        <p>"AI gợi ý; chuyên gia/người có thẩm quyền quyết định."</p>
+        <p>"Theo dõi từ kết nối đến nghiệm thu/chuyển giao."</p>
+        <p>"Nền tảng do VAST chủ trì."</p>
+      </div>
+      <div class="voice-col">
+        <div class="h">✕ Tránh viết</div>
+        <p>"Chuyên gia tốt nhất Việt Nam."</p>
+        <p>"Khám phá hệ sinh thái vô hạn."</p>
+        <p>"AI lựa chọn chính xác tuyệt đối."</p>
+        <p>"Tăng tương tác và lượt truy cập."</p>
+        <p>"Nền tảng số quốc gia" khi chưa được công nhận.</p>
+      </div>
+    </div>
+    <div class="note-box"><b>Microcopy sản phẩm:</b> "Đã xác minh bởi đơn vị" thay "Verified" đơn lẻ · "Vì sao được đề xuất?" thay "AI Score" · "Tiếp tục chuẩn hóa đầu bài" thay "Next" · "Chưa đủ bằng chứng để công bố" thay lỗi chung chung.</div>
+  </div>
+</section>
+
+<section class="block" id="rules">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">07</span><h2>Quy tắc sử dụng</h2></div>
+    <div class="rules-grid">
+      <div class="rule ok"><div class="mk">✓</div><div><b>Đổi bản theo nền</b><p>Primary (vòng Connect Blue) trên sáng; reverse (vòng Data Cyan) trên Navy hoặc ảnh phủ Navy ≥75%.</p></div></div>
+      <div class="rule ok"><div class="mk">✓</div><div><b>Giữ khoảng thở</b><p>Tối thiểu bằng đường kính nút trung tâm ở cả bốn phía — không chèn chữ/yếu tố khác vào.</p></div></div>
+      <div class="rule ok"><div class="mk">✓</div><div><b>Đỏ/vàng tiết chế</b><p>Chỉ dùng cho logo và điểm nhấn nhỏ (badge, KPI) — không dùng làm nền diện rộng hay văn bản dài.</p></div></div>
+      <div class="rule ok"><div class="mk">✓</div><div><b>Đồng bộ token</b><p>Dùng biến CSS trong <code>app/globals.css</code> (<code>--brand</code>, <code>--accent</code>, <code>--gold</code>, <code>--red</code>, <code>--cyan</code>…) thay vì mã hex rời rạc.</p></div></div>
+      <div class="rule bad"><div class="mk">✕</div><div><b>Không đổi màu từng nút</b><p>Không tùy chỉnh màu vòng C, ngôi sao hay hai đầu vòng ngoài bảng đã định nghĩa.</p></div></div>
+      <div class="rule bad"><div class="mk">✕</div><div><b>Không thêm hiệu ứng</b><p>Không đổ bóng, viền hay hiệu ứng 3D lên biểu tượng.</p></div></div>
+      <div class="rule bad"><div class="mk">✕</div><div><b>Không đặt trên ảnh rối</b><p>Tránh nền ảnh nhiều chi tiết, tương phản thấp — logo phải luôn rõ.</p></div></div>
+      <div class="rule bad"><div class="mk">✕</div><div><b>Không tự vẽ lại</b><p>Đối tác/nhà cung cấp chỉ dùng bộ file phát hành chính thức — không tự vẽ lại hoặc đổi màu.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="status">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">08</span><h2>Trạng thái &amp; việc đã hoàn thiện</h2></div>
+    <table class="spec">
+      <tr><th>Hạng mục</th><th>Trạng thái</th></tr>
+      <tr><td>Chiến lược thương hiệu</td><td>Đầy đủ — định vị, giá trị, đối tượng, kiến trúc thông điệp, ngôn ngữ, quản trị. Xem <code>brand/guidelines/VI_CONNECT_Brand_Guidelines_v3_1.pdf</code> (tài liệu gốc, 14 trang).</td></tr>
+      <tr><td>Logo &amp; biểu tượng</td><td>Đầy đủ — primary/reverse, logo/biểu tượng, SVG+PNG.</td></tr>
+      <tr><td>profile-avatar, linkedin-cover</td><td><b style="color:var(--accent-dark)">Đã sửa lỗi</b> — PNG trước đó rỗng do <code>&lt;image href&gt;</code> tham chiếu chéo file không được nhúng khi rasterize; nay inline trực tiếp vector.</td></tr>
+      <tr><td>Business card, letterhead, slide, chữ ký email</td><td><b style="color:var(--accent-dark)">Mới hoàn thiện</b> — chưa có ở bản giao trước, nay có trong <code>brand/cip/</code>.</td></tr>
+      <tr><td>Favicon / app icon</td><td><b style="color:var(--accent-dark)">Mới hoàn thiện</b> — xuất 8 kích thước + đã cài vào <code>app/favicon.ico</code>, <code>app/icon.png</code>, <code>app/apple-icon.png</code>.</td></tr>
+      <tr><td>Token màu trong code</td><td><b style="color:var(--accent-dark)">Đã cập nhật</b> — <code>app/globals.css</code> nay dùng đúng bảng màu v3.1.</td></tr>
+      <tr><td>Phê duyệt chính thức</td><td><b style="color:var(--warning)">Chưa</b> — đây vẫn là phương án đề xuất, cần VAST/HTIC phê duyệt tên gọi, logo, tagline và kiểm tra khả năng đăng ký bảo hộ trước khi công bố chính thức, theo đúng quy trình phát hành trong tài liệu gốc.</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fl">
+      <svg class="vi-mark" viewBox="0 0 530 530"><g transform="translate(-24,-35)"><path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/><circle cx="465" cy="145" r="22" fill="#F7C948"/><circle cx="465" cy="455" r="22" fill="#37B878"/><path d="M190 210 L285 412 L370 210" fill="none" stroke="#D62828" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><path d="M386 245 L386 412" fill="none" stroke="#092B4C" stroke-width="46" stroke-linecap="round"/><path d="M386 168 L397 195 L426 197 L404 216 L411 245 L386 230 L361 245 L368 216 L346 197 L375 195 Z" fill="#F7C948"/></g></svg>
+      <p>VI CONNECT Brand Guidelines v3.1 · Nguồn: <code>vi-connect/brand/logo/</code>, <code>applications/</code>, <code>cip/</code>, <code>favicon/</code>, <code>tokens/</code>, <code>guidelines/</code></p>
+    </div>
+    <p>Đề xuất — chờ phê duyệt · Tháng 8/2026</p>
+  </div>
+</footer>

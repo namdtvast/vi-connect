@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VI CONNECT — Giai đoạn 1 (MVP thí điểm)
 
-## Getting Started
+Nền tảng số kết nối tri thức, công nghệ và nguồn lực đầu tư — do Trung tâm Đổi mới
+sáng tạo công nghệ cao (HTIC) đề xuất, thuộc Viện Hàn lâm Khoa học và Công nghệ Việt
+Nam (VAST). Xây dựng theo `VI_CONNECT_TM_Dean.docx`, phạm vi rút gọn về đúng Giai đoạn
+1 (Năm 1) mà chính đề án tự quy định — xem `docs/SCOPE.md` để biết lý do.
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Prisma 7 + PostgreSQL · NextAuth v5 (Credentials,
+JWT) · Tailwind CSS.
+
+## Chạy local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Yêu cầu Postgres đang chạy và `DATABASE_URL` trong `.env` (mặc định trỏ vào Postgres
+cài qua Homebrew: `brew services start postgresql@16`). Lần đầu:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Đăng nhập demo: `admin@vi-connect.demo` / `Password123!` (VAST_ADMIN). Xem thêm tài
+khoản demo khác trong `prisma/seed.ts`.
 
-## Learn More
+## Trong scope Giai đoạn 1 (đã code thật, không mock)
 
-To learn more about Next.js, take a look at the following resources:
+- **01+10 — Hồ sơ & tổ chức**: đăng ký/xác minh hồ sơ chuyên gia, danh mục hội thành
+  viên/tổ chức KH&CN, delegated administration theo tổ chức (`HOI_ADMIN` chỉ thấy dữ
+  liệu của mình).
+- **02+06 — Cung cầu & Ngân hàng bài toán**: đăng nhu cầu/công nghệ, ngân hàng bài toán
+  đầy đủ vòng đời (tiếp nhận → công bố → nhận giải pháp → đánh giá).
+- **05 — AI Matching**: bộ chấm điểm giải thích được (`lib/matching.ts`) — không gọi
+  API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh nghiệm. Mỗi đề
+  xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật ở Giai đoạn 2 mà
+  không đổi schema hay giao diện gọi.
+- **04+09 — Dự án & hợp đồng**: chuyển match đã chấp nhận thành dự án, mốc thực hiện,
+  hợp đồng/thỏa thuận (chỉ theo dõi trạng thái, chưa xử lý thanh toán thật).
+- **11 — KPI Dashboard**: Connect/Match/Mobilize/Impact tính trực tiếp từ dữ liệu sống,
+  Match Funnel theo đúng mô hình đề án.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Backlog Giai đoạn 2-3 (chưa xây, theo đúng nguyên tắc "không mở rộng khi lớp trước
+chưa có giao dịch thật" của đề án)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Cấu phần 07, 08 đầy đủ: Funding & Investment Hub, due diligence, giải ngân thật.
+- AI Governance, Risk & Compliance, Forecasting dashboards (11.6-11.11).
+- Tích hợp thật ORCID/OpenAlex/ROR/Techmart Vietnam (hiện chỉ có trường lưu định danh).
+- Semantic/embedding matching thật thay cho scoring rule-based.
+- Thanh toán/giải ngân thật, đối soát tài chính.
 
-## Deploy on Vercel
+## Ghi chú dữ liệu
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Toàn bộ dữ liệu trong `prisma/seed.ts` là dữ liệu demo tự tạo cho môi trường thí điểm,
+**không phải** số liệu thật của VAST/HTIC hay các hội thành viên. Banner cảnh báo demo
+hiển thị trên mọi trang.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Triển khai production
+
+Chưa deploy. Cần xác nhận: nhà cung cấp hosting (Vercel/VPS khác), nhà cung cấp
+Postgres production (Neon/Supabase/RDS...), và tên miền trước khi triển khai thật.

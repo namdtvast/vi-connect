@@ -1,0 +1,26 @@
+{
+  "brand": {
+    "blue": { "value": "#0F5FAE", "name": "Tri Thức Blue", "role": "Primary — khoa học, uy tín, nền tảng do VAST/HTIC bảo trợ" },
+    "blueDark": { "value": "#0A3D70", "name": "Tri Thức Blue Dark", "role": "Hover, header, gradient stop, dark-mode surface" },
+    "blueLight": { "value": "#EAF3FC", "name": "Tri Thức Blue Tint", "role": "Nền nhạt, badge, khối thông tin phụ" },
+    "green": { "value": "#17A673", "name": "Kết Nối Green", "role": "Accent — match thành công, tăng trưởng, CTA phụ" },
+    "greenDark": { "value": "#0E7A54", "name": "Kết Nối Green Dark", "role": "Hover trên accent, biểu đồ KPI" },
+    "greenLight": { "value": "#E4F7EF", "name": "Kết Nối Green Tint", "role": "Badge trạng thái thành công" },
+    "gold": { "value": "#C8951B", "name": "Đầu Tư Gold", "role": "Nhấn mạnh cấu phần Mobilize/đầu tư — dùng tiết chế, không dùng làm màu nền lớn" },
+    "goldLight": { "value": "#FBF1DC", "name": "Đầu Tư Gold Tint", "role": "Badge liên quan tài trợ/đầu tư" }
+  },
+  "neutral": {
+    "background": { "value": "#F7F8FA" },
+    "surface": { "value": "#FFFFFF" },
+    "border": { "value": "#E3E6EB" },
+    "muted": { "value": "#6B7280" },
+    "foreground": { "value": "#14181F" }
+  },
+  "semantic": {
+    "danger": { "value": "#D1453B", "role": "Lỗi, từ chối hồ sơ" },
+    "warning": { "value": "#B8890A", "role": "Cảnh báo, chờ duyệt" },
+    "success": { "value": "#17A673", "role": "Thành công — dùng chung Kết Nối Green" },
+    "info": { "value": "#0F5FAE", "role": "Thông tin — dùng chung Tri Thức Blue" }
+  },
+  "notes": "Bảng màu kế thừa & chính thức hóa token đã dùng trong app/globals.css (brand blue #0F5FAE, accent green #17A673), bổ sung Đầu Tư Gold cho cấu phần Mobilize/Funding & Investment Hub (giai đoạn 2) và các sắc thái tint/dark cho từng màu chính."
+}

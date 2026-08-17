@@ -159,6 +159,8 @@ model Need {
   organization   Organization @relation(fields: [organizationId], references: [id])
   budgetVnd      BigInt?
   status         NeedStatus   @default(DRAFT)
+  attachmentPath String? // đường dẫn tương đối trong uploads/, không phải public/ — xem app/api/needs/[id]/attachment
+  attachmentName String? // tên file gốc do người dùng đặt, hiển thị khi tải xuống
   matches        Match[]
 
   createdAt DateTime @default(now())
@@ -255,6 +257,8 @@ model Challenge {
   organizationId String
   organization   Organization    @relation(fields: [organizationId], references: [id])
   status         ChallengeStatus @default(INTAKE)
+  attachmentPath String? // đường dẫn tương đối trong uploads/, không phải public/ — xem app/api/challenges/[id]/attachment
+  attachmentName String? // tên file gốc do người dùng đặt, hiển thị khi tải xuống
   solutions      Solution[]
 
   createdAt DateTime @default(now())

@@ -6,6 +6,7 @@ import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Textarea } from "@/components/ui/field";
 import { FIELDS } from "@/lib/taxonomy";
+import { Paperclip } from "lucide-react";
 
 const initialState: ActionState = {};
 
@@ -36,6 +37,22 @@ export function CreateNeedForm() {
             </label>
           ))}
         </div>
+      </FieldGroup>
+      <FieldGroup>
+        <Label htmlFor="attachment" className="flex items-center gap-1.5">
+          <Paperclip className="w-3.5 h-3.5" />
+          Đính kèm tài liệu (không bắt buộc)
+        </Label>
+        <Input
+          id="attachment"
+          name="attachment"
+          type="file"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg"
+          className="file:mr-3 file:rounded file:border-0 file:bg-background file:px-3 file:py-1.5 file:text-sm"
+        />
+        <p className="text-xs text-muted mt-1">
+          PDF, Word, Excel, PowerPoint hoặc ảnh — tối đa 10MB.
+        </p>
       </FieldGroup>
       <FormError>{state.error}</FormError>
       <Button type="submit" disabled={pending}>

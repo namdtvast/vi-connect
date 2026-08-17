@@ -45,6 +45,9 @@ next-env.d.ts
 
 /lib/generated/prisma
 
+# tệp đính kèm người dùng tải lên (Need/Challenge) — lưu trên đĩa VPS, không commit
+/uploads
+
 # local disposable workspace; keep only its navigation file
 /99_TAM/*
 !/99_TAM/README.md

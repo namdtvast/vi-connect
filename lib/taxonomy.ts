@@ -13,7 +13,9 @@ export const FIELDS = [
   { code: "co_khi_tu_dong", label: "Cơ khí - Tự động hóa" },
   { code: "xay_dung", label: "Xây dựng - Hạ tầng" },
   { code: "chinh_sach", label: "Chính sách KH&CN" },
-  { code: "do_luong", label: "Đo lường - Kiểm định - Thử nghiệm" },
+  { code: "do_luong", label: "Đo lường (Kiểm định; Hiệu chuẩn; Thử nghiệm)" },
+  { code: "quan_trac_moi_truong", label: "Quan trắc môi trường" },
+  { code: "ra_test", label: "RA Test" },
 ] as const;
 
 export type FieldCode = (typeof FIELDS)[number]["code"];

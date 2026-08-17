@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { assertOrgScope, requireRole, requireUser } from "@/lib/rbac";
+import { saveUploadedFile } from "@/lib/uploads";
 import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
 import type { ChallengeStatus, SolutionStatus } from "@/lib/generated/prisma/enums";
@@ -37,6 +38,19 @@ export async function createChallengeAction(
     return { error: parsed.error.issues[0]?.message ?? "Dữ liệu không hợp lệ" };
   }
 
+  let attachmentPath: string | undefined;
+  let attachmentName: string | undefined;
+  const attachment = formData.get("attachment");
+  if (attachment instanceof File && attachment.size > 0) {
+    try {
+      const saved = await saveUploadedFile(attachment, "challenges");
+      attachmentPath = saved.path;
+      attachmentName = saved.name;
+    } catch (e) {
+      return { error: e instanceof Error ? e.message : "Không thể lưu tệp đính kèm." };
+    }
+  }
+
   await db.challenge.create({
     data: {
       title: parsed.data.title,
@@ -47,6 +61,8 @@ export async function createChallengeAction(
       budgetVnd: parsed.data.budgetVnd ? BigInt(parsed.data.budgetVnd) : null,
       organizationId: user.organizationId,
       status: "PUBLISHED",
+      attachmentPath,
+      attachmentName,
     },
   });
 

@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { requireRole, requireUser } from "@/lib/rbac";
+import { assertOrgScope, requireRole } from "@/lib/rbac";
 import { scoreNeedAgainstExpert, scoreNeedAgainstSupply } from "@/lib/matching";
+import { saveUploadedFile } from "@/lib/uploads";
 import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
 import type { MatchStage } from "@/lib/generated/prisma/enums";
@@ -35,6 +36,19 @@ export async function createNeedAction(
     return { error: parsed.error.issues[0]?.message ?? "Dữ liệu không hợp lệ" };
   }
 
+  let attachmentPath: string | undefined;
+  let attachmentName: string | undefined;
+  const attachment = formData.get("attachment");
+  if (attachment instanceof File && attachment.size > 0) {
+    try {
+      const saved = await saveUploadedFile(attachment, "needs");
+      attachmentPath = saved.path;
+      attachmentName = saved.name;
+    } catch (e) {
+      return { error: e instanceof Error ? e.message : "Không thể lưu tệp đính kèm." };
+    }
+  }
+
   await db.need.create({
     data: {
       title: parsed.data.title,
@@ -43,6 +57,8 @@ export async function createNeedAction(
       organizationId: user.organizationId,
       budgetVnd: parsed.data.budgetVnd ? BigInt(parsed.data.budgetVnd) : null,
       status: "PUBLISHED",
+      attachmentPath,
+      attachmentName,
     },
   });
 
@@ -96,9 +112,10 @@ export async function createSupplyAction(
 
 /** Cấu phần 05: chạy lại đề xuất ghép nối cho 1 nhu cầu (explainable scoring). */
 export async function generateMatchesAction(needId: string) {
-  await requireUser();
+  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
 
   const need = await db.need.findUniqueOrThrow({ where: { id: needId } });
+  assertOrgScope(user, need.organizationId);
 
   // Idempotent: drop previously auto-suggested matches that haven't progressed,
   // keep anything the user already acted on.
@@ -136,7 +153,13 @@ export async function generateMatchesAction(needId: string) {
 }
 
 export async function updateMatchStageAction(matchId: string, stage: MatchStage) {
-  const user = await requireUser();
+  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const existing = await db.match.findUniqueOrThrow({
+    where: { id: matchId },
+    include: { need: true },
+  });
+  assertOrgScope(user, existing.need.organizationId);
+
   const match = await db.match.update({ where: { id: matchId }, data: { stage } });
 
   await db.auditLog.create({

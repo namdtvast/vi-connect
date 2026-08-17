@@ -7,6 +7,7 @@ import { fieldLabel } from "@/lib/taxonomy";
 import { formatVnd } from "@/lib/utils";
 import { CreateChallengeForm } from "@/components/challenges/create-challenge-form";
 import { CHALLENGE_STATUS_LABEL } from "@/lib/challenge-labels";
+import { Paperclip } from "lucide-react";
 
 export default async function ChallengesPage() {
   const session = await auth();
@@ -60,9 +61,18 @@ export default async function ChallengesPage() {
                 <span>{c.hasBudget ? formatVnd(c.budgetVnd) : "Chưa có ngân sách"}</span>
                 <span>{c._count.solutions} giải pháp đã nộp</span>
               </div>
+              {c.attachmentPath && (
+                <a
+                  href={`/api/challenges/${c.id}/attachment`}
+                  className="text-sm text-brand hover:underline mt-2 inline-flex items-center gap-1"
+                >
+                  <Paperclip className="w-3.5 h-3.5" />
+                  {c.attachmentName ?? "Tệp đính kèm"}
+                </a>
+              )}
               <Link
                 href={`/dashboard/challenges/${c.id}`}
-                className="text-sm text-brand hover:underline mt-2 inline-block"
+                className="text-sm text-brand hover:underline mt-2 block"
               >
                 Xem chi tiết →
               </Link>

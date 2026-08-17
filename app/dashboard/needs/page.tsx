@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { fieldLabel } from "@/lib/taxonomy";
 import { CreateNeedForm } from "@/components/matching/create-need-form";
 import { formatVnd } from "@/lib/utils";
+import { Paperclip } from "lucide-react";
 
 export default async function NeedsPage() {
   const needs = await db.need.findMany({
@@ -50,9 +51,18 @@ export default async function NeedsPage() {
                   Ngân sách: {formatVnd(n.budgetVnd)}
                 </div>
               )}
+              {n.attachmentPath && (
+                <a
+                  href={`/api/needs/${n.id}/attachment`}
+                  className="text-sm text-brand hover:underline mt-2 inline-flex items-center gap-1"
+                >
+                  <Paperclip className="w-3.5 h-3.5" />
+                  {n.attachmentName ?? "Tệp đính kèm"}
+                </a>
+              )}
               <Link
                 href={`/dashboard/needs/${n.id}`}
-                className="text-sm text-brand hover:underline mt-2 inline-block"
+                className="text-sm text-brand hover:underline mt-2 block"
               >
                 Xem đề xuất ghép nối →
               </Link>

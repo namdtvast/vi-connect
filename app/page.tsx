@@ -22,7 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CountUp, Reveal, RotatingWords, StickyCTA } from "@/components/campaign/interactive";
 
 export const metadata = {
-  title: "VI CONNECT — Kết nối trí tuệ, Kiến tạo giá trị",
+  title: "VI CONNECT — Kết nối tri thức, Kiến tạo giá trị",
   description:
     "Nền tảng kết nối tri thức, công nghệ và nguồn lực đầu tư cho hệ sinh thái khoa học, công nghệ và đổi mới sáng tạo Việt Nam — vận hành trên Knowledge Graph với AI Matching giải thích được.",
 };
@@ -98,11 +98,19 @@ const STEPS = [
   },
   {
     step: "04",
+    label: "EXECUTE",
+    color: "var(--red)",
+    bg: "var(--red-light)",
+    title: "Dự án & hợp đồng",
+    desc: "Chuyển kết quả huy động thành dự án có mốc, sản phẩm bàn giao và hợp đồng theo dõi được.",
+  },
+  {
+    step: "05",
     label: "IMPACT",
     color: "var(--gold)",
     bg: "var(--gold-light)",
     title: "Đo lường tác động",
-    desc: "Theo dõi đến khi hợp đồng được ký, nhiệm vụ nghiệm thu, công nghệ chuyển giao và hiệu quả đo lường được.",
+    desc: "Theo dõi nhiệm vụ nghiệm thu, công nghệ chuyển giao và hiệu quả kinh tế - xã hội đo lường được.",
   },
 ];
 
@@ -221,13 +229,13 @@ export default function HomePage() {
           </span>
 
           <h1 className="mt-6 text-5xl sm:text-6xl md:text-7xl font-bold max-w-3xl leading-[1.02] tracking-tight">
-            Kết nối trí tuệ.{" "}
+            Kết nối tri thức.{" "}
             <span style={{ color: "var(--gold)" }}>Kiến tạo giá trị.</span>
           </h1>
           <p className="mt-6 text-white/85 max-w-xl text-lg leading-relaxed">
             VI CONNECT là nền tảng có trí tuệ, vận hành trên một Knowledge Graph sống,
-            kết nối và kích hoạt nguồn lực theo bốn bước Connect – Match – Mobilize –
-            Impact, với AI Matching giải thích được xuyên suốt.
+            kết nối và kích hoạt nguồn lực theo năm bước Connect – Match – Mobilize –
+            Execute – Impact, với AI Matching giải thích được xuyên suốt.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link href="/register">
@@ -481,12 +489,12 @@ export default function HomePage() {
               Cách VI CONNECT vận hành
             </p>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark">
-              Từ hồ sơ đến tác động, theo bốn bước rõ ràng
+              Từ hồ sơ đến tác động, theo năm bước rõ ràng
             </h2>
           </div>
         </Reveal>
-        <div className="relative mt-10 grid md:grid-cols-4 gap-5">
-          <div className="hidden md:block absolute top-[22px] left-[12.5%] right-[12.5%] h-px bg-border" aria-hidden="true" />
+        <div className="relative mt-10 grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          <div className="hidden lg:block absolute top-[22px] left-[10%] right-[10%] h-px bg-border" aria-hidden="true" />
           {STEPS.map((s, i) => (
             <Reveal key={s.step} delay={i * 80} className="relative">
               <div

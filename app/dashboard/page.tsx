@@ -9,6 +9,7 @@ export default async function DashboardHomePage() {
     verifiedExpertCount,
     expertCount,
     matches,
+    fundingSourceCount,
     agreementsSum,
     completedProjects,
     activeProjects,
@@ -19,6 +20,7 @@ export default async function DashboardHomePage() {
     db.expertProfile.count({ where: { verificationStatus: "VERIFIED" } }),
     db.expertProfile.count(),
     db.match.findMany({ select: { stage: true } }),
+    db.fundingSource.count(),
     db.agreement.aggregate({
       where: { status: { in: ["SIGNED", "COMPLETED"] } },
       _sum: { valueVnd: true },
@@ -50,12 +52,12 @@ export default async function DashboardHomePage() {
           Tổng quan điều hành (cấu phần 11 — rút gọn Giai đoạn 1)
         </h1>
         <p className="text-sm text-muted mt-1">
-          KPI theo bốn bước Connect – Match – Mobilize – Impact. AI Governance, Risk &amp;
-          Compliance, Forecasting là backlog Giai đoạn 2-3.
+          KPI theo năm bước Connect – Match – Mobilize – Execute – Impact. AI Governance,
+          Risk &amp; Compliance, Forecasting là backlog Giai đoạn 2-3.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
           label="CONNECT — Tổ chức & chuyên gia"
           value={`${orgCount} tổ chức`}
@@ -68,13 +70,18 @@ export default async function DashboardHomePage() {
         />
         <KpiCard
           label="MOBILIZE — Nguồn lực huy động"
-          value={formatVnd(agreementsSum._sum.valueVnd)}
-          sub="Tổng giá trị hợp đồng đã ký"
+          value={`${fundingSourceCount} nguồn lực`}
+          sub="Nguồn lực/tài trợ đã công bố trên nền tảng"
+        />
+        <KpiCard
+          label="EXECUTE — Dự án & hợp đồng"
+          value={`${activeProjects} dự án đang triển khai`}
+          sub={`Tổng giá trị hợp đồng đã ký: ${formatVnd(agreementsSum._sum.valueVnd)}`}
         />
         <KpiCard
           label="IMPACT — Kết quả"
           value={`${completedProjects} dự án hoàn thành`}
-          sub={`${activeProjects} đang triển khai · ${solutionCount} giải pháp được chọn`}
+          sub={`${solutionCount} giải pháp được chọn để triển khai`}
         />
       </div>
 

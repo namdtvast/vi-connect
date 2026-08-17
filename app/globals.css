@@ -21,6 +21,7 @@
   --gold: #f7c948; /* National Gold */
   --gold-light: #fbf1dc;
   --red: #d62828; /* Vietnam Red — VI wordmark, dùng tiết chế ngoài logo */
+  --red-light: #fbe4e4;
   --cyan: #00a6c8; /* Data Cyan — ring/tagline trên nền tối, KPI Match */
   --danger: #d1453b;
   --warning: #b8890a;
@@ -40,6 +41,8 @@
   --accent-dark: #7ff0b6;
   --accent-light: #10281c;
   --gold-light: #2b220f;
+  --red: #ef5350;
+  --red-light: #341616;
   --danger: #f2726b;
   --warning: #e3ac4a;
 }
@@ -61,6 +64,7 @@
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
   --color-red: var(--red);
+  --color-red-light: var(--red-light);
   --color-cyan: var(--cyan);
   --color-danger: var(--danger);
   --color-warning: var(--warning);

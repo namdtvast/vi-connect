@@ -1,23 +1,57 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/field";
 import { formatDateTime } from "@/lib/utils";
 
-const DISPLAY_LIMIT = 200;
+const PAGE_SIZE = 20;
 
-export default async function AuditLogPage() {
+function buildHref(page: number, query: string) {
+  const params = new URLSearchParams();
+  if (query) params.set("q", query);
+  if (page > 1) params.set("page", String(page));
+  const qs = params.toString();
+  return qs ? `/dashboard/audit-log?${qs}` : "/dashboard/audit-log";
+}
+
+export default async function AuditLogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
   const session = await auth();
   if (session?.user.role !== "VAST_ADMIN") redirect("/dashboard");
 
-  const [logs, total] = await Promise.all([
-    db.auditLog.findMany({
-      include: { user: { select: { name: true, email: true } } },
-      orderBy: { createdAt: "desc" },
-      take: DISPLAY_LIMIT,
-    }),
-    db.auditLog.count(),
-  ]);
+  const params = await searchParams;
+  const query = (params.q ?? "").trim();
+  const requestedPage = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+
+  const where = query
+    ? {
+        OR: [
+          { action: { contains: query, mode: "insensitive" as const } },
+          { entity: { contains: query, mode: "insensitive" as const } },
+          { entityId: { contains: query, mode: "insensitive" as const } },
+          { user: { name: { contains: query, mode: "insensitive" as const } } },
+          { user: { email: { contains: query, mode: "insensitive" as const } } },
+        ],
+      }
+    : {};
+
+  const total = await db.auditLog.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const page = Math.min(requestedPage, totalPages);
+
+  const logs = await db.auditLog.findMany({
+    where,
+    include: { user: { select: { name: true, email: true } } },
+    orderBy: { createdAt: "desc" },
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+  });
 
   return (
     <div className="space-y-6">
@@ -30,6 +64,26 @@ export default async function AuditLogPage() {
           trình phê duyệt — thuộc backlog Giai đoạn 2-3.
         </p>
       </div>
+
+      <form method="GET" className="flex gap-2">
+        <Input
+          type="search"
+          name="q"
+          defaultValue={query}
+          placeholder="Tìm theo hành động, đối tượng, người thực hiện..."
+          className="max-w-sm"
+        />
+        <Button type="submit" variant="outline">
+          Tìm kiếm
+        </Button>
+        {query && (
+          <Link href="/dashboard/audit-log">
+            <Button type="button" variant="ghost">
+              Xóa lọc
+            </Button>
+          </Link>
+        )}
+      </form>
 
       <Card>
         <CardContent className="p-0">
@@ -72,7 +126,9 @@ export default async function AuditLogPage() {
               {logs.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-6 text-center text-muted">
-                    Chưa có nhật ký nào.
+                    {query
+                      ? `Không tìm thấy nhật ký khớp "${query}".`
+                      : "Chưa có nhật ký nào."}
                   </td>
                 </tr>
               )}
@@ -81,12 +137,36 @@ export default async function AuditLogPage() {
         </CardContent>
       </Card>
 
-      {total > DISPLAY_LIMIT && (
-        <p className="text-xs text-muted">
-          Hiển thị {DISPLAY_LIMIT} bản ghi gần nhất trên tổng số {total}. Phân trang đầy
-          đủ thuộc backlog Giai đoạn 2.
-        </p>
-      )}
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-muted">
+          Trang {page}/{totalPages} · {total} bản ghi
+          {query ? ` khớp "${query}"` : ""}
+        </span>
+        <div className="flex gap-2">
+          {page > 1 ? (
+            <Link href={buildHref(page - 1, query)}>
+              <Button size="sm" variant="outline">
+                ← Trang trước
+              </Button>
+            </Link>
+          ) : (
+            <Button size="sm" variant="outline" disabled>
+              ← Trang trước
+            </Button>
+          )}
+          {page < totalPages ? (
+            <Link href={buildHref(page + 1, query)}>
+              <Button size="sm" variant="outline">
+                Trang sau →
+              </Button>
+            </Link>
+          ) : (
+            <Button size="sm" variant="outline" disabled>
+              Trang sau →
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -14,4 +14,4 @@ ISO 56001:2024 — Clause 9; ISO 56008:2024
 Dashboard, KPI, đo lường kết quả và tác động; phân tích xu hướng, dự báo và hỗ trợ ra quyết định.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

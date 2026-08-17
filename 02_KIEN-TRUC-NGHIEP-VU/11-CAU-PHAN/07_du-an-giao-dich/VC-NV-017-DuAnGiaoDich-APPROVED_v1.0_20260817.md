@@ -14,4 +14,4 @@ ISO 56001:2024 — Clause 8 Operation
 Quản lý vòng đời từ đề xuất, hợp đồng, thực hiện, mốc tiến độ, giải ngân, nghiệm thu đến kết thúc dự án/giao dịch.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

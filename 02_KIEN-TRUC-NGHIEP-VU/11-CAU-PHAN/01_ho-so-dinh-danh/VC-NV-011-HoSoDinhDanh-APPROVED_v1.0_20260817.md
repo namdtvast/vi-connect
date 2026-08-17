@@ -14,4 +14,4 @@ ISO 56001:2024 — Clause 7 Support
 Quản lý năng lực, nguồn lực, vai trò con người và thông tin hỗ trợ hệ thống quản lý đổi mới sáng tạo.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

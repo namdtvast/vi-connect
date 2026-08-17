@@ -14,4 +14,4 @@ ISO 56001:2024 — Clauses 6, 8; ISO 56007:2023
 Xác định nhu cầu, vấn đề, cơ hội và ý tưởng; chuẩn hóa đầu bài để đưa vào quy trình ghép nối và triển khai.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

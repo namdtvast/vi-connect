@@ -14,4 +14,4 @@ ISO 56003:2019 — Clauses 4–8
 Hình thành và quản lý quan hệ hợp tác, nhóm thực hiện, mạng lưới chuyên gia/tổ chức và tương tác đối tác đổi mới.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

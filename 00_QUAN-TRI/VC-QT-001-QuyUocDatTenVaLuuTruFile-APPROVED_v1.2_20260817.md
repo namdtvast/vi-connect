@@ -1,10 +1,10 @@
 # QUY ƯỚC ĐẶT TÊN VÀ LƯU TRỮ FILE VI CONNECT
 
 **Mã tài liệu:** VC-QT-001  
-**Phiên bản:** v1.0  
+**Phiên bản:** v1.2  
 **Ngày ban hành:** 2026-08-17  
 **Trạng thái:** Áp dụng  
-**Nơi lưu chuẩn:** `00_QUAN-TRI/VC-QT-001-QUY-UOC-DAT-TEN-VA-LUU-TRU-FILE-APPROVED_v1.0_20260817.md`
+**Nơi lưu chuẩn:** `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.2_20260817.md`
 
 ## 1. Mục đích
 
@@ -25,30 +25,32 @@ Quy định thống nhất cách đặt tên, lưu trữ, cập nhật, thay th�
 Tên file sử dụng mẫu:
 
 ```text
-VC-[NHOM]-[MA]-[TEN-NGAN]-[TRANG-THAI]_v[MAJOR.MINOR]_[YYYYMMDD].[ext]
+VC-[NHOM]-[MA]-[TenNganPascalCase]-[TRANG-THAI]_v[MAJOR.MINOR]_[YYYYMMDD].[ext]
 ```
 
 Trong đó:
 
 | Thành phần | Quy định | Ví dụ |
 |---|---|---|
-| `VC-` | Tiền tố bắt buộc của VI CONNECT | `VC-` |
-| `[NHOM]` | Nhóm tài liệu | `QT`, `DA`, `KT`, `DL`, `PL`, `TH`, `BC` |
+| `VC-` | Tiền tố bắt buộc của VI CONNECT, viết hoa, giữ nguyên | `VC-` |
+| `[NHOM]` | Mã nhóm tài liệu, viết hoa, giữ nguyên như Mục 4 | `QT`, `DA`, `KT`, `DL`, `PL`, `TH`, `BC` |
 | `[MA]` | Số định danh duy nhất, gồm 3 chữ số | `001` |
-| `[TEN-NGAN]` | Tên ngắn gọn, không dấu, dùng dấu gạch ngang | `THUYET-MINH-DE-AN` |
-| `[TRANG-THAI]` | Trạng thái quản lý | `DRAFT`, `REVIEW`, `APPROVED`, `REFERENCE`, `SUPERSEDED`, `WITHDRAWN` |
+| `[TenNganPascalCase]` | Tên ngắn gọn, không dấu, không khoảng trắng, viết liền theo kiểu PascalCase — chữ cái đầu mỗi từ viết hoa, không dùng gạch ngang/gạch dưới giữa các từ | `ThuyetMinhDeAn` |
+| `[TRANG-THAI]` | Trạng thái quản lý, viết hoa, đứng riêng sau dấu gạch ngang | `DRAFT`, `REVIEW`, `APPROVED`, `REFERENCE`, `SUPERSEDED`, `WITHDRAWN` |
 | `v[MAJOR.MINOR]` | Phiên bản tài liệu | `v1.0` |
 | `[YYYYMMDD]` | Ngày tạo hoặc ban hành phiên bản | `20260817` |
 | `[ext]` | Định dạng file | `docx`, `pdf`, `xlsx`, `md`, `svg` |
 
+**Quy tắc chữ hoa/thường:** `VC-`, mã nhóm `[NHOM]` và trạng thái `[TRANG-THAI]` luôn viết hoa, giữ nguyên như bảng ở Mục 4 và 4.1 — không hạ chữ thường. Tên thư mục cũng viết hoa-gạch ngang như quy ước sẵn có (ví dụ `00_QUAN-TRI/`, `11-CAU-PHAN/`). Riêng đoạn tên ngắn gọn `[TenNganPascalCase]` viết liền theo PascalCase, không dấu gạch ngang giữa các từ, để vừa ngắn gọn vừa dễ đọc. Ngoại lệ duy nhất là nhóm file theo thông lệ GitHub tại Mục 4.2, giữ nguyên cách viết hoa/thường quen thuộc của cộng đồng (`README.md`, `LICENSE`...).
+
 Ví dụ:
 
 ```text
-VC-DA-001-THUYET-MINH-DE-AN-DRAFT_v0.6_20260817.docx
-VC-DA-001-THUYET-MINH-DE-AN-APPROVED_v1.0_20260910.pdf
-VC-KT-003-KIEN-TRUC-DU-LIEU-APPROVED_v1.1_20261002.pdf
-VC-TH-002-LOGO-PRIMARY-APPROVED_v3.1_20260817.svg
-VC-PL-004-TO-KHAI-NHAN-HIEU-REVIEW_v0.9_20260817.docx
+VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx
+VC-DA-001-ThuyetMinhDeAn-APPROVED_v1.0_20260910.pdf
+VC-KT-003-KienTrucDuLieu-APPROVED_v1.1_20261002.pdf
+VC-TH-002-LogoPrimary-APPROVED_v3.1_20260817.svg
+VC-PL-004-ToKhaiNhanHieu-REVIEW_v0.9_20260817.docx
 ```
 
 ## 4. Mã nhóm tài liệu

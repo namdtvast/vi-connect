@@ -14,4 +14,4 @@ ISO 56001:2024 — Clauses 4, 5, 6, 10; ISO 9001; ISO/IEC 27001; ISO/IEC 27701
 Quản trị chính sách, chiến lược, mục tiêu, rủi ro, phân quyền, phê duyệt, tuân thủ pháp luật/ISO, audit và cải tiến.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

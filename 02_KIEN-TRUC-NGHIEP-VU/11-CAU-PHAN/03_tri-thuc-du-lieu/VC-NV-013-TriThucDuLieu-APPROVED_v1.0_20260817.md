@@ -14,4 +14,4 @@ ISO 56001:2024 — Clause 7 Support; ISO 56006:2021
 Quản lý tri thức, dữ liệu và strategic intelligence; thu thập, phân tích và cung cấp bằng chứng phục vụ quyết định đổi mới.
 
 ## Tham chiếu
-Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11-CAU-PHAN-DATA-ISO-APPROVED_v1.0_20260817.md)
+Baseline taxonomy: [`VC-NV-001`](../VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)

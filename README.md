@@ -2,8 +2,38 @@
 
 Nền tảng số kết nối tri thức, công nghệ và nguồn lực đầu tư — do Trung tâm Đổi mới
 sáng tạo công nghệ cao (HTIC) đề xuất, thuộc Viện Hàn lâm Khoa học và Công nghệ Việt
-Nam (VAST). Xây dựng theo `VI_CONNECT_TM_Dean.docx`, phạm vi rút gọn về đúng Giai đoạn
+Nam (VAST). Xây dựng theo tài liệu `VC-DA-001`, phạm vi rút gọn về đúng Giai đoạn
 1 (Năm 1) mà chính đề án tự quy định — xem `docs/SCOPE.md` để biết lý do.
+
+## Bắt đầu từ đâu
+
+- [Quy ước quản lý file](00_QUAN-TRI/VC-QT-001-QUY-UOC-DAT-TEN-VA-LUU-TRU-FILE-APPROVED_v1.0_20260817.md)
+- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DANH-MUC-TAI-LIEU-APPROVED_v1.0_20260817.md)
+- [Thuyết minh đề án hiện hành](01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-THUYET-MINH-DE-AN-DRAFT_v0.6_20260817.docx)
+- [Kiến trúc nghiệp vụ 11 cấu phần](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md)
+- [Kiến trúc ứng dụng](ARCHITECTURE.md)
+- [Phạm vi MVP](docs/SCOPE.md)
+- [Hướng dẫn đóng góp](CONTRIBUTING.md) và [chính sách bảo mật](SECURITY.md)
+- [Lịch sử thay đổi](CHANGELOG.md) và [manifest repo](repo-manifest.yaml)
+
+## Cấu trúc repo
+
+| Khu vực | Nội dung |
+|---|---|
+| `00_QUAN-TRI/` | Quy định, danh mục và báo cáo quản trị |
+| `01_CHIEN-LUOC-DE-AN/` | Nguồn, bản soạn thảo, thẩm định, phê duyệt và lịch sử đề án |
+| `02_KIEN-TRUC-NGHIEP-VU/` | Taxonomy và 11 cấu phần nghiệp vụ |
+| `03_KIEN-TRUC-KY-THUAT/` | Hệ thống, dữ liệu, API, bảo mật và hạ tầng |
+| `04_SAN-PHAM-THUONG-HIEU/` | Sản phẩm truyền thông và infographic quản lý như hồ sơ |
+| `05_QUAN-LY-DU-AN/` | Kế hoạch, rủi ro, biên bản, nghiệm thu và bàn giao |
+| `06_PHAP-LY-TUAN-THU/` | Pháp lý, dữ liệu cá nhân, sở hữu trí tuệ và hợp đồng |
+| `07_DU-LIEU-VA-DANH-MUC/` | Data dictionary, taxonomy và schema trao đổi |
+| `08_NGHIEN-CUU-THAM-KHAO/` | Nguồn nghiên cứu, tiêu chuẩn và đối sánh |
+| `09_PHAT-HANH/` | Manifest phát hành gắn với commit/tag Git |
+| `90_LUU-TRU/` | Tài liệu hết hiệu lực cần bảo toàn |
+| `99_TAM/` | File có thể tái tạo; không commit nội dung tạm |
+| `app/`, `components/`, `lib/`, `prisma/` | Mã nguồn và schema ứng dụng |
+| `tests/`, `.github/workflows/` | Kiểm thử và CI |
 
 ## Stack
 

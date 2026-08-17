@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+~$*
 *.pem
 
 # debug
@@ -43,3 +44,11 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# local disposable workspace; keep only its navigation file
+/99_TAM/*
+!/99_TAM/README.md
+
+# local Codex/Claude desktop configuration
+/.claude/launch.json
+/.claude/settings.local.json

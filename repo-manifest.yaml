@@ -2,6 +2,10 @@ schema: vi-connect/repo-manifest@1.0
 product: VI CONNECT
 description: Nền tảng kết nối tri thức, công nghệ và nguồn lực đầu tư
 stage: phase-1-mvp
+repository:
+  remote: https://github.com/namdtvast/vi-connect
+  default_branch: main
+  structure: application-and-governed-documents
 runtime:
   node: "22"
   framework: nextjs-16
@@ -10,7 +14,18 @@ agents:
   claude_code: CLAUDE.md
   codex: AGENTS.md
 quality_gate: npm run check
+documentation:
+  policy: 00_QUAN-TRI/VC-QT-001-QUY-UOC-DAT-TEN-VA-LUU-TRU-FILE-APPROVED_v1.0_20260817.md
+  registry: 00_QUAN-TRI/VC-QT-003-DANH-MUC-TAI-LIEU-APPROVED_v1.0_20260817.md
+  proposal_current: 01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-THUYET-MINH-DE-AN-DRAFT_v0.6_20260817.docx
+  business_architecture: 02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md
+  application_architecture: ARCHITECTURE.md
+  changelog: CHANGELOG.md
 integration:
   manlab_aios: contract-only
   reference_architecture: "4.1"
 data_classification: demo-only
+storage_policy:
+  single_source_of_truth: true
+  temporary_directory: 99_TAM
+  temporary_content_tracked: false

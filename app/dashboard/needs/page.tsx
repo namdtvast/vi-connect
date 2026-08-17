@@ -15,7 +15,7 @@ export default async function NeedsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">Nhu cầu (cấu phần 02)</h1>
+        <h1 className="text-xl font-semibold">Nhu cầu (cấu phần 04)</h1>
         <p className="text-sm text-muted mt-1">
           Nhu cầu công nghệ / chuyên gia / R&amp;D do doanh nghiệp, hội thành viên đăng.
         </p>

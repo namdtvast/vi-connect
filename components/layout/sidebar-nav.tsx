@@ -10,8 +10,8 @@ type NavGroup = { group: string; items: NavItem[] };
 
 // Sắp xếp theo kiến trúc nghiệp vụ 11 cấu phần VI-CONNECT (baseline
 // VC-NV-001, 02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN). Chỉ liệt kê các cấu phần
-// đã có trang triển khai ở Giai đoạn 1; cấu phần chưa xây (03, 06, 08, 09,
-// 10) chưa xuất hiện trong menu để tránh liên kết chết.
+// đã có trang triển khai thật ở Giai đoạn 1; cấu phần chưa xây (03, 08, 09)
+// chưa xuất hiện trong menu để tránh liên kết chết.
 const OVERVIEW: NavItem = { href: "/dashboard", label: "Tổng quan (KPI)" };
 
 const NAV_GROUPS: NavGroup[] = [
@@ -30,8 +30,22 @@ const NAV_GROUPS: NavGroup[] = [
     items: [{ href: "/dashboard/matches", label: "05 · Ghép nối (Matching)" }],
   },
   {
+    group: "MOBILIZE",
+    items: [{ href: "/dashboard/funding-sources", label: "06 · Nguồn lực & tài trợ" }],
+  },
+  {
     group: "EXECUTE",
     items: [{ href: "/dashboard/projects", label: "07 · Dự án & hợp đồng" }],
+  },
+  {
+    group: "GOVERN & IMPACT",
+    items: [
+      {
+        href: "/dashboard/audit-log",
+        label: "10 · Nhật ký hệ thống",
+        roles: ["VAST_ADMIN"],
+      },
+    ],
   },
 ];
 

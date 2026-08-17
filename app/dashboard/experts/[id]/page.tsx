@@ -90,7 +90,7 @@ export default async function ExpertDetailPage({
       {canManage && expert.verificationStatus !== "VERIFIED" && (
         <Card>
           <CardContent>
-            <div className="text-sm font-medium mb-2">Xác minh hồ sơ (cấu phần 1.4)</div>
+            <div className="text-sm font-medium mb-2">Xác minh hồ sơ (cấu phần 01)</div>
             <VerifyActions expertProfileId={expert.id} />
           </CardContent>
         </Card>

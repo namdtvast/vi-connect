@@ -60,25 +60,40 @@ khoản demo khác trong `prisma/seed.ts`.
 
 ## Trong scope Giai đoạn 1 (đã code thật, không mock)
 
-- **01+10 — Hồ sơ & tổ chức**: đăng ký/xác minh hồ sơ chuyên gia, danh mục hội thành
+Đánh số theo đúng baseline 11 cấu phần
+([VC-NV-001](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)):
+
+- **01 — Hồ sơ & Định danh**: đăng ký/xác minh hồ sơ chuyên gia, danh mục hội thành
   viên/tổ chức KH&CN, delegated administration theo tổ chức (`HOI_ADMIN` chỉ thấy dữ
   liệu của mình).
-- **02+06 — Cung cầu & Ngân hàng bài toán**: đăng nhu cầu/công nghệ, ngân hàng bài toán
-  đầy đủ vòng đời (tiếp nhận → công bố → nhận giải pháp → đánh giá).
-- **05 — AI Matching**: bộ chấm điểm giải thích được (`lib/matching.ts`) — không gọi
-  API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh nghiệm. Mỗi đề
-  xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật ở Giai đoạn 2 mà
-  không đổi schema hay giao diện gọi.
-- **04+09 — Dự án & hợp đồng**: chuyển match đã chấp nhận thành dự án, mốc thực hiện,
+- **02 — Công nghệ & Giải pháp**: đăng nguồn cung công nghệ/giải pháp kèm TRL.
+- **04 — Bài toán & Nhu cầu**: đăng nhu cầu, ngân hàng bài toán đầy đủ vòng đời (tiếp
+  nhận → công bố → nhận giải pháp → đánh giá).
+- **05 — Tìm kiếm & Ghép nối**: bộ chấm điểm giải thích được (`lib/matching.ts`) —
+  không gọi API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh
+  nghiệm. Mỗi đề xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật
+  ở Giai đoạn 2 mà không đổi schema hay giao diện gọi.
+- **06 — Nguồn lực & Tài trợ**: danh mục nguồn lực/chương trình tài trợ do tổ chức tự
+  công bố (`FundingSource`) — chỉ theo dõi danh mục, chưa có due diligence hay giải
+  ngân thật.
+- **07 — Dự án & Giao dịch**: chuyển match đã chấp nhận thành dự án, mốc thực hiện,
   hợp đồng/thỏa thuận (chỉ theo dõi trạng thái, chưa xử lý thanh toán thật).
-- **11 — KPI Dashboard**: Connect/Match/Mobilize/Impact tính trực tiếp từ dữ liệu sống,
-  Match Funnel theo đúng mô hình đề án.
+- **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `VAST_ADMIN`
+  xem được toàn bộ — chưa có màn hình chính sách/rủi ro/quy trình phê duyệt.
+- **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực
+  tiếp từ dữ liệu sống, Match Funnel theo đúng mô hình đề án.
 
 ## Backlog Giai đoạn 2-3 (chưa xây, theo đúng nguyên tắc "không mở rộng khi lớp trước
 chưa có giao dịch thật" của đề án)
 
-- Cấu phần 07, 08 đầy đủ: Funding & Investment Hub, due diligence, giải ngân thật.
-- AI Governance, Risk & Compliance, Forecasting dashboards (11.6-11.11).
+- **03 — Tri thức & Dữ liệu**: chưa có model/trang (Publication, Patent, Dataset...).
+- **06 đầy đủ**: Funding & Investment Hub, due diligence, giải ngân thật (hiện chỉ có
+  danh mục cơ bản — xem mục scope ở trên).
+- **08 — Thẩm định & Đánh giá**: chưa có model/trang riêng (review, due diligence,
+  evaluation có cấu trúc).
+- **09 — Cộng tác & Mạng lưới**: chưa có model/trang riêng (partnership, team, network).
+- **10 đầy đủ**: AI Governance, Risk & Compliance, Forecasting dashboards — hiện chỉ có
+  nhật ký audit thô, chưa có chính sách/quy trình phê duyệt/đánh giá rủi ro.
 - Tích hợp thật ORCID/OpenAlex/ROR/Techmart Vietnam (hiện chỉ có trường lưu định danh).
 - Semantic/embedding matching thật thay cho scoring rule-based.
 - Thanh toán/giải ngân thật, đối soát tài chính.

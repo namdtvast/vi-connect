@@ -19,7 +19,7 @@ export default async function OrganizationsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold">
-          Tổ chức &amp; Hội thành viên (cấu phần 10)
+          Tổ chức &amp; Hội thành viên (cấu phần 01)
         </h1>
         <p className="text-sm text-muted mt-1">
           Danh mục hội thành viên, tổ chức KH&amp;CN trực thuộc, doanh nghiệp và quỹ tham

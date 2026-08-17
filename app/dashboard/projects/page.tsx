@@ -18,7 +18,7 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">Dự án &amp; hợp đồng (cấu phần 04, 09)</h1>
+        <h1 className="text-xl font-semibold">Dự án &amp; hợp đồng (cấu phần 07)</h1>
         <p className="text-sm text-muted mt-1">
           Được tạo tự động khi một đề xuất ghép nối được chấp nhận và chuyển thành hợp
           tác thực tế.

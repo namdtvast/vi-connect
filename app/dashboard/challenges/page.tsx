@@ -23,7 +23,7 @@ export default async function ChallengesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">Ngân hàng bài toán (cấu phần 06)</h1>
+        <h1 className="text-xl font-semibold">Ngân hàng bài toán (cấu phần 04)</h1>
         <p className="text-sm text-muted mt-1">
           Challenge Bank quốc gia: nhu cầu thực tế được chuẩn hóa thành bài toán để cộng
           đồng chuyên gia cùng giải quyết.

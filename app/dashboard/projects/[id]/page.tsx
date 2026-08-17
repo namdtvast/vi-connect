@@ -46,7 +46,7 @@ export default async function ProjectDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Mốc thực hiện (cấu phần 9.3-9.4)</CardTitle>
+          <CardTitle>Mốc thực hiện (cấu phần 07)</CardTitle>
         </CardHeader>
         <CardContent>
           <MilestonePanel projectId={project.id} milestones={project.milestones} />
@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Hợp đồng / thỏa thuận (cấu phần 9.1-9.2)</CardTitle>
+          <CardTitle>Hợp đồng / thỏa thuận (cấu phần 07)</CardTitle>
         </CardHeader>
         <CardContent>
           <AgreementPanel projectId={project.id} agreement={project.agreement} />

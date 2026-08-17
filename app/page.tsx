@@ -488,7 +488,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold text-brand uppercase tracking-wide">
               Cách VI CONNECT vận hành
             </p>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark">
+            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark text-balance">
               Từ hồ sơ đến tác động, theo năm bước rõ ràng
             </h2>
           </div>
@@ -518,7 +518,7 @@ export default function HomePage() {
         <Reveal>
           <div className="max-w-2xl">
             <p className="text-sm font-semibold text-brand uppercase tracking-wide">Dành cho ai</p>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark">
+            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark text-balance">
               Bốn nhóm đối tượng, một mạng lưới chung
             </h2>
           </div>
@@ -570,7 +570,7 @@ export default function HomePage() {
       <section className="bg-background">
         <Reveal>
           <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-brand-dark">
+            <h2 className="text-2xl md:text-3xl font-bold text-brand-dark text-balance">
               Sẵn sàng kết nối với hệ sinh thái khoa học công nghệ Việt Nam?
             </h2>
             <p className="mt-3 text-muted max-w-xl mx-auto">

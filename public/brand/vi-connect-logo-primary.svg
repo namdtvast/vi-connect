@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
-    <rect width="100%" height="100%" fill="#FFFFFF"/>
     <g transform="translate(18,8) scale(.47)">
       <!-- C = Connect, a circular open ecosystem surrounding VI = Viet Nam -->
       <path d="M465 145 A210 210 0 1 0 465 455" fill="none" stroke="#0067B9" stroke-width="58" stroke-linecap="round"/>
@@ -11,4 +10,4 @@
     </g>
       <text x="385" y="146" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="700" letter-spacing="1" fill="#D62828">VI</text>
       <text x="488" y="146" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="700" letter-spacing="1" fill="#092B4C">CONNECT</text>
-      <text x="389" y="198" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="2.4" fill="#5D7083">VIỆT NAM · KẾT NỐI TRI THỨC VÀ CÔNG NGHỆ</text></svg>
+      <text x="389" y="202" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="3.1" fill="#5D7083">VIỆT NAM · KẾT NỐI TRI THỨC VÀ CÔNG NGHỆ</text></svg>

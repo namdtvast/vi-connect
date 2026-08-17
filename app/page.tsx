@@ -180,7 +180,7 @@ export default function HomePage() {
       <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Logo className="h-11 w-auto" />
+            <Logo className="h-14 w-auto md:h-16" />
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm text-muted">
             <a href="#khac-biet" className="hover:text-foreground transition-colors">Khác biệt</a>

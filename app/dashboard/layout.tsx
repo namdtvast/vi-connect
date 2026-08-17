@@ -21,7 +21,7 @@ export default async function DashboardLayout({
       <div className="flex-1 flex">
         <aside className="w-64 shrink-0 border-r border-border bg-surface p-4 flex flex-col">
           <div className="flex items-center justify-between mb-6 px-1">
-            <Logo className="h-8 w-auto" />
+            <Logo className="h-12 w-auto" />
             <Link
               href="/"
               title="Về trang chủ"

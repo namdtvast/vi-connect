@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { DemoBanner } from "@/components/demo-banner";
+import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountUp, Reveal, RotatingWords, StickyCTA } from "@/components/campaign/interactive";
@@ -178,29 +179,8 @@ export default function HomePage() {
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <svg viewBox="0 0 40 40" className="w-7 h-7" aria-hidden="true">
-              <path
-                d="M27.3 8.5 A11 11 0 1 0 27.3 24.5"
-                fill="none"
-                stroke="var(--brand)"
-                strokeWidth="3.2"
-                strokeLinecap="round"
-                transform="translate(3 3.5) scale(0.85)"
-              />
-              <circle cx="26.5" cy="10.7" r="1.4" fill="var(--gold)" transform="translate(3 3.5) scale(0.85)" />
-              <circle cx="26.5" cy="22.3" r="1.4" fill="var(--accent)" transform="translate(3 3.5) scale(0.85)" />
-              <path
-                d="M9 12 L15.5 22 L21 12"
-                fill="none"
-                stroke="var(--red)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                transform="translate(3 3.5) scale(0.85)"
-              />
-            </svg>
-            <span className="font-semibold text-brand-dark tracking-tight">VI CONNECT</span>
+          <Link href="/" className="flex items-center">
+            <Logo className="h-11 w-auto" />
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm text-muted">
             <a href="#khac-biet" className="hover:text-foreground transition-colors">Khác biệt</a>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { Logo } from "@/components/brand/logo";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { DemoBanner } from "@/components/demo-banner";
@@ -20,7 +21,7 @@ export default async function DashboardLayout({
       <div className="flex-1 flex">
         <aside className="w-64 shrink-0 border-r border-border bg-surface p-4 flex flex-col">
           <div className="flex items-center justify-between mb-6 px-1">
-            <div className="font-semibold text-brand">VI CONNECT</div>
+            <Logo className="h-8 w-auto" />
             <Link
               href="/"
               title="Về trang chủ"

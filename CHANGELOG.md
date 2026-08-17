@@ -14,10 +14,20 @@ Các thay đổi đáng chú ý của VI CONNECT được ghi tại đây. Phiê
 - Bổ sung thiết kế phân quyền `VC-KT-002` (role, permission, data scope, ma trận
   quyền và luồng kiểm tra tại server cho Giai đoạn 1), kèm đối chiếu với mô hình
   multi-tenant architecture phổ biến để xác nhận không áp dụng cô lập dữ liệu
-  theo tenant.
+  theo tenant; bổ sung scope `PARTY` cho domain EXECUTE (một `Project` bắc cầu
+  2 tổ chức) và ghi nhận thêm các khoảng trống đối chiếu mã nguồn ở Phụ lục B.
+- Lưu tài liệu tham khảo `VC-TK-004` (kiến trúc multi-tenant đích do một phiên
+  Codex khác đề xuất, tự nhận mã `VC-KT-002`/`APPROVED` không hợp lệ) dưới trạng
+  thái `REFERENCE`, không thay thế `VC-KT-002` hiện hành, kèm ghi chú các điểm
+  mâu thuẫn với `AGENTS.md`/`docs/SCOPE.md`.
 
 ### Changed
 
+- Viết lại `VC-KT-002` thành mô hình phân quyền chung cho toàn nền tảng VI CONNECT
+  (bỏ khung "Giai đoạn 1"): tách rõ mô hình kiến trúc tổng quát (Mục 3-9, có tầng
+  `Membership`/`Tenant` dự phòng cho mở rộng) khỏi ma trận permission đang bật
+  (Mục 7, 13); đổi tên role `VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN` trong
+  tài liệu (chưa áp dụng vào mã nguồn, xem Phụ lục B mục B11).
 - Chuẩn hoá tên tài liệu bằng tiền tố `VC-`, mã nhóm, trạng thái, phiên bản và ngày.
 - Chuyển sơ đồ hạ tầng CNTT sang nhóm kiến trúc kỹ thuật với mã `VC-KT-001`.
 - Chuyển mục lục 11 cấu phần về `README.md` không phiên bản hoá.

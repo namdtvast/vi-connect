@@ -1,4 +1,4 @@
-# THIẾT KẾ PHÂN QUYỀN VI CONNECT — GIAI ĐOẠN 1
+# THIẾT KẾ PHÂN QUYỀN VI CONNECT
 
 **Mã tài liệu:** VC-KT-002
 **Phiên bản:** v0.1
@@ -8,25 +8,47 @@
 
 ## 1. Mục đích & phạm vi
 
-Tài liệu này chốt **mô hình phân quyền chính thức** cho VI CONNECT Giai đoạn 1: danh
-mục Role, Permission (`resource.action`), Data Scope, ma trận Role × Permission ×
-Scope, luồng kiểm tra quyền tại server, và ranh giới rõ ràng với các cấu phần chưa
-được xây (giải ngân, đầu tư, multi-tenant SaaS thật...).
+Tài liệu này chốt **mô hình phân quyền chung cho toàn bộ nền tảng VI CONNECT** —
+không viết riêng cho một giai đoạn triển khai, để khi hệ thống mở rộng (thêm cấu
+phần, thêm loại tổ chức, thêm tenant...) **không phải thiết kế lại** Role/
+Permission/Scope từ đầu.
 
-Phạm vi áp dụng: toàn bộ route handler và server action dưới `app/` và `lib/actions/`,
-lấy `lib/domain/access-control.ts` và `lib/rbac.ts` làm nơi hiện thực hoá duy nhất.
-Không thay đổi `prisma/schema.prisma` ở phiên bản v0.1 này ngoài các bổ sung nêu ở
-Mục 14; đây là tài liệu thiết kế, việc code hoá thực hiện ở các PR riêng sau khi
-tài liệu được duyệt (`APPROVED`).
+Tài liệu tách rõ hai lớp, để không nhầm "mô hình tổng quát" với "những gì đang
+được phép chạy":
+
+- **Mô hình kiến trúc** (Mục 3-9): tổng quát, dùng cho toàn bộ vòng đời VI
+  CONNECT. Tham khảo hướng tiếp cận multi-tenant/multi-membership ở `VC-TK-004`,
+  nhưng chỉ giữ lại phần đã kiểm chứng khớp với đặc thù VI CONNECT — xem Mục 4
+  (Tenant/Membership) và Mục 16 (đối chiếu mô hình multi-tenant phổ biến).
+- **Ma trận permission đang bật** (Mục 7, Phụ lục B): chỉ liệt kê `resource.action`
+  có nghiệp vụ và mã nguồn thật tại thời điểm viết tài liệu. Bật thêm permission
+  cho cấu phần mới (VD: Mobilize/Funding Hub) là **thêm dòng vào ma trận**, không
+  đổi cấu trúc Role/Permission/Scope — nhưng việc bật permission nào, khi nào, vẫn
+  do `AGENTS.md` và quyết định nghiệp vụ của đề án quyết định (Mục 2, Mục 13).
+
+Phạm vi áp dụng: toàn bộ route handler và server action dưới `app/` và
+`lib/actions/`, lấy `lib/domain/access-control.ts` và `lib/rbac.ts` làm nơi hiện
+thực hoá duy nhất. Không thay đổi `prisma/schema.prisma` trong bản này ngoài các
+bổ sung nêu ở Mục 14; đây là tài liệu thiết kế, việc code hoá thực hiện ở các PR
+riêng sau khi tài liệu được duyệt (`APPROVED`).
 
 ## 2. Căn cứ
 
-- Yêu cầu phân quyền gốc (58 mục) do chủ đề án cung cấp — kiến trúc IAM đầy đủ cho nền
-  tảng multi-tenant SaaS 5 năm.
-- `AGENTS.md`: *"MVP Giai đoạn 1; không tự mở rộng sang giải ngân, đầu tư hoặc AI tự
-  quyết định."*
-- `docs/SCOPE.md`: *"ưu tiên giới hạn mà chính tài liệu nguồn (đề án) đặt ra, thay vì
-  quy mô lớn nhất mà yêu cầu ban đầu ngụ ý."*
+- Yêu cầu phân quyền gốc (58 mục) do chủ đề án cung cấp — kiến trúc IAM đầy đủ cho
+  nền tảng multi-tenant SaaS.
+- `VC-TK-004` (REFERENCE, chưa phê duyệt) — kiến trúc multi-tenant/multi-membership
+  đầy đủ do một phiên Codex khác đề xuất; dùng làm nguồn ý tưởng cho Mục 4, 6, 7
+  của tài liệu này, nhưng đã bỏ phần mâu thuẫn với `AGENTS.md` (permission liên
+  quan giải ngân/đầu tư) và phần chưa đối chiếu được với mã nguồn thật.
+- `AGENTS.md`: *"không tự mở rộng sang giải ngân, đầu tư hoặc AI tự quyết định."*
+  Đây là giới hạn về **những gì được phép code hoá và bật tại một thời điểm cho
+  trước**, độc lập với việc mô hình phân quyền có tổng quát hay không. Tài liệu
+  này tuân thủ bằng cách: mô hình đủ tổng quát để thêm permission cho Funding/
+  Investment sau này (chỉ thêm dòng vào Mục 7), nhưng **không bật** các permission
+  đó trong ma trận hiện hành cho tới khi `AGENTS.md`/đề án cho phép — xem Mục 13.
+- `docs/SCOPE.md`: *"ưu tiên giới hạn mà chính tài liệu nguồn (đề án) đặt ra, thay
+  vì quy mô lớn nhất mà yêu cầu ban đầu ngụ ý."* Áp dụng cho **thứ tự code hoá và
+  permission được bật**, không giới hạn hình dạng của mô hình kiến trúc.
 - `ARCHITECTURE.md`: *"Kiểm tra xác thực/phân quyền ở server; giao diện chỉ hỗ trợ
   trải nghiệm người dùng."*
 - Mã nguồn hiện có: `prisma/schema.prisma`, `lib/domain/access-control.ts`,
@@ -34,55 +56,83 @@ tài liệu được duyệt (`APPROVED`).
 
 ## 3. Nguyên tắc thiết kế
 
-1. Backend là nơi duy nhất quyết định `ALLOW/DENY`; ẩn nút trên giao diện chỉ là gợi ý
-   UX, không phải kiểm soát.
-2. Permission đặt tên dạng `resource.action`, không hard-code theo tên role rải rác
-   trong controller/action.
+1. Backend là nơi duy nhất quyết định `ALLOW/DENY`; ẩn nút trên giao diện chỉ là
+   gợi ý UX, không phải kiểm soát.
+2. Permission đặt tên dạng `resource.action`, không hard-code theo tên role rải
+   rác trong controller/action.
 3. Permission và Data Scope là hai trục độc lập: có quyền `need.publish` không có
    nghĩa được publish `Need` của tổ chức khác — scope quyết định phạm vi dữ liệu.
-4. Không tin `organizationId` do client gửi trong body/query/header; tổ chức hiện tại
-   luôn lấy từ `session.user.organizationId` (JWT đã xác thực).
-5. Không hard-delete tài khoản đã có lịch sử nghiệp vụ; dùng cờ trạng thái.
+4. Không tin `organizationId`/`tenantId` do client gửi trong body/query/header;
+   ngữ cảnh tổ chức/tenant hiện tại luôn lấy từ `session` đã xác thực (JWT).
+5. Không hard-delete tài khoản hoặc tổ chức đã có lịch sử nghiệp vụ; dùng cờ
+   trạng thái (`Status`, `DeletedAt`).
 6. Mọi thay đổi quyền, xác minh, phê duyệt phải ghi `AuditLog`.
-7. Chỉ xây phần có nghiệp vụ thật đang chạy trong Giai đoạn 1 (5 domain A-E rút gọn);
-   không dựng khung ("engine") tổng quát cho các trường hợp chưa có dữ liệu thật.
+7. Chỉ **bật** permission cho nghiệp vụ có mã nguồn thật đang chạy; mô hình phải
+   đủ tổng quát để bật thêm mà không tái cấu trúc, nhưng không tự ý bật trước khi
+   nghiệp vụ/mã nguồn tương ứng tồn tại.
+8. Không dựng "authorization engine" tổng quát hoá quá mức khi số loại resource
+   còn nhỏ — dùng hàm scope-check thuần (`assertOrgScope`/`assertPartyScope`),
+   chỉ nâng cấp lên bảng cấu hình (`RolePermissions` trong DB) khi số role/
+   permission thực tế đủ lớn để việc sửa code mỗi lần đổi quyền trở nên bất tiện.
 
 ## 4. Mô hình đối tượng phân quyền
 
-Mô hình gốc 8 tầng (`User → Membership → Tenant → Org/Unit → Role → Permission →
-Scope → Resource`) được **rút gọn còn 5 tầng**, khớp với schema hiện tại (`User` có
-đúng 1 `organizationId`, không có bảng `Membership`/`Tenant` riêng):
+Mô hình chung, không giới hạn theo giai đoạn triển khai (tham khảo cấu trúc ở
+`VC-TK-004`, giữ lại phần khớp với đặc thù VI CONNECT):
 
 ```text
-User (role toàn cục, organizationId 1-1, status)
+User
   ↓
-Role  (VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER)
+Membership   (quan hệ User ↔ Organization, mang Role riêng theo từng nơi)
+  ↓
+Role
   ↓
 Permission ("resource.action")
   ↓
-Data Scope (OWN | ORGANIZATION | PLATFORM | PLATFORM chỉ-PUBLISHED)
+Data Scope (OWN | ORGANIZATION | PARTY | PLATFORM | PLATFORM chỉ-PUBLISHED)
   ↓
 Resource (Organization, ExpertProfile, Need, Supply, Challenge, Solution,
-          Match, Project, Milestone, Deliverable, Agreement, FundingSource)
+          Match, Project, Milestone, Deliverable, Agreement, FundingSource, ...)
 ```
 
-`Organization` giữ vai trò tương đương "tenant nghiệp vụ" nhưng **không cô lập dữ
-liệu chéo tổ chức** — vì tính năng lõi (AI Matching) buộc phải đọc `Need` của tổ chức
-A khớp với `Supply` của tổ chức B. Đây là khác biệt chủ đích so với mô hình
-"DENY CROSS-TENANT mặc định" trong yêu cầu gốc (xem Mục 13, điểm 1).
+**Trạng thái hiện tại của tầng Membership:** schema hiện có (`User.organizationId`
+1-1) là **trường hợp đơn giản hoá** của mô hình trên — mỗi `User` có đúng 1
+Membership ngầm định, không có bảng `Membership` riêng. Khi nghiệp vụ thật sự cần
+một người thuộc nhiều tổ chức với vai trò khác nhau, bổ sung bảng `Membership`
+(n-n giữa `User` và `Organization`, mang `Role`) — Role/Permission/Scope ở Mục 5-7
+**không cần đổi cấu trúc**, chỉ đổi nơi lấy `organizationId`/`role`: từ
+`user.organizationId` sang `currentMembership.organizationId`.
 
-## 5. Danh mục Role (giữ nguyên enum `Role` hiện có, không thêm role mới)
+**Trạng thái hiện tại của tầng Tenant:** VI CONNECT vận hành như **một tenant duy
+nhất** — một nền tảng do VAST/HTIC vận hành cho nhiều tổ chức tham gia — nên tầng
+`Tenant` trong mô hình tổng quát hiện **trùng với chính VI CONNECT** và không xuất
+hiện như một entity riêng trong schema. `Organization` là thực thể nghiệp vụ bên
+trong tenant đó, **không phải một tenant độc lập** — đây là lý do tính năng lõi
+(AI Matching) được phép đọc `Need`/`Supply` xuyên `Organization` (xem Mục 8, 16).
+Nếu sau này VI CONNECT vận hành nhiều tenant tách biệt thật sự (VD: triển khai
+white-label riêng cho một đơn vị khác), thêm 1 tầng `Tenant` phía trên
+`Organization` và đổi scope `PLATFORM` thành `TENANT` — không cần đổi cấu trúc
+Role/Permission bên dưới.
+
+## 5. Danh mục Role
 
 | Role | Mô tả | Gắn với |
 |---|---|---|
-| `VAST_ADMIN` | Quản trị toàn nền tảng | Không giới hạn tổ chức |
-| `HOI_ADMIN` | Quản trị được ủy quyền (delegated admin) của 1 tổ chức | `organizationId` |
+| `SUPERADMIN` *(trước đây `VAST_ADMIN`)* | Quản trị toàn nền tảng | Không giới hạn tổ chức |
+| `ADMIN` *(trước đây `HOI_ADMIN`)* | Quản trị được ủy quyền (delegated admin) của 1 tổ chức | `organizationId` (qua Membership) |
 | `EXPERT` | Chuyên gia — cá nhân có hồ sơ năng lực | `organizationId` (đơn vị chủ quản) |
 | `ENTERPRISE` | Đại diện tổ chức cầu (doanh nghiệp/quỹ đầu tư) đăng nhu cầu/bài toán | `organizationId` |
 | `VIEWER` | Chỉ xem dữ liệu công khai/đã publish | Không bắt buộc |
 
-Không tách `SuperAdmin/SecurityAdmin/DataAdmin/Auditor/SupportAdmin` như yêu cầu gốc
-§3.1 — vượt nhu cầu vận hành pilot 1 năm (xem Mục 13, điểm 4).
+Trong toàn tài liệu dùng tên role mới (`SUPERADMIN`/`ADMIN`) thay cho tên cũ
+(`VAST_ADMIN`/`HOI_ADMIN`). Khi trích nguyên văn đoạn code hiện tại (chưa đổi
+tên), giữ nguyên định danh cũ trong dấu backtick để khớp mã nguồn thật — xem
+Phụ lục B, mục B11 về việc đổi tên trong Prisma enum.
+
+Không tách `SecurityAdmin/DataAdmin/Auditor/SupportAdmin` như yêu cầu gốc §3.1
+hay `VC-TK-004` Mục 40 — số lượng vai trò nền tảng chỉ nên tăng khi có nhu cầu
+vận hành thật (đội ngũ quản trị chuyên trách riêng cho bảo mật/dữ liệu/audit);
+Mục 3, điểm 8 đã cho phép thêm role mới bất cứ lúc nào mà không đổi cấu trúc.
 
 ## 6. Data Scope
 
@@ -90,24 +140,35 @@ Không tách `SuperAdmin/SecurityAdmin/DataAdmin/Auditor/SupportAdmin` như yêu
 |---|---|
 | `OWN` | Chỉ bản ghi user tự tạo/sở hữu (VD: `ExpertProfile` của chính mình) |
 | `ORGANIZATION` | Mọi bản ghi thuộc `organizationId` của user |
-| `PLATFORM` | Toàn hệ thống (chỉ `VAST_ADMIN`) |
+| `PARTY` | Bản ghi thuộc domain EXECUTE (`Project/Milestone/Deliverable/Agreement`) mà tổ chức của user là **một trong các bên** tham gia `Match` gốc (bên `Need` hoặc bên `Supply`/`ExpertProfile`) — xem Mục 7.3 |
+| `PLATFORM` | Toàn hệ thống (chỉ `SUPERADMIN`) — tương đương scope `TENANT` khi VI CONNECT vận hành nhiều tenant (Mục 4) |
 | `PLATFORM*` | Toàn hệ thống nhưng **chỉ bản ghi ở trạng thái công khai** (`PUBLISHED`) — dùng cho hành vi đọc kiểu marketplace |
 
-Không dùng `TEAM/DEPARTMENT/UNIT/PROJECT/NETWORK/CUSTOM` như yêu cầu gốc §6 — schema
-hiện tại không có đơn vị/phòng ban dưới `Organization`, và quyền theo dự án cụ thể
-chưa có nhu cầu nghiệp vụ (mọi thành viên tổ chức chủ quản của một `Match` đều được
-xem `Project` phát sinh từ `Match` đó — xem Mục 9).
+Không dùng `TEAM/DEPARTMENT/UNIT/NETWORK/CUSTOM` như yêu cầu gốc §6 — schema hiện
+tại không có đơn vị/phòng ban dưới `Organization`; bổ sung khi nghiệp vụ thật cần
+(VD: một tổ chức lớn cần phân quyền tới cấp phòng ban), không cần đổi cấu trúc
+scope hiện có, chỉ thêm giá trị mới vào enum này.
+
+Có bổ sung **`PARTY`** — khái niệm không có trong yêu cầu gốc 58 mục, phát sinh
+từ đặc thù VI CONNECT: một `Match`/`Project` luôn bắc cầu **giữa 2 tổ chức** (bên
+đăng `Need` và bên cung `Supply`/chuyên gia), nên `ORGANIZATION` (so khớp đúng 1
+org) không đủ để cấp quyền đúng cho cả hai bên đang hợp tác — xem phân tích chi
+tiết ở Mục 7.3.
 
 ## 7. Ma trận Role × Permission × Scope
 
 Ký hiệu: `P` = PLATFORM · `P*` = PLATFORM chỉ-PUBLISHED · `O` = ORGANIZATION ·
 `W` = OWN · `—` = không có quyền.
 
+Ma trận dưới đây là **những permission đang được bật** vì đã có nghiệp vụ/mã
+nguồn tương ứng. Thêm permission mới cho cấu phần chưa xây chỉ là thêm dòng —
+xem Mục 13 về điều kiện bật thêm.
+
 ### 7.1 CONNECT — tổ chức, tài khoản, hồ sơ chuyên gia
 
-| Permission | VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 |---|---|---|---|---|---|
-| `organization.view` | P | O | O | O | P* |
+| `organization.view` | P | O + P* | O + P* | O + P* | P* |
 | `organization.create` | P | — | — | — | — |
 | `organization.update` (hồ sơ tổ chức) | P | O | — | — | — |
 | `organization.manage` (kích hoạt/tạm ngưng) | P | — | — | — | — |
@@ -119,12 +180,15 @@ Ký hiệu: `P` = PLATFORM · `P*` = PLATFORM chỉ-PUBLISHED · `O` = ORGANIZAT
 | `expertProfile.update` | P | — | W | — | — |
 | `expertProfile.verify` | P | O | — | — | — |
 
-¹ `HOI_ADMIN` chỉ được `user.disable` với tài khoản thuộc chính tổ chức mình — hệ quả
-của mô hình 1 user–1 org hiện tại (xem giới hạn ở Mục 13, điểm 3).
+¹ `ADMIN` chỉ được `user.disable` với tài khoản thuộc chính tổ chức mình — hệ quả
+của mô hình 1 user–1 org hiện tại (Mục 4). Khi bổ sung bảng `Membership`, quyền
+này tự nhiên tách thành "vô hiệu hoá Membership tại tổ chức mình" (không ảnh
+hưởng Membership ở tổ chức khác), khớp §23 của yêu cầu gốc mà không cần đổi Mục
+5-7.
 
 ### 7.2 DISCOVER & MATCH — cung cầu, bài toán, ghép nối
 
-| Permission | VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 |---|---|---|---|---|---|
 | `need.view` | P | O + P* | P* | O + P* | P* |
 | `need.create` / `.update` / `.publish` / `.close` | P | O | — | O | — |
@@ -143,62 +207,84 @@ của mô hình 1 user–1 org hiện tại (xem giới hạn ở Mục 13, đi�
 ² `EXPERT` có quyền `supply.*` ở scope `OWN` theo **thiết kế mục tiêu** khớp mô tả
 README ("01+10 — Hồ sơ & tổ chức... đăng nhu cầu/công nghệ"), nhưng mã hiện tại
 (`createSupplyAction` trong `lib/actions/matching.ts:65`) chỉ cho `VAST_ADMIN,
-HOI_ADMIN` — đây là khoảng trống cần xác nhận nghiệp vụ trước khi code hoá, ghi ở
-Phụ lục B.
+HOI_ADMIN` (= `SUPERADMIN, ADMIN` sau khi đổi tên) — đây là khoảng trống cần xác
+nhận nghiệp vụ trước khi code hoá, ghi ở Phụ lục B.
 
 ### 7.3 EXECUTE — dự án, hợp đồng
 
-| Permission | VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER |
+`Project` phát sinh từ `Match`, mà `Match` liên kết `Need` (thuộc 1 tổ chức) với
+`Supply` hoặc `ExpertProfile` (thuộc 1 tổ chức khác — bên cung). Vì vậy quyền trên
+`Project` và các resource con (`Milestone`, `Deliverable`, `Agreement`) dùng scope
+`PARTY` thay vì `ORGANIZATION` đơn: tổ chức của user chỉ cần là **một trong hai
+bên** liên quan đến `Match` gốc, không nhất thiết là bên tạo `Need`.
+
+| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 |---|---|---|---|---|---|
-| `project.view` | P | O | W (dự án phát sinh từ match của mình) | O | — |
-| `project.update` | P | O | — | O | — |
-| `milestone.create` / `.updateStatus` | P | O | — | O | — |
-| `deliverable.view` | P | O | W | O | — |
-| `deliverable.accept` | P | O | — | O | — |
-| `agreement.view` | P | O | W | O | — |
-| `agreement.create` / `.sign` | P | O | — | O | — |
+| `project.view` | P | PARTY³ | W (dự án phát sinh từ match của mình) | PARTY³ | — |
+| `project.update` | P | PARTY³ | — | PARTY³ | — |
+| `milestone.create` / `.updateStatus` | P | PARTY³ | — | PARTY³ | — |
+| `deliverable.view` | P | PARTY³ | W | PARTY³ | — |
+| `deliverable.accept` | P | PARTY³ | — | PARTY³ | — |
+| `agreement.view` | P | PARTY³ | W | PARTY³ | — |
+| `agreement.create` / `.sign` | P | PARTY³ | — | PARTY³ | — |
+
+³ `PARTY` = `user.organizationId` nằm trong tập
+`{match.need.organizationId, match.supply?.organizationId,
+match.expertProfile?.organization.id}` của `Match` gắn với `Project` (qua
+`Project.matchId`). Việc này đòi hỏi một hàm mới `assertPartyScope(user, project)`
+— load `Project` kèm `match.need`, `match.supply`, `match.expertProfile.organization`
+rồi kiểm tra `user.organizationId` có thuộc tập trên không — khác với
+`assertOrgScope` hiện tại (chỉ so khớp đúng 1 giá trị `organizationId`). Hàm này
+chưa tồn tại trong `lib/domain/access-control.ts`, bổ sung ở Mục 14.
 
 ### 7.4 MOBILIZE — chỉ phần stub đã có (không phải Funding Hub thật)
 
-| Permission | VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 |---|---|---|---|---|---|
 | `fundingSource.view` | P | O | — | O | — |
 | `fundingSource.create` (chỉ ghi chú, không phê duyệt/giải ngân) | P | O | — | O | — |
 
-Không có `funding.review`, `funding.approve`, `investment.decision`,
-`due_diligence.view` — bị loại theo Mục 13, điểm 2.
+Không bật `funding.review`, `funding.approve`, `investment.decision`,
+`due_diligence.view` — không phải vì mô hình không hỗ trợ (mô hình `resource.action`
++ scope ở Mục 5-6 đủ tổng quát để thêm các permission này), mà vì `AGENTS.md`
+hiện cấm mở rộng mã nguồn sang giải ngân/đầu tư (Mục 2, Mục 13, điểm 1). Khi đề
+án phê duyệt xây Funding Hub thật, thêm các dòng này vào bảng trên với scope phù
+hợp (nhiều khả năng `ORGANIZATION` cho review nội bộ + `PARTY`/quy trình
+Maker-Checker riêng cho approve) — không cần đổi cấu trúc Role/Permission/Scope.
 
 ### 7.5 IMPACT / GOVERNANCE
 
-| Permission | VAST_ADMIN | HOI_ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 |---|---|---|---|---|---|
-| `kpi.view` | P | O³ | — | — | — |
+| `kpi.view` | P | O⁴ | — | — | — |
 | `auditLog.view` | P | — | — | — | — |
 
-³ KPI theo scope tổ chức (`kpi.view = O` cho `HOI_ADMIN`) là **mục tiêu thiết kế**;
+⁴ KPI theo scope tổ chức (`kpi.view = O` cho `ADMIN`) là **mục tiêu thiết kế**;
 cần đối chiếu với dashboard KPI hiện tại (`11 — KPI Dashboard`) xem có đang tính
 theo toàn platform hay đã lọc theo tổ chức — nằm ngoài phạm vi tài liệu này, ghi
-backlog kiểm tra riêng.
+là việc cần kiểm tra riêng.
 
 ## 8. Quy tắc hiển thị theo trạng thái xuất bản (thay cho PUBLIC/INTERNAL/SHARED/RESTRICTED của yêu cầu gốc §21-22)
 
-Thay vì 4 cấp phân loại dữ liệu nhạy cảm đầy đủ, Giai đoạn 1 chỉ dùng **trạng thái đã
-có sẵn trong schema**:
+Thay vì 4 cấp phân loại dữ liệu nhạy cảm đầy đủ, mô hình hiện tại chỉ dùng
+**trạng thái đã có sẵn trong schema**:
 
 - `Need/Supply/Challenge.status = PUBLISHED` → xem được ở scope `PLATFORM*` (mọi
   user đã đăng nhập, kể cả `VIEWER`).
 - `status = DRAFT` → chỉ `ORGANIZATION` scope của tổ chức sở hữu.
-- `ExpertProfile.verificationStatus` không ảnh hưởng quyền xem, chỉ ảnh hưởng việc có
-  xuất hiện trong kết quả `match.generate` hay không (đã đúng theo
+- `ExpertProfile.verificationStatus` không ảnh hưởng quyền xem, chỉ ảnh hưởng việc
+  có xuất hiện trong kết quả `match.generate` hay không (đã đúng theo
   `lib/actions/matching.ts:109`, lọc `VERIFIED`/`PENDING`).
 
-Không dựng cấp `CONFIDENTIAL/RESTRICTED` kèm MFA/IP allowlist — chưa có dữ liệu nào
-trong schema Giai đoạn 1 đạt mức nhạy cảm đó (không có hồ sơ tài chính, PII đầy đủ
-hay bí mật công nghệ đóng gói dạng file mã hoá).
+Chưa bật cấp `CONFIDENTIAL/RESTRICTED` kèm MFA/IP allowlist — chưa có dữ liệu nào
+trong schema hiện tại đạt mức nhạy cảm đó (không có hồ sơ tài chính, PII đầy đủ
+hay bí mật công nghệ đóng gói dạng file mã hoá). Bật khi loại dữ liệu đó xuất
+hiện thật, bằng cách thêm giá trị `Visibility` mới (tách khỏi `Permission/Scope`,
+đúng khuyến nghị ở `VC-TK-004` Mục 10) — không cần đổi cấu trúc Mục 5-7.
 
 ## 9. Luồng kiểm tra quyền tại server action / route handler
 
-Rút gọn từ 10 bước ở yêu cầu gốc §55, khớp với mô hình 5 tầng ở Mục 4:
+Rút gọn từ 10 bước ở yêu cầu gốc §55, khớp với mô hình ở Mục 4:
 
 ```text
 1. requireUser()          → có session hợp lệ? (lib/rbac.ts)
@@ -206,15 +292,21 @@ Rút gọn từ 10 bước ở yêu cầu gốc §55, khớp với mô hình 5 t
 3. requireRole(...)        → role nằm trong danh sách cho permission này?
 4. resolve resource        → load bản ghi theo id từ path/body (KHÔNG tin field
                               organizationId gửi từ client)
-5. assertOrgScope / assertPermission
+5. assertOrgScope / assertPartyScope / assertPermission
                             → so organizationId của resource với session, theo
                               scope ở Mục 7 (OWN so sánh ownerId, ORGANIZATION so
-                              sánh organizationId, PLATFORM bỏ qua)
+                              sánh đúng 1 organizationId, PARTY so khớp tập
+                              organizationId liên quan tới Match — Mục 7.3,
+                              PLATFORM bỏ qua)
 6. business rule cụ thể    → VD: status hiện tại có cho phép transition không
 7. execute (db write)
 8. auditLog.create(...)    → bắt buộc cho mọi hành vi ghi (Mục 10)
 9. revalidatePath(...)
 ```
+
+Bước "Tenant Resolution" của mô hình tổng quát (§34 yêu cầu gốc, `VC-TK-004` Mục
+28) hiện là no-op vì chỉ có 1 tenant (Mục 4) — khi có nhiều tenant, chèn bước này
+giữa bước 1 và 2 mà không đổi các bước còn lại.
 
 Nếu bước 2-6 không đạt → ném `ForbiddenError`/`AuthError` (đã có ở
 `lib/domain/access-control.ts`, `lib/rbac.ts`), không âm thầm trả mảng rỗng.
@@ -222,8 +314,9 @@ Nếu bước 2-6 không đạt → ném `ForbiddenError`/`AuthError` (đã có 
 ## 10. Audit log — trường bắt buộc
 
 `AuditLog` hiện có `userId, action, entity, entityId, meta, createdAt`. Bổ sung tối
-thiểu cho Giai đoạn 1 (không cần đủ bộ `IPAddress/UserAgent/CorrelationId` như §49
-gốc ngay từ đầu, nhưng `before/after` có giá trị cao cho các hành vi nhạy):
+thiểu có giá trị cao (không cần đủ bộ `IPAddress/UserAgent/CorrelationId` như §49
+gốc/`VC-TK-004` Mục 32 ngay từ đầu, nhưng `before/after` có giá trị cao cho các
+hành vi nhạy):
 
 | Hành vi bắt buộc ghi audit | Đã ghi trong mã nguồn? |
 |---|---|
@@ -239,52 +332,63 @@ gốc ngay từ đầu, nhưng `before/after` có giá trị cao cho các hành 
 ## 11. Trường hợp đặc biệt
 
 - **Tài khoản bị vô hiệu hoá**: hiện `User` chưa có `status`. Bổ sung
-  `status: ACTIVE | DISABLED`, chặn ở bước 2 của Mục 9. Vì Giai đoạn 1 là mô hình
-  1 user–1 org, không cần phân biệt "khoá tài khoản toàn hệ thống" và "khoá thành
-  viên trong tổ chức" như §23 gốc — hai khái niệm trùng nhau ở đây.
+  `status: ACTIVE | DISABLED`, chặn ở bước 2 của Mục 9. Vì mô hình hiện tại là
+  1 user–1 org (Mục 4), không cần phân biệt "khoá tài khoản toàn hệ thống" và
+  "khoá thành viên trong tổ chức" như §23 gốc — hai khái niệm trùng nhau cho tới
+  khi bổ sung bảng `Membership`.
 - **IDOR**: mọi action nhận `*Id` từ tham số phải load bản ghi rồi `assertOrgScope`
   trước khi ghi — xem khoảng trống cụ thể ở Phụ lục B.
 - **Conflict of interest tối thiểu**: `reviewSolutionAction` nên chặn
   `user.id === solution.submittedById` (chưa có trong mã hiện tại — Phụ lục B).
 - **Không dùng Explicit Deny**: hệ thống chỉ dùng allow-based authorization (đúng
-  tinh thần §29 gốc khi "chưa triển khai Explicit Deny ở giai đoạn đầu, phải ghi rõ
-  hệ thống chỉ dùng allow-based authorization").
+  tinh thần §29 gốc khi "chưa triển khai Explicit Deny, phải ghi rõ hệ thống chỉ
+  dùng allow-based authorization").
 
-## 12. AI Assistant (nếu có ở Giai đoạn 1)
+## 12. AI Assistant
 
 Nếu module AI matching hoặc trợ lý AI nào truy vấn dữ liệu thay người dùng, phải
 gọi qua cùng lớp `assertOrgScope`/permission như request thông thường của
-`CurrentUser` đó — không dùng service account có quyền cao hơn user gọi. Hiện
-`lib/matching.ts` chạy hoàn toàn nội bộ (không gọi API AI ngoài), nhưng nguyên tắc
-này áp dụng ngay khi có AI Assistant tương tác trực tiếp với người dùng.
+`CurrentUser` đó — không dùng service account có quyền cao hơn user gọi (khớp
+`VC-TK-004` Mục 15). Hiện `lib/matching.ts` chạy hoàn toàn nội bộ (không gọi API
+AI ngoài), nhưng nguyên tắc này áp dụng ngay khi có AI Assistant tương tác trực
+tiếp với người dùng.
 
-## 13. Loại trừ khỏi Giai đoạn 1 (và lý do)
+## 13. Phần chưa bật trong ma trận hiện hành (và điều kiện bật thêm)
 
-1. **Multi-tenant cô lập dữ liệu chéo tổ chức / "DENY CROSS-TENANT mặc định"** — mâu
-   thuẫn với tính năng lõi AI Matching cần đọc chéo tổ chức để ghép Need↔Supply.
-2. **Funder/Investor role, `funding.review`, `investment.decision`,
-   `due_diligence.view`, giải ngân/đối soát tài chính thật** — vi phạm trực tiếp
-   `AGENTS.md`. `FundingSource` giữ nguyên dạng stub (ghi chú, không phê duyệt).
-3. **Multi-membership (1 người nhiều tổ chức), Workspace Selector, Personal
-   Workspace** — đòi hỏi đổi `User.organizationId` (1-1) sang bảng `Membership`
-   (n-n); không nằm trong 5 domain A-E mà đề án chốt cho Năm 1.
-4. **6 role nền tảng riêng biệt (SecurityAdmin/DataAdmin/Auditor/SupportAdmin...)**
-   — vượt nhu cầu vận hành pilot; giữ 1 `VAST_ADMIN`.
-5. **SSO (Entra ID/LDAP/Google Workspace)** — stack hiện chỉ có NextAuth Credentials.
-6. **Phân loại dữ liệu CONFIDENTIAL/RESTRICTED + MFA/IP allowlist/approval workflow**
-   — chưa có dữ liệu nhạy cảm ở mức đó trong schema Giai đoạn 1.
+Mô hình ở Mục 3-9 đủ tổng quát để mở rộng bằng cách thêm dòng vào Mục 7 hoặc thêm
+giá trị vào các enum ở Mục 5-6 — nhưng các phần dưới đây **chưa bật** vì chưa có
+nghiệp vụ/mã nguồn thật tương ứng, hoặc bị `AGENTS.md` giới hạn tại thời điểm này:
+
+1. **Cô lập dữ liệu chéo tổ chức kiểu multi-tenant SaaS thật ("DENY CROSS-TENANT
+   mặc định")** — mâu thuẫn với tính năng lõi AI Matching cần đọc chéo tổ chức để
+   ghép Need↔Supply (xem Mục 4, Mục 16). Đây là giới hạn của chính đặc thù VI
+   CONNECT, không phải giới hạn tạm thời sẽ gỡ bỏ sau.
+2. **Permission liên quan Funding/Investment** (`funding.review`, `funding.approve`,
+   `investment.decision`, `due_diligence.view`) và giải ngân/đối soát tài chính
+   thật — bị `AGENTS.md` cấm mở rộng ở thời điểm hiện tại (Mục 2, Mục 7.4).
+   `FundingSource` giữ nguyên dạng stub (ghi chú, không phê duyệt) cho tới khi
+   được đề án phê duyệt xây Funding Hub.
+3. **Bảng `Membership` (multi-org), Workspace Selector, Personal Workspace** — mô
+   hình ở Mục 4 đã dự phòng vị trí cho việc này; chỉ cần bổ sung khi có nghiệp vụ
+   thật cần một người thuộc nhiều tổ chức với vai trò khác nhau.
+4. **Các role nền tảng chuyên trách khác** (SecurityAdmin/DataAdmin/Auditor/
+   SupportAdmin...) — thêm khi có đội ngũ vận hành chuyên trách tương ứng; Mục 5
+   đã nêu rõ đây chỉ là thêm giá trị enum, không đổi cấu trúc.
+5. **SSO (Entra ID/LDAP/Google Workspace)** — stack hiện chỉ có NextAuth
+   Credentials; bật khi tổ chức tham gia yêu cầu SSO thật.
+6. **Phân loại dữ liệu `CONFIDENTIAL/RESTRICTED` + MFA/IP allowlist/approval
+   workflow** — bật khi loại dữ liệu nhạy cảm tương ứng xuất hiện trong schema
+   (Mục 8).
 7. **Delegation có hiệu lực thời gian, Support Access tạm thời, Invitation token
-   qua email** — chưa có model `Invitation`/`Delegation`; membership hiện set trực
-   tiếp qua admin/seed.
+   qua email** — chưa có model `Invitation`/`Delegation`; bật khi luồng mời thành
+   viên qua email được xây (hiện set trực tiếp qua admin/seed).
 8. **ReBAC/ABAC "Authorization Engine" tổng quát, `ResourceAccessGrant`/
-   `ResourceDeny` riêng** — với ~12 domain model hiện tại, hàm scope-check thuần
-   (`assertOrgScope`/`assertPermission`) là đủ; không dựng engine tổng quát.
+   `ResourceDeny` riêng** — với số lượng resource hiện tại, hàm scope-check thuần
+   (`assertOrgScope`/`assertPartyScope`) là đủ (Mục 3, điểm 8); nâng cấp lên bảng
+   cấu hình khi số lượng role/permission thực tế lớn hơn.
 9. **Bộ 56 test §56 của yêu cầu gốc nguyên văn** — nhiều test giả định cơ chế chưa
-   tồn tại (cross-tenant, cache theo tenant, SSO, background job theo tenant). Bộ
-   test tối thiểu thực tế cho Giai đoạn 1 nêu ở Mục 15.
-
-Các mục 1-8 giữ nguyên làm backlog Giai đoạn 2-3, gắn đúng module tương ứng (Mobilize
-= mục 2; multi-org membership = mục 3), theo đúng nguyên tắc `docs/SCOPE.md`.
+   tồn tại (cross-tenant thật, cache theo tenant, SSO, background job theo
+   tenant). Bộ test tối thiểu thực tế cho hiện trạng nêu ở Mục 15.
 
 ## 14. Kế hoạch triển khai kỹ thuật (khi tài liệu này được duyệt)
 
@@ -292,16 +396,21 @@ Các mục 1-8 giữ nguyên làm backlog Giai đoạn 2-3, gắn đúng module 
 |---|---|---|
 | Bảng permission tĩnh `Record<Role, string[]>` theo Mục 7 | `lib/domain/access-control.ts` (mới: `permissions.ts` cùng thư mục) | Thay dần các `role === "..."` rải rác |
 | Hàm `assertPermission(user, "resource.action", {organizationId?, ownerId?})` | `lib/domain/access-control.ts` | Mở rộng `assertOrgScope` hiện có, giữ tương thích ngược |
+| Hàm `assertPartyScope(user, project)` cho domain EXECUTE (Mục 7.3, chú thích ³) | `lib/domain/access-control.ts` | Load `Project.match.{need, supply, expertProfile.organization}`, kiểm tra `user.organizationId` thuộc tập organizationId liên quan; dùng cho `project/milestone/deliverable/agreement.*` |
+| Đổi tên `Role` enum: `VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN` | `prisma/schema.prisma` + migration mới + `prisma/seed.ts` | Breaking change: migration phải rename giá trị enum, cập nhật toàn bộ `requireRole(...)`/`role === "..."` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`; cập nhật nhãn UI hiển thị role — xem Phụ lục B, B11 |
 | Thêm `User.status ACTIVE\|DISABLED` | `prisma/schema.prisma` + migration mới | Không sửa migration cũ, đúng `AGENTS.md` |
-| Mở rộng `AuditLog`: `before Json?`, `after Json?` | `prisma/schema.prisma` + migration mới | `ipAddress/userAgent/correlationId` để Giai đoạn sau khi có middleware phù hợp |
+| Mở rộng `AuditLog`: `before Json?`, `after Json?` | `prisma/schema.prisma` + migration mới | `ipAddress/userAgent/correlationId` khi có middleware phù hợp |
 | Vá các khoảng trống ở Phụ lục B | `lib/actions/projects.ts`, `lib/actions/matching.ts` | Ưu tiên trước khi có dữ liệu thật nhiều tổ chức |
 
-## 15. Test bắt buộc tối thiểu cho Giai đoạn 1
+## 15. Test bắt buộc tối thiểu
 
-1. `HOI_ADMIN` tổ chức A không đọc/sửa được `Need`/`Supply`/`Challenge` của tổ chức B.
-2. `ENTERPRISE` không `convertMatchToProjectAction` được match của tổ chức khác.
-3. `EXPERT`/`VIEWER` không gọi được các action giới hạn `requireRole("VAST_ADMIN",
-   "HOI_ADMIN", "ENTERPRISE")`.
+1. `ADMIN` tổ chức A không đọc/sửa được `Need`/`Supply`/`Challenge` của tổ chức B.
+2. `ENTERPRISE` không `convertMatchToProjectAction` được match của tổ chức khác;
+   ngược lại, `ENTERPRISE`/`ADMIN` ở **bên cung** (`Supply`/chuyên gia thuộc tổ
+   chức mình) vẫn phải xem/sửa được `Project` dù không phải bên tạo `Need` (kiểm
+   tra `assertPartyScope`, không phải `assertOrgScope` — Mục 7.3).
+3. `EXPERT`/`VIEWER` không gọi được các action giới hạn `requireRole("SUPERADMIN",
+   "ADMIN", "ENTERPRISE")`.
 4. `VIEWER` chỉ thấy `Need`/`Supply`/`Challenge` có `status = PUBLISHED`.
 5. `reviewSolutionAction` chặn người review chính là người nộp giải pháp.
 6. `User.status = DISABLED` không đăng nhập được (`authorize()` trả `null`).
@@ -340,51 +449,53 @@ Tham khảo: "Cơ bản về Multi-Tenant Architecture" — Viblo,
    Mục 7-8). Đây là lý do gọi `Organization` là "tenant nghiệp vụ" chứ không phải
    tenant hạ tầng.
 3. **"Shared Database, Separate Schema" và "Separate Database per Tenant" đều
-   không phù hợp** cho Giai đoạn 1: cả hai được chính bài viết khuyến nghị cho
+   không phù hợp ở quy mô hiện tại**: cả hai được chính bài viết khuyến nghị cho
    khách hàng Enterprise/tài chính cần cô lập tuyệt đối — VI CONNECT hiện không
    bán license hạ tầng riêng cho từng tổ chức, không có yêu cầu compliance buộc
-   tách database, và 152 hội + 624 tổ chức là **người tham gia trong cùng một nền
-   tảng do VAST/HTIC vận hành**, không phải khách thuê hạ tầng độc lập. Áp mô hình
-   này sẽ phát sinh đúng nhược điểm bài viết nêu ("chi phí cực cao, khó quản lý
-   hàng loạt") mà không giải quyết nhu cầu thật nào ở Giai đoạn 1.
+   tách database, và các tổ chức tham gia là **người dùng trong cùng một nền
+   tảng do VAST/HTIC vận hành**, không phải khách thuê hạ tầng độc lập. Áp mô
+   hình này sẽ phát sinh đúng nhược điểm bài viết nêu ("chi phí cực cao, khó
+   quản lý hàng loạt") mà không giải quyết nhu cầu thật nào hiện nay.
 4. **Rủi ro "Noisy Neighbor" và rủi ro bảo mật của Shared Schema mà bài viết nêu
    là có thật và cần phòng ngừa** — nhưng bằng kỷ luật ở tầng ứng dụng (mọi truy
-   vấn đi qua `assertOrgScope`/`assertPermission`, không viết raw query bỏ qua lớp
-   này — Mục 3, 9), chứ không phải bằng cách tách database. Đây chính là lý do
-   Phụ lục B xếp các chỗ thiếu `assertOrgScope` ở mức rủi ro Cao — rủi ro nằm ở
-   thiếu enforcement tầng ứng dụng, không phải ở thiếu tách hạ tầng.
+   vấn đi qua `assertOrgScope`/`assertPartyScope`/`assertPermission`, không viết
+   raw query bỏ qua lớp này — Mục 3, 9), chứ không phải bằng cách tách database.
+   Đây chính là lý do Phụ lục B xếp các chỗ thiếu `assertOrgScope` ở mức rủi ro
+   Cao — rủi ro nằm ở thiếu enforcement tầng ứng dụng, không phải ở thiếu tách
+   hạ tầng.
 
 ### 16.2 Kết luận
 
 Giữ nguyên hướng thiết kế ở Mục 4 và Mục 13, điểm 1: **không áp dụng mô hình
-multi-tenant cô lập** (dạng schema riêng hay database riêng) cho VI CONNECT Giai
-đoạn 1. Tài liệu tham khảo xác nhận thêm rằng cả 3 mô hình phổ biến đều giả định
-"khách thuê không cần thấy dữ liệu nhau" — tiền đề không đúng với nền tảng này.
-Nếu về sau VI CONNECT mở rộng sang mô hình thương mại hoá, bán license riêng cho
-từng tổ chức có yêu cầu compliance cao hơn (ngoài phạm vi đề án hiện tại), có thể
-xem xét lại "Shared Database, Separate Schema" cho nhóm khách đó — ghi backlog
-Giai đoạn 2-3, không phải Giai đoạn 1.
+multi-tenant cô lập** (dạng schema riêng hay database riêng) cho VI CONNECT ở
+quy mô/nhu cầu hiện tại. Tài liệu tham khảo xác nhận thêm rằng cả 3 mô hình phổ
+biến đều giả định "khách thuê không cần thấy dữ liệu nhau" — tiền đề không đúng
+với nền tảng này. Nếu về sau VI CONNECT mở rộng sang mô hình thương mại hoá, bán
+license riêng cho từng tổ chức có yêu cầu compliance cao hơn, có thể xem xét lại
+"Shared Database, Separate Schema" cho nhóm khách đó — đây là điều kiện mở rộng
+trong tương lai (Mục 4 đã dự phòng vị trí cho tầng `Tenant`), không phải nhu cầu
+hiện tại.
 
 ## Phụ lục A — Đối chiếu với yêu cầu 58 mục gốc
 
 | Nhóm mục gốc | Trạng thái |
 |---|---|
 | §1, §29 (nguyên tắc chung, allow-based) | Áp dụng, rút gọn — Mục 3, 11 |
-| §2-§6 (Membership/Tenant/Unit/resource.action/scope) | Rút gọn còn 5 tầng, 3 scope — Mục 4, 6, 7 |
-| §7-§9 (Workspace Selector, Personal Workspace) | Loại trừ Giai đoạn 1 — Mục 13.3 |
-| §10-§14 (nhiều đơn vị, nhiều role, kế thừa role, lãnh đạo/trưởng phòng) | Không áp dụng — không có Unit/Department dưới Organization |
-| §15-§19 (chuyên gia, reviewer, funder, guest, người ngoài tổ chức) | Áp dụng phần chuyên gia/reviewer/guest (Mục 7); Funder loại trừ (Mục 13.2) |
+| §2-§6 (Membership/Tenant/Unit/resource.action/scope) | Rút gọn còn mô hình Mục 4, scope Mục 6, permission Mục 7 |
+| §7-§9 (Workspace Selector, Personal Workspace) | Chưa bật — Mục 13, điểm 3 |
+| §10-§14 (nhiều đơn vị, nhiều role, kế thừa role, lãnh đạo/trưởng phòng) | Không áp dụng hiện tại — không có Unit/Department dưới Organization; enum scope có thể mở rộng khi cần (Mục 6) |
+| §15-§19 (chuyên gia, reviewer, funder, guest, người ngoài tổ chức) | Áp dụng phần chuyên gia/reviewer/guest (Mục 7); Funder chưa bật (Mục 13, điểm 2) |
 | §20-§22 (cross-tenant, public/private, phân loại dữ liệu) | Thay bằng quy tắc PUBLISHED — Mục 8 |
-| §23-§28 (disable, rời tổ chức, đổi role, quyền tạm thời, ủy quyền) | Áp dụng tối thiểu (disable) — Mục 11; còn lại loại trừ — Mục 13.7 |
-| §31 (Maker-Checker) | Loại trừ — gắn với Funding module chưa xây |
-| §32-§33 (SuperAdmin/TenantAdmin) | Rút gọn còn `VAST_ADMIN`/`HOI_ADMIN` — Mục 5 |
-| §34-§39 (API flow, IDOR, tenant giả, export, download, search) | Áp dụng — Mục 9; export/search chưa có tính năng, ghi backlog |
+| §23-§28 (disable, rời tổ chức, đổi role, quyền tạm thời, ủy quyền) | Áp dụng tối thiểu (disable) — Mục 11; còn lại chưa bật — Mục 13, điểm 7 |
+| §31 (Maker-Checker) | Chưa bật — gắn với Funding module chưa xây (Mục 13, điểm 2) |
+| §32-§33 (SuperAdmin/TenantAdmin) | Rút gọn còn `SUPERADMIN`/`ADMIN` — Mục 5 |
+| §34-§39 (API flow, IDOR, tenant giả, export, download, search) | Áp dụng — Mục 9; export/search chưa có tính năng, ghi nhận là việc cần làm khi tính năng xuất hiện |
 | §40-§41 (AI Assistant, background job) | AI Assistant áp dụng nguyên tắc — Mục 12; background job: chưa có job nào cần TenantContext |
 | §42-§44 (cache, notification, session) | Chưa có cache/notification theo tenant; session đã đúng cấu trúc tối thiểu qua JWT |
-| §45 (SSO) | Loại trừ — Mục 13.5 |
-| §46-§48 (chưa có membership, invitation, xoá user) | Invitation loại trừ — Mục 13.7; xoá user: đã dùng soft-status — Mục 11 |
+| §45 (SSO) | Chưa bật — Mục 13, điểm 5 |
+| §46-§48 (chưa có membership, invitation, xoá user) | Invitation chưa bật — Mục 13, điểm 7; xoá user: đã dùng soft-status — Mục 11 |
 | §49 (audit) | Áp dụng tối thiểu — Mục 10 |
-| §50-§55 (UI convenience, màn hình quản trị, ma trận quyền, entity, authorize function, thứ tự ưu tiên) | Áp dụng — Mục 7, 9; màn hình quản trị quyền là backlog UI riêng |
+| §50-§55 (UI convenience, màn hình quản trị, ma trận quyền, entity, authorize function, thứ tự ưu tiên) | Áp dụng — Mục 7, 9; màn hình quản trị quyền là việc UI cần làm riêng |
 | §56 (56 test) | Rút gọn còn 8 test cốt lõi — Mục 15 |
 | §57-§58 (kiến trúc chính thức, yêu cầu coder) | Rút gọn theo Mục 3-4; các cấm chỉ (không hard-code role, không tin TenantId client...) giữ nguyên |
 
@@ -395,16 +506,22 @@ này**, cần PR riêng sau khi thiết kế được duyệt.
 
 | # | Vị trí | Vấn đề | Mức độ |
 |---|---|---|---|
-| B1 | `lib/actions/projects.ts:65` `addMilestoneAction`, `:93` `setMilestoneStatusAction` | Chỉ `requireUser()`, không `assertOrgScope` theo tổ chức sở hữu `Project` → user bất kỳ tổ chức nào cũng sửa được milestone của project bất kỳ | Cao (IDOR) |
+| B1 | `lib/actions/projects.ts:65` `addMilestoneAction`, `:93` `setMilestoneStatusAction` | Chỉ `requireUser()`, không `assertOrgScope`/`assertPartyScope` theo tổ chức liên quan `Project` → user bất kỳ tổ chức nào cũng sửa được milestone của project bất kỳ | Cao (IDOR) |
 | B2 | `lib/actions/matching.ts:99` `generateMatchesAction` | Chỉ `requireUser()`, không kiểm tra `need.organizationId` thuộc phạm vi user | Trung bình |
 | B3 | `lib/actions/matching.ts:138` `updateMatchStageAction` | Chỉ `requireUser()`, không `assertOrgScope` → đổi được stage của match bất kỳ tổ chức nào | Cao (IDOR) |
-| B4 | `lib/actions/projects.ts:11` `convertMatchToProjectAction`, `:98` `createAgreementAction`, `:123` `signAgreementAction` | Có `requireRole` nhưng thiếu `assertOrgScope` theo tổ chức sở hữu `Need`/`Match` gốc → `HOI_ADMIN`/`ENTERPRISE` tổ chức A thao tác được trên project của tổ chức B | Cao (IDOR) |
+| B4 | `lib/actions/projects.ts:11` `convertMatchToProjectAction`, `:98` `createAgreementAction`, `:123` `signAgreementAction` | Có `requireRole` nhưng thiếu `assertPartyScope` theo các tổ chức liên quan `Match` gốc → `ADMIN`/`ENTERPRISE` tổ chức A thao tác được trên project của tổ chức B dù không liên quan | Cao (IDOR) |
 | B5 | `lib/actions/challenges.ts:77` `submitSolutionAction` | Chỉ `requireUser()` — cần quyết định nghiệp vụ: `VIEWER` có được nộp giải pháp không | Thấp (cần quyết định, không phải lỗi) |
-| B6 | `lib/actions/matching.ts:65` `createSupplyAction` | `requireRole("VAST_ADMIN", "HOI_ADMIN")` — không có `EXPERT`, trong khi README mô tả chuyên gia đăng công nghệ/dịch vụ của mình | Cần xác nhận nghiệp vụ (Mục 7.2, chú thích ²) |
+| B6 | `lib/actions/matching.ts:65` `createSupplyAction` | `requireRole("VAST_ADMIN", "HOI_ADMIN")` (= `SUPERADMIN, ADMIN`) — không có `EXPERT`, trong khi README mô tả chuyên gia đăng công nghệ/dịch vụ của mình | Cần xác nhận nghiệp vụ (Mục 7.2, chú thích ²) |
 | B7 | `lib/auth.ts` (hàm `authorize`) | Không ghi `AuditLog` khi đăng nhập thất bại | Thấp |
+| B8 | `lib/actions/matching.ts` (`createNeedAction`, `createSupplyAction`) | Không có action `update`/`publish`/`close` cho `Need`, không có `update`/`archive` cho `Supply` — Mục 7.2 liệt kê các quyền này như đã có nhưng chưa code hoá; mọi `Need`/`Supply` được set thẳng `status: PUBLISHED` khi tạo, không có bước `DRAFT` nào trong luồng thật (Mục 8 hiện không áp dụng cho dữ liệu thật) | Tài liệu vượt trước mã nguồn |
+| B9 | `lib/actions/` (toàn bộ) | Không có action nào tạo/mời thành viên vào tổ chức (`user.create`, Mục 7.1) — tài khoản hiện chỉ tạo qua `prisma/seed.ts` | Tài liệu vượt trước mã nguồn |
+| B10 | `prisma/schema.prisma` (`User.organizationId` và `ExpertProfile.organizationId`) | Hai trường độc lập, không có ràng buộc đảm bảo luôn khớp nhau — các scope check trong Mục 9 dựa trên `session.user.organizationId`, có thể sai với `ExpertProfile` thật nếu 2 giá trị lệch nhau | Rủi ro dữ liệu |
+| B11 | `prisma/schema.prisma` (`Role` enum), toàn bộ `requireRole("VAST_ADMIN"...)`/`role === "VAST_ADMIN"` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`, `prisma/seed.ts` | Đổi tên role (`VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN`) ở Mục 5 **chưa áp dụng vào mã nguồn** — cần 1 migration Prisma đổi giá trị enum, cập nhật mọi lời gọi `requireRole`/so sánh role, cập nhật tài khoản demo trong seed và nhãn hiển thị role trên UI | Breaking change (schema) |
 
 ---
 
-*Tài liệu này ở trạng thái DRAFT. Sau khi rà soát nghiệp vụ (đặc biệt B5, B6 và chú
-thích ³ ở Mục 7.5), cập nhật thành `v1.0` với trạng thái `APPROVED`, đồng thời cập
-nhật `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.2_20260817.md`.*
+*Tài liệu này ở trạng thái DRAFT. Sau khi rà soát nghiệp vụ (đặc biệt B5, B6, B8-B10
+và chú thích ⁴ ở Mục 7.5), sau khi hiện thực hoá `assertPartyScope` (chú thích ³,
+Mục 7.3), và sau khi thực hiện đổi tên role trong mã nguồn (B11), cập nhật thành
+`v1.0` với trạng thái `APPROVED`, đồng thời cập nhật
+`00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.2_20260817.md`.*

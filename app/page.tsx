@@ -211,7 +211,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-dark to-brand text-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-navy to-brand text-white">
         <div className="relative max-w-6xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-36">
           <RingMotif className="pointer-events-none hidden lg:block absolute -right-10 top-1/2 -translate-y-1/2 w-72 h-72 opacity-60 -z-10" />
 
@@ -234,7 +234,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="group bg-white text-brand-dark hover:bg-white/90 border-transparent shadow-[0_0_0_0_rgba(247,201,72,0)] hover:shadow-[0_0_24px_2px_rgba(247,201,72,0.35)] transition-shadow"
+                className="group bg-white text-navy hover:bg-white/90 border-transparent shadow-[0_0_0_0_rgba(247,201,72,0)] hover:shadow-[0_0_24px_2px_rgba(247,201,72,0.35)] transition-shadow"
               >
                 Tham gia mạng lưới chuyên gia
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -451,7 +451,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-6">
           <Reveal>
             <div
-              className="rounded-2xl px-6 py-10 md:py-12 md:px-12 text-center bg-gradient-to-br from-brand to-brand-dark text-white"
+              className="rounded-2xl px-6 py-10 md:py-12 md:px-12 text-center bg-gradient-to-br from-brand to-navy text-white"
             >
               <h3 className="text-2xl md:text-3xl font-bold max-w-xl mx-auto leading-snug">
                 Mạng lưới đang được xây dựng từng ngày. Hồ sơ của bạn có thể là mảnh ghép tiếp theo.
@@ -461,7 +461,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="group bg-white text-brand-dark hover:bg-white/90 border-transparent"
+                    className="group bg-white text-navy hover:bg-white/90 border-transparent"
                   >
                     Tham gia ngay
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -543,7 +543,7 @@ export default function HomePage() {
       </section>
 
       {/* Positioning banner */}
-      <section className="mt-20 bg-brand-dark text-white">
+      <section className="mt-20 bg-navy text-white">
         <Reveal>
           <div className="max-w-4xl mx-auto px-6 py-16 text-center">
             <p className="text-2xl md:text-3xl font-bold leading-snug">

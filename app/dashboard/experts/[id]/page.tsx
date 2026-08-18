@@ -48,13 +48,17 @@ export default async function ExpertDetailPage({
       session.user.organizationId === expert.organizationId);
   const canMerge = session?.user.role === "VAST_ADMIN";
   const isOwner = Boolean(session?.user && expert.userId === session.user.id);
+  // Admin (VAST_ADMIN toàn hệ thống, HOI_ADMIN đúng tổ chức) được thao tác
+  // thay chủ hồ sơ — ADR-0001 Mục 5.1. lib/actions/identity.ts tự kiểm tra
+  // lại quyền này ở server, đây chỉ là điều kiện hiển thị form.
+  const canEdit = isOwner || canManage;
 
   const viewerHasProfile = session?.user
     ? Boolean(await db.expertProfile.findUnique({ where: { userId: session.user.id } }))
     : true;
 
   const [organizations, pendingClaims, identityMatches, mergeHistory] = await Promise.all([
-    isOwner ? db.organization.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }) : Promise.resolve([]),
+    canEdit ? db.organization.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }) : Promise.resolve([]),
     canManage
       ? db.profileClaim.findMany({
           where: { expertProfileId: id, status: "PENDING" },
@@ -155,19 +159,19 @@ export default async function ExpertDetailPage({
 
       {canManage && <AdminClaimsSection claims={pendingClaims} />}
 
-      <ConsentSection expertProfileId={expert.id} consents={expert.consents} isOwner={isOwner} />
+      <ConsentSection expertProfileId={expert.id} consents={expert.consents} canEdit={canEdit} />
 
       <EnrichmentAndProposalsSection
         expertProfileId={expert.id}
         proposals={expert.fieldProposals}
-        isOwner={isOwner}
+        canEdit={canEdit}
       />
 
       <ExpertiseCapabilitySection
         expertProfileId={expert.id}
         expertise={expert.expertise}
         capabilities={expert.capabilities}
-        isOwner={isOwner}
+        canEdit={canEdit}
         canVerify={canManage}
       />
 
@@ -175,14 +179,14 @@ export default async function ExpertDetailPage({
         expertProfileId={expert.id}
         affiliations={expert.affiliations}
         organizations={organizations}
-        isOwner={isOwner}
+        canEdit={canEdit}
         canVerify={canManage}
       />
 
       <VisibilitySection
         expertProfileId={expert.id}
         visibility={(expert.visibility as Record<string, FieldVisibility>) ?? {}}
-        isOwner={isOwner}
+        canEdit={canEdit}
       />
 
       {canManage && (

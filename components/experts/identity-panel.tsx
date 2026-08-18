@@ -73,11 +73,11 @@ type ConsentItem = {
 export function ConsentSection({
   expertProfileId,
   consents,
-  isOwner,
+  canEdit,
 }: {
   expertProfileId: string;
   consents: ConsentItem[];
-  isOwner: boolean;
+  canEdit: boolean;
 }) {
   const [pending, startTransition] = useTransition();
   const [sourceType, setSourceType] = useState<ExternalSourceType>("ORCID");
@@ -99,7 +99,7 @@ export function ConsentSection({
                   <Badge variant="success">Đang hoạt động</Badge>
                 )}
               </span>
-              {isOwner && !c.revokedAt && (
+              {canEdit && !c.revokedAt && (
                 <Button
                   size="sm"
                   variant="outline"
@@ -112,7 +112,7 @@ export function ConsentSection({
             </li>
           ))}
         </ul>
-        {isOwner && (
+        {canEdit && (
           <div className="flex items-end gap-2 pt-2 border-t border-border">
             <FieldGroup className="flex-1">
               <Label>Nguồn</Label>
@@ -163,22 +163,22 @@ type ProposalItem = {
 export function EnrichmentAndProposalsSection({
   expertProfileId,
   proposals,
-  isOwner,
+  canEdit,
 }: {
   expertProfileId: string;
   proposals: ProposalItem[];
-  isOwner: boolean;
+  canEdit: boolean;
 }) {
   const [pending, startTransition] = useTransition();
   const [editing, setEditing] = useState<Record<string, string>>({});
 
-  if (!isOwner && proposals.length === 0) return null;
+  if (!canEdit && proposals.length === 0) return null;
 
   return (
     <Card>
       <CardContent className="space-y-3">
         <SectionTitle>Đề xuất từ nguồn ngoài (Mục 7.2)</SectionTitle>
-        {isOwner && (
+        {canEdit && (
           <Button
             size="sm"
             variant="outline"
@@ -213,7 +213,7 @@ export function EnrichmentAndProposalsSection({
                   {p.conflictFlags.length > 0 && (
                     <p className="text-xs text-danger">Xung đột: {p.conflictFlags.join(", ")}</p>
                   )}
-                  {isOwner && (
+                  {canEdit && (
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
@@ -257,7 +257,7 @@ export function EnrichmentAndProposalsSection({
                 </li>
               ))}
             </ul>
-            {isOwner && (
+            {canEdit && (
               <Button
                 size="sm"
                 disabled={pending}
@@ -291,13 +291,13 @@ export function ExpertiseCapabilitySection({
   expertProfileId,
   expertise,
   capabilities,
-  isOwner,
+  canEdit,
   canVerify,
 }: {
   expertProfileId: string;
   expertise: ExpertiseItem[];
   capabilities: CapabilityItem[];
-  isOwner: boolean;
+  canEdit: boolean;
   canVerify: boolean;
 }) {
   const [pending, startTransition] = useTransition();
@@ -319,7 +319,7 @@ export function ExpertiseCapabilitySection({
             ))}
             {expertise.length === 0 && <span className="text-sm text-muted">Chưa khai báo.</span>}
           </div>
-          {isOwner && (
+          {canEdit && (
             <div className="flex gap-2">
               <Input
                 placeholder="Thêm lĩnh vực chuyên môn"
@@ -360,7 +360,7 @@ export function ExpertiseCapabilitySection({
                     </li>
                   ))}
                 </ul>
-                {isOwner && (
+                {canEdit && (
                   <div className="flex gap-2 items-center">
                     <Select
                       className="w-40"
@@ -406,7 +406,7 @@ export function ExpertiseCapabilitySection({
             ))}
             {capabilities.length === 0 && <p className="text-sm text-muted">Chưa khai báo.</p>}
           </ul>
-          {isOwner && (
+          {canEdit && (
             <div className="flex gap-2 mt-2">
               <Input
                 placeholder="Thêm năng lực"
@@ -447,13 +447,13 @@ export function AffiliationSection({
   expertProfileId,
   affiliations,
   organizations,
-  isOwner,
+  canEdit,
   canVerify,
 }: {
   expertProfileId: string;
   affiliations: AffiliationItem[];
   organizations: { id: string; name: string }[];
-  isOwner: boolean;
+  canEdit: boolean;
   canVerify: boolean;
 }) {
   const [pending, startTransition] = useTransition();
@@ -488,7 +488,7 @@ export function AffiliationSection({
           ))}
           {affiliations.length === 0 && <p className="text-sm text-muted">Chưa có affiliation.</p>}
         </ul>
-        {isOwner && organizations.length > 0 && (
+        {canEdit && organizations.length > 0 && (
           <div className="flex items-end gap-2 pt-2 border-t border-border">
             <FieldGroup className="flex-1">
               <Label>Tổ chức</Label>
@@ -529,17 +529,17 @@ const VISIBILITY_FIELDS = ["headline", "bio", "email", "phone", "fundingNeed", "
 export function VisibilitySection({
   expertProfileId,
   visibility,
-  isOwner,
+  canEdit,
 }: {
   expertProfileId: string;
   visibility: Record<string, FieldVisibility>;
-  isOwner: boolean;
+  canEdit: boolean;
 }) {
   const [pending, startTransition] = useTransition();
   const [fieldPath, setFieldPath] = useState(VISIBILITY_FIELDS[0]);
   const [level, setLevel] = useState<FieldVisibility>("PUBLIC");
 
-  if (!isOwner) return null;
+  if (!canEdit) return null;
 
   return (
     <Card>

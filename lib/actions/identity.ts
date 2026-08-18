@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { assertOrgScope, requireRole, requireUser } from "@/lib/rbac";
+import { ForbiddenError, assertOrgScope, requireRole, requireUser } from "@/lib/rbac";
 import {
   canVerifyCapability,
   classifyIdentityMatch,
@@ -35,13 +35,26 @@ function coerceValueForField(fieldPath: string, value: string) {
   return { [fieldPath]: value };
 }
 
-async function requireProfileOwner(expertProfileId: string) {
+/**
+ * Cho phép chủ hồ sơ TỰ thao tác, hoặc admin (VAST_ADMIN toàn hệ thống,
+ * HOI_ADMIN đúng tổ chức của hồ sơ) thao tác THAY — theo yêu cầu bổ sung
+ * quyền quản trị. `actingAsAdmin` dùng để ghi rõ vào AuditLog ai thực sự
+ * bấm nút, tránh lẫn với dữ liệu chủ hồ sơ tự khai (VC-NV-011 Mục 3.4, 13.2).
+ */
+async function requireProfileOwnerOrAdmin(expertProfileId: string) {
   const user = await requireUser();
   const profile = await db.expertProfile.findUniqueOrThrow({ where: { id: expertProfileId } });
-  if (profile.userId !== user.id) {
-    throw new Error("Chỉ chủ hồ sơ mới thực hiện được thao tác này.");
+
+  const isOwner = profile.userId === user.id;
+  const isAdmin =
+    user.role === "VAST_ADMIN" ||
+    (user.role === "HOI_ADMIN" && user.organizationId === profile.organizationId);
+
+  if (!isOwner && !isAdmin) {
+    throw new ForbiddenError("Chỉ chủ hồ sơ hoặc quản trị viên tổ chức mới thực hiện được thao tác này.");
   }
-  return { user, profile };
+
+  return { user, profile, actingAsAdmin: !isOwner };
 }
 
 // ---------- Consent (VC-NV-011 Mục 3.2, 01.3) ----------
@@ -52,7 +65,7 @@ export async function grantConsentAction(
   purpose: string,
   scopeNote?: string
 ) {
-  const { user } = await requireProfileOwner(expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const consent = await db.consent.create({
     data: { expertProfileId, sourceType, purpose, scopeNote },
@@ -64,7 +77,7 @@ export async function grantConsentAction(
       action: "CONSENT_GRANTED",
       entity: "Consent",
       entityId: consent.id,
-      meta: { expertProfileId, sourceType, purpose },
+      meta: { expertProfileId, sourceType, purpose, actingAsAdmin },
     },
   });
 
@@ -74,12 +87,18 @@ export async function grantConsentAction(
 
 export async function revokeConsentAction(consentId: string) {
   const consent = await db.consent.findUniqueOrThrow({ where: { id: consentId } });
-  const { user } = await requireProfileOwner(consent.expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(consent.expertProfileId);
 
   await db.consent.update({ where: { id: consentId }, data: { revokedAt: new Date() } });
 
   await db.auditLog.create({
-    data: { userId: user.id, action: "CONSENT_REVOKED", entity: "Consent", entityId: consentId },
+    data: {
+      userId: user.id,
+      action: "CONSENT_REVOKED",
+      entity: "Consent",
+      entityId: consentId,
+      meta: { actingAsAdmin },
+    },
   });
 
   revalidatePath(`/dashboard/experts/${consent.expertProfileId}`);
@@ -88,7 +107,7 @@ export async function revokeConsentAction(consentId: string) {
 // ---------- Enrichment MOCK (ADR-0001 Mục 8 — chưa nối API thật) ----------
 
 export async function runMockEnrichmentAction(expertProfileId: string) {
-  const { user, profile } = await requireProfileOwner(expertProfileId);
+  const { user, profile, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const activeConsent = await db.consent.findFirst({
     where: { expertProfileId, revokedAt: null },
@@ -136,7 +155,7 @@ export async function runMockEnrichmentAction(expertProfileId: string) {
       action: "ENRICHMENT_MOCK_RUN",
       entity: "ExpertProfile",
       entityId: expertProfileId,
-      meta: { proposalCount: created.length },
+      meta: { proposalCount: created.length, actingAsAdmin },
     },
   });
 
@@ -152,7 +171,7 @@ export async function decideFieldProposalAction(
   editedValue?: string
 ) {
   const proposal = await db.fieldProposal.findUniqueOrThrow({ where: { id: proposalId } });
-  const { user } = await requireProfileOwner(proposal.expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(proposal.expertProfileId);
 
   if (proposal.decision !== "PENDING") {
     throw new Error("Đề xuất này đã được xử lý.");
@@ -189,6 +208,7 @@ export async function decideFieldProposalAction(
       action: `FIELD_PROPOSAL_${decision}`,
       entity: "FieldProposal",
       entityId: proposalId,
+      meta: { actingAsAdmin },
     },
   });
 
@@ -196,7 +216,7 @@ export async function decideFieldProposalAction(
 }
 
 export async function bulkSafeAcceptProposalsAction(expertProfileId: string) {
-  const { user } = await requireProfileOwner(expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const pending = await db.fieldProposal.findMany({
     where: { expertProfileId, decision: "PENDING" },
@@ -228,7 +248,7 @@ export async function bulkSafeAcceptProposalsAction(expertProfileId: string) {
       action: "FIELD_PROPOSAL_BULK_SAFE_ACCEPT",
       entity: "ExpertProfile",
       entityId: expertProfileId,
-      meta: { acceptedCount: safe.length },
+      meta: { acceptedCount: safe.length, actingAsAdmin },
     },
   });
 
@@ -319,7 +339,7 @@ export async function setFieldVisibilityAction(
   fieldPath: string,
   visibility: FieldVisibility
 ) {
-  const { user, profile } = await requireProfileOwner(expertProfileId);
+  const { user, profile, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const current = (profile.visibility as Record<string, FieldVisibility> | null) ?? {};
   const next = { ...current, [fieldPath]: visibility };
@@ -332,7 +352,7 @@ export async function setFieldVisibilityAction(
       action: "FIELD_VISIBILITY_SET",
       entity: "ExpertProfile",
       entityId: expertProfileId,
-      meta: { fieldPath, visibility },
+      meta: { fieldPath, visibility, actingAsAdmin },
     },
   });
 
@@ -346,7 +366,7 @@ export async function addAffiliationAction(
   organizationId: string,
   input: { department?: string; position?: string; affiliationType?: string; isPrimary?: boolean }
 ) {
-  const { user } = await requireProfileOwner(expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const affiliation = await db.affiliation.create({
     data: {
@@ -356,7 +376,7 @@ export async function addAffiliationAction(
       position: input.position,
       affiliationType: input.affiliationType,
       isPrimary: input.isPrimary ?? false,
-      source: "SELF",
+      source: actingAsAdmin ? "ADMIN_ON_BEHALF" : "SELF",
     },
   });
 
@@ -365,7 +385,13 @@ export async function addAffiliationAction(
   }
 
   await db.auditLog.create({
-    data: { userId: user.id, action: "AFFILIATION_ADDED", entity: "Affiliation", entityId: affiliation.id },
+    data: {
+      userId: user.id,
+      action: "AFFILIATION_ADDED",
+      entity: "Affiliation",
+      entityId: affiliation.id,
+      meta: { actingAsAdmin },
+    },
   });
 
   revalidatePath(`/dashboard/experts/${expertProfileId}`);
@@ -392,14 +418,20 @@ export async function verifyAffiliationAction(affiliationId: string) {
 // ---------- Expertise & Capability (VC-NV-011 Mục 12) ----------
 
 export async function addExpertiseAction(expertProfileId: string, label: string) {
-  const { user } = await requireProfileOwner(expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const expertise = await db.expertise.create({
     data: { expertProfileId, label, source: "SELF", confirmedAt: new Date() },
   });
 
   await db.auditLog.create({
-    data: { userId: user.id, action: "EXPERTISE_ADDED", entity: "Expertise", entityId: expertise.id },
+    data: {
+      userId: user.id,
+      action: "EXPERTISE_ADDED",
+      entity: "Expertise",
+      entityId: expertise.id,
+      meta: { actingAsAdmin },
+    },
   });
 
   revalidatePath(`/dashboard/experts/${expertProfileId}`);
@@ -407,12 +439,18 @@ export async function addExpertiseAction(expertProfileId: string, label: string)
 }
 
 export async function addCapabilityAction(expertProfileId: string, label: string) {
-  const { user } = await requireProfileOwner(expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
 
   const capability = await db.capability.create({ data: { expertProfileId, label } });
 
   await db.auditLog.create({
-    data: { userId: user.id, action: "CAPABILITY_ADDED", entity: "Capability", entityId: capability.id },
+    data: {
+      userId: user.id,
+      action: "CAPABILITY_ADDED",
+      entity: "Capability",
+      entityId: capability.id,
+      meta: { actingAsAdmin },
+    },
   });
 
   revalidatePath(`/dashboard/experts/${expertProfileId}`);
@@ -426,7 +464,7 @@ export async function addCapabilityEvidenceAction(
   referenceUrl?: string
 ) {
   const capability = await db.capability.findUniqueOrThrow({ where: { id: capabilityId } });
-  const { user } = await requireProfileOwner(capability.expertProfileId);
+  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(capability.expertProfileId);
 
   const evidence = await db.capabilityEvidence.create({
     data: { capabilityId, type, description, referenceUrl },
@@ -438,6 +476,7 @@ export async function addCapabilityEvidenceAction(
       action: "CAPABILITY_EVIDENCE_ADDED",
       entity: "CapabilityEvidence",
       entityId: evidence.id,
+      meta: { actingAsAdmin },
     },
   });
 

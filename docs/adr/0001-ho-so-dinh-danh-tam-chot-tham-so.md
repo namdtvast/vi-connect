@@ -61,6 +61,28 @@ Theo đúng `assertOrgScope` đã có ở `lib/domain/access-control.ts`
 - Chủ hồ sơ (`EXPERT`, scope `OWN`): claim, accept/reject/edit proposal,
   consent, đặt field visibility cho hồ sơ của chính mình.
 
+### 5.1. Admin thao tác thay chủ hồ sơ (bổ sung 2026-08-18)
+
+Theo yêu cầu vận hành thực tế (nhiều chuyên gia cần admin hỗ trợ nhập liệu),
+`VAST_ADMIN` và `HOI_ADMIN` (đúng tổ chức của hồ sơ, theo `assertOrgScope`)
+**được phép thao tác thay** chủ hồ sơ ở toàn bộ các action vốn chỉ dành cho
+chủ hồ sơ: cấp/thu hồi consent, chạy enrichment mock, duyệt/từ chối/điều
+chỉnh field proposal, bulk-safe-accept, đặt field visibility, thêm
+affiliation/expertise/capability/evidence.
+
+Không đổi nguyên tắc self-declare ở Mục 6.3 tài liệu `VC-NV-011` — admin chỉ
+**thay mặt nhập hộ**, không tự sinh ra nội dung. Mọi thao tác admin làm thay
+được ghi `actingAsAdmin: true` vào `AuditLog.meta` để truy vết đúng ai thực sự
+xác nhận (Mục 3.4, 13.2 của `VC-NV-011`) — không lẫn với dữ liệu chủ hồ sơ tự
+khai. `Affiliation.source` ghi `"ADMIN_ON_BEHALF"` khi admin thêm hộ (trường
+tự do, không cần migration); `Expertise.source` vẫn ghi `SELF` vì enum
+`ExpertiseSource` hiện chưa có giá trị admin — nếu cần phân biệt tại đó, phải
+thêm giá trị enum + migration riêng (để backlog).
+
+Không mở rộng cho `ENTERPRISE`/`VIEWER`, và **không** áp dụng cho các hành
+động vốn đã admin-only từ đầu (xác minh capability/affiliation, duyệt claim,
+identity match, merge) — các hành động đó giữ nguyên logic cũ.
+
 ## 6. Danh mục chuẩn Expertise/Capability/AffiliationType
 
 Chưa có danh mục chuẩn hoá được duyệt — dùng free-text do người dùng nhập ở

@@ -23,11 +23,17 @@ export function CreateSupplyForm() {
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="title">Tên công nghệ / giải pháp</Label>
-        <Input id="title" name="title" required />
+        <Input id="title" name="title" placeholder="VD: Cảm biến IoT giám sát chất lượng nước" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="description">Mô tả</Label>
-        <Textarea id="description" name="description" rows={3} required />
+        <Textarea
+          id="description"
+          name="description"
+          rows={3}
+          placeholder="Mô tả tính năng, ưu điểm, mức độ sẵn sàng ứng dụng..."
+          required
+        />
       </FieldGroup>
       <div className="grid grid-cols-2 gap-4">
         <FieldGroup>
@@ -42,7 +48,7 @@ export function CreateSupplyForm() {
         </FieldGroup>
         <FieldGroup>
           <Label htmlFor="trl">TRL (1-9, không bắt buộc)</Label>
-          <Input id="trl" name="trl" type="number" min={1} max={9} />
+          <Input id="trl" name="trl" type="number" min={1} max={9} placeholder="VD: 7" />
         </FieldGroup>
       </div>
       <FieldGroup>

@@ -243,7 +243,11 @@ export function ConsentSection({
             </FieldGroup>
             <FieldGroup className="flex-1">
               <Label>Mục đích</Label>
-              <Input value={purpose} onChange={(e) => setPurpose(e.target.value)} />
+              <Input
+                value={purpose}
+                onChange={(e) => setPurpose(e.target.value)}
+                placeholder="VD: ENRICHMENT"
+              />
             </FieldGroup>
             <Button
               disabled={pending}
@@ -616,7 +620,11 @@ export function AffiliationSection({
             </FieldGroup>
             <FieldGroup className="flex-1">
               <Label>Chức danh</Label>
-              <Input value={position} onChange={(e) => setPosition(e.target.value)} />
+              <Input
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                placeholder="VD: Trưởng nhóm nghiên cứu"
+              />
             </FieldGroup>
             <Button
               disabled={pending || !organizationId}

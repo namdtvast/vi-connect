@@ -59,7 +59,7 @@ export function AgreementPanel({
         </FieldGroup>
         <FieldGroup>
           <Label htmlFor="valueVnd">Giá trị (VNĐ)</Label>
-          <Input id="valueVnd" name="valueVnd" type="number" min={0} />
+          <Input id="valueVnd" name="valueVnd" type="number" min={0} placeholder="VD: 800.000.000" />
         </FieldGroup>
         <Button type="submit" size="sm" disabled={pending}>
           Khởi tạo

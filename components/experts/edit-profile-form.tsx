@@ -37,15 +37,26 @@ export function EditProfileForm({
       <input type="hidden" name="expertProfileId" value={expertProfileId} />
       <FieldGroup>
         <Label htmlFor="title">Học hàm / học vị</Label>
-        <Input id="title" name="title" defaultValue={title ?? ""} />
+        <Input id="title" name="title" placeholder="VD: TS., PGS.TS." defaultValue={title ?? ""} />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="headline">Chức danh ngắn</Label>
-        <Input id="headline" name="headline" defaultValue={headline ?? ""} />
+        <Input
+          id="headline"
+          name="headline"
+          placeholder="VD: Trưởng phòng Nghiên cứu & Phát triển"
+          defaultValue={headline ?? ""}
+        />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="bio">Giới thiệu</Label>
-        <Textarea id="bio" name="bio" rows={3} defaultValue={bio ?? ""} />
+        <Textarea
+          id="bio"
+          name="bio"
+          rows={3}
+          placeholder="Tóm tắt kinh nghiệm, thế mạnh chuyên môn của bạn..."
+          defaultValue={bio ?? ""}
+        />
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực chuyên môn</Label>
@@ -65,7 +76,12 @@ export function EditProfileForm({
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="skills">Kỹ năng (cách nhau bởi dấu phẩy)</Label>
-        <Input id="skills" name="skills" defaultValue={skills.join(", ")} />
+        <Input
+          id="skills"
+          name="skills"
+          placeholder="VD: xử lý ảnh, học máy, Python"
+          defaultValue={skills.join(", ")}
+        />
       </FieldGroup>
       <div className="grid grid-cols-3 gap-3">
         <FieldGroup>
@@ -75,16 +91,31 @@ export function EditProfileForm({
             name="experienceYears"
             type="number"
             min={0}
+            placeholder="VD: 10"
             defaultValue={experienceYears ?? ""}
           />
         </FieldGroup>
         <FieldGroup>
           <Label htmlFor="publications">Công bố</Label>
-          <Input id="publications" name="publications" type="number" min={0} defaultValue={publications ?? 0} />
+          <Input
+            id="publications"
+            name="publications"
+            type="number"
+            min={0}
+            placeholder="VD: 5"
+            defaultValue={publications ?? 0}
+          />
         </FieldGroup>
         <FieldGroup>
           <Label htmlFor="patents">Sáng chế</Label>
-          <Input id="patents" name="patents" type="number" min={0} defaultValue={patents ?? 0} />
+          <Input
+            id="patents"
+            name="patents"
+            type="number"
+            min={0}
+            placeholder="VD: 1"
+            defaultValue={patents ?? 0}
+          />
         </FieldGroup>
       </div>
       <FormError>{state.error}</FormError>

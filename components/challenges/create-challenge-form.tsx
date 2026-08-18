@@ -17,19 +17,25 @@ export function CreateChallengeForm() {
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="title">Tên bài toán</Label>
-        <Input id="title" name="title" required />
+        <Input id="title" name="title" placeholder="VD: Giảm hao hụt điện năng trong lưới truyền tải" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="problem">Mô tả vấn đề / hiện trạng</Label>
-        <Textarea id="problem" name="problem" rows={3} required />
+        <Textarea
+          id="problem"
+          name="problem"
+          rows={3}
+          placeholder="Mô tả vấn đề đang gặp phải, nguyên nhân, tác động..."
+          required
+        />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="goal">Mục tiêu cần đạt</Label>
-        <Textarea id="goal" name="goal" rows={2} />
+        <Textarea id="goal" name="goal" rows={2} placeholder="VD: Giảm 15% tổn thất điện năng trong 12 tháng" />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="budgetVnd">Ngân sách (VNĐ, để trống nếu chưa có)</Label>
-        <Input id="budgetVnd" name="budgetVnd" type="number" min={0} />
+        <Input id="budgetVnd" name="budgetVnd" type="number" min={0} placeholder="VD: 4.000.000" />
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực</Label>

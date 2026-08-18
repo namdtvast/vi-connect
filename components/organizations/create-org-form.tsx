@@ -19,11 +19,11 @@ export function CreateOrgForm() {
     <form action={formAction} className="grid md:grid-cols-2 gap-4">
       <FieldGroup>
         <Label htmlFor="name">Tên đầy đủ</Label>
-        <Input id="name" name="name" required />
+        <Input id="name" name="name" placeholder="VD: Liên hiệp Hội Khoa học và Kỹ thuật TP. Hà Nội" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="shortName">Tên viết tắt</Label>
-        <Input id="shortName" name="shortName" />
+        <Input id="shortName" name="shortName" placeholder="VD: LHH Hà Nội" />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="type">Loại hình</Label>
@@ -37,11 +37,11 @@ export function CreateOrgForm() {
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="province">Tỉnh / thành phố</Label>
-        <Input id="province" name="province" />
+        <Input id="province" name="province" placeholder="VD: Hà Nội" />
       </FieldGroup>
       <FieldGroup className="md:col-span-2">
         <Label htmlFor="description">Mô tả</Label>
-        <Textarea id="description" name="description" rows={2} />
+        <Textarea id="description" name="description" rows={2} placeholder="Chức năng, lĩnh vực hoạt động chính..." />
       </FieldGroup>
       <div className="md:col-span-2 flex items-center gap-3">
         <Button type="submit" disabled={pending}>

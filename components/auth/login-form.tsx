@@ -14,7 +14,7 @@ export function LoginForm() {
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" required autoComplete="email" />
+        <Input id="email" name="email" type="email" placeholder="ten@vidu.com" required autoComplete="email" />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="password">Mật khẩu</Label>
@@ -22,6 +22,7 @@ export function LoginForm() {
           id="password"
           name="password"
           type="password"
+          placeholder="Nhập mật khẩu"
           required
           autoComplete="current-password"
         />

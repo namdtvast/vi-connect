@@ -35,15 +35,22 @@ export function RegisterForm({
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="name">Họ và tên</Label>
-        <Input id="name" name="name" required />
+        <Input id="name" name="name" placeholder="VD: Nguyễn Văn A" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" type="email" required />
+        <Input id="email" name="email" type="email" placeholder="ten@vidu.com" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="password">Mật khẩu</Label>
-        <Input id="password" name="password" type="password" required minLength={8} />
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Tối thiểu 8 ký tự"
+          required
+          minLength={8}
+        />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="organizationId">Hội thành viên / tổ chức KH&amp;CN</Label>
@@ -75,7 +82,12 @@ export function RegisterForm({
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="bio">Giới thiệu ngắn</Label>
-        <Textarea id="bio" name="bio" rows={3} />
+        <Textarea
+          id="bio"
+          name="bio"
+          rows={3}
+          placeholder="VD: Chuyên gia đo lường với 10 năm kinh nghiệm trong lĩnh vực hiệu chuẩn thiết bị."
+        />
       </FieldGroup>
       <FormError>{state.error}</FormError>
       <Button type="submit" className="w-full" disabled={pending}>

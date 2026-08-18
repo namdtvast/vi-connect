@@ -19,7 +19,7 @@ export function CreateFundingSourceForm() {
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="name">Tên nguồn lực / chương trình tài trợ</Label>
-        <Input id="name" name="name" required />
+        <Input id="name" name="name" placeholder="VD: Quỹ Đổi mới công nghệ quốc gia (NATIF)" required />
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực ưu tiên</Label>
@@ -34,7 +34,12 @@ export function CreateFundingSourceForm() {
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="note">Ghi chú (điều kiện, quy mô, đầu mối liên hệ...)</Label>
-        <Textarea id="note" name="note" rows={2} />
+        <Textarea
+          id="note"
+          name="note"
+          rows={2}
+          placeholder="VD: Tài trợ tối đa 30% chi phí dự án, liên hệ: 024-xxxx-xxxx"
+        />
       </FieldGroup>
       <FormError>{state.error}</FormError>
       <div className="flex items-center gap-3">

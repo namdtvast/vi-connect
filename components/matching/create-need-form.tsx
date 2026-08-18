@@ -17,15 +17,21 @@ export function CreateNeedForm() {
     <form action={formAction} className="space-y-4">
       <FieldGroup>
         <Label htmlFor="title">Tiêu đề nhu cầu / bài toán</Label>
-        <Input id="title" name="title" required />
+        <Input id="title" name="title" placeholder="VD: Tìm giải pháp AI kiểm tra lỗi bề mặt sản phẩm" required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="description">Mô tả chi tiết</Label>
-        <Textarea id="description" name="description" rows={3} required />
+        <Textarea
+          id="description"
+          name="description"
+          rows={3}
+          placeholder="Mô tả bài toán, hiện trạng, yêu cầu kỹ thuật cần giải quyết..."
+          required
+        />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="budgetVnd">Ngân sách dự kiến (VNĐ, không bắt buộc)</Label>
-        <Input id="budgetVnd" name="budgetVnd" type="number" min={0} />
+        <Input id="budgetVnd" name="budgetVnd" type="number" min={0} placeholder="VD: 4.000.000 (bốn triệu đồng)" />
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực liên quan</Label>

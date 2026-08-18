@@ -16,11 +16,17 @@ export function SubmitSolutionForm({ challengeId }: { challengeId: string }) {
     <form action={formAction} className="space-y-3">
       <FieldGroup>
         <Label htmlFor="summary">Tóm tắt giải pháp</Label>
-        <Textarea id="summary" name="summary" rows={2} required />
+        <Textarea id="summary" name="summary" rows={2} placeholder="Tóm tắt ngắn gọn giải pháp đề xuất..." required />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="approach">Cách tiếp cận</Label>
-        <Textarea id="approach" name="approach" rows={3} required />
+        <Textarea
+          id="approach"
+          name="approach"
+          rows={3}
+          placeholder="Mô tả phương pháp, công nghệ sử dụng, các bước triển khai..."
+          required
+        />
       </FieldGroup>
       <FormError>{state.error}</FormError>
       <Button type="submit" size="sm" disabled={pending}>

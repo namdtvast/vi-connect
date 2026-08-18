@@ -99,13 +99,29 @@ dữ liệu cá nhân thật quy mô lớn (đúng Mục 21.1 của `VC-NV-011`)
 
 ## 8. Nguồn ngoài được phép crawl, API scope, quota
 
-Chưa có API credential thật (ORCID OAuth client, OpenAlex/Crossref/ROR key) —
-`AGENTS.md` cấm kết nối dữ liệu thật khi chưa được yêu cầu rõ. V1 chỉ dựng
-khung connector (`ExternalSource`/`ExternalConnection`) và **enrichment giả
-lập (mock)**: sinh `FieldProposal` mẫu có gắn `source = "MOCK"` để luồng
-consent → enrichment → review chạy được end-to-end trên dữ liệu demo. Kết nối
-thật để P0 kế tiếp, cần chủ repo cấp credential và xác nhận điều khoản dịch vụ
-từng nguồn.
+**Cập nhật 2026-08-18 — đã bật kết nối thật cho phần không cần credential:**
+
+- **OpenAlex, ROR, Crossref**: API mở, không cần key — đã nối thật ở
+  `lib/integrations/openalex.ts`, `lib/integrations/ror.ts`,
+  `lib/integrations/crossref.ts`. `runMockEnrichmentAction` gọi OpenAlex thật
+  theo ORCID của hồ sơ (nếu có) trước, chỉ fallback về đề xuất mock khi chưa
+  có ORCID hoặc gọi API thất bại/rỗng — mọi `FieldProposal` ghi đúng
+  `extractionMethod` (`API` hoặc `MOCK`), không bao giờ trình bày mock như dữ
+  liệu thật (Mục 3.5). `CapabilityEvidence` loại `PUBLICATION` có DOI trong
+  `referenceUrl` được xác minh thật qua Crossref.
+- **ORCID OAuth**: đã dựng luồng thật (`lib/integrations/orcid.ts`,
+  `app/api/integrations/orcid/connect`, `/callback`) nhưng **cần
+  `ORCID_CLIENT_ID`/`ORCID_CLIENT_SECRET`** — phải đăng ký ứng dụng tại
+  https://orcid.org/developer-tools bằng tài khoản ORCID của tổ chức (chủ
+  repo tự đăng ký, ngoài phạm vi AI thực hiện được, xem `.env.production.example`).
+  Chưa cấu hình thì nút OAuth tự ẩn, chỉ còn nhập ORCID thủ công (trạng thái
+  `ENTERED`, không xác thực) qua `addOrcidIdentifierAction`.
+- Chưa xin quyền/đánh giá điều khoản dùng cho nguồn thương mại (Scopus, Web
+  of Science) — để backlog, chưa có adapter.
+- Rate limit: chưa có cơ chế giới hạn/backoff chủ động khi gọi OpenAlex/ROR/
+  Crossref — mỗi request có timeout 8s, lỗi/timeout thì fallback êm, không
+  crash trang. Thêm cơ chế backoff/quota theo dõi để backlog nếu lưu lượng
+  thật tăng.
 
 ## 9. Chu kỳ đồng bộ định kỳ
 

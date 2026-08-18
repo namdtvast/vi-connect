@@ -5,6 +5,7 @@ import {
   canViewField,
   classifyIdentityMatch,
   isBulkSafeAccept,
+  isValidOrcidChecksum,
   nameTokenSimilarity,
   resolveFieldVisibility,
   scoreIdentityMatch,
@@ -75,4 +76,10 @@ test("isBulkSafeAccept từ chối trường nhạy cảm, confidence thấp ho�
 test("canVerifyCapability yêu cầu ít nhất một evidence", () => {
   assert.equal(canVerifyCapability(0), false);
   assert.equal(canVerifyCapability(1), true);
+});
+
+test("isValidOrcidChecksum đúng với ORCID mẫu chính thức, sai khi gõ nhầm", () => {
+  assert.equal(isValidOrcidChecksum("0000-0002-1825-0097"), true);
+  assert.equal(isValidOrcidChecksum("0000-0002-1825-0098"), false);
+  assert.equal(isValidOrcidChecksum("khong-phai-orcid"), false);
 });

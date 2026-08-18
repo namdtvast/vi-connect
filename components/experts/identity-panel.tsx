@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FieldGroup, Input, Label, Select } from "@/components/ui/field";
 import type {
   CapabilityEvidenceType,
+  ExternalConnectionStatus,
   ExternalSourceType,
 } from "@/lib/generated/prisma/enums";
 import type { FieldVisibility } from "@/lib/domain/identity";
@@ -15,6 +16,7 @@ import {
   addCapabilityAction,
   addCapabilityEvidenceAction,
   addExpertiseAction,
+  addOrcidIdentifierAction,
   approveMergeAction,
   bulkSafeAcceptProposalsAction,
   claimProfileAction,
@@ -29,6 +31,22 @@ import {
   verifyAffiliationAction,
   verifyCapabilityAction,
 } from "@/lib/actions/identity";
+
+const ORCID_STATUS_LABEL: Record<ExternalConnectionStatus, string> = {
+  ENTERED: "Tự nhập, chưa xác thực",
+  MATCHED: "Đối sánh được, chưa xác thực",
+  AUTHENTICATED: "Đã xác thực qua OAuth",
+  DISPUTED: "Đang tranh chấp",
+  REVOKED: "Đã thu hồi",
+};
+
+const ORCID_STATUS_BADGE: Record<ExternalConnectionStatus, "default" | "success" | "warning" | "danger"> = {
+  ENTERED: "warning",
+  MATCHED: "warning",
+  AUTHENTICATED: "success",
+  DISPUTED: "danger",
+  REVOKED: "default",
+};
 
 const SOURCE_LABEL: Record<ExternalSourceType, string> = {
   ORCID: "ORCID",
@@ -58,6 +76,102 @@ const VISIBILITY_LABEL: Record<FieldVisibility, string> = {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="text-sm font-semibold uppercase text-muted mb-3">{children}</h2>;
+}
+
+// ---------- ORCID (Mục 9.1) ----------
+
+export function OrcidSection({
+  expertProfileId,
+  orcidValue,
+  connectionStatus,
+  canEdit,
+  oauthConfigured,
+  banner,
+}: {
+  expertProfileId: string;
+  orcidValue: string | null;
+  connectionStatus: ExternalConnectionStatus | null;
+  canEdit: boolean;
+  oauthConfigured: boolean;
+  banner: { kind: "success" | "error"; message: string } | null;
+}) {
+  const [pending, startTransition] = useTransition();
+  const [orcidInput, setOrcidInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  return (
+    <Card>
+      <CardContent className="space-y-3">
+        <SectionTitle>ORCID (Mục 9.1)</SectionTitle>
+
+        {banner && (
+          <p className={`text-sm ${banner.kind === "success" ? "text-accent" : "text-danger"}`}>
+            {banner.message}
+          </p>
+        )}
+
+        {orcidValue ? (
+          <p className="text-sm">
+            <span className="font-medium">{orcidValue}</span>{" "}
+            {connectionStatus && (
+              <Badge variant={ORCID_STATUS_BADGE[connectionStatus]}>
+                {ORCID_STATUS_LABEL[connectionStatus]}
+              </Badge>
+            )}
+          </p>
+        ) : (
+          <p className="text-sm text-muted">Chưa liên kết ORCID.</p>
+        )}
+
+        {canEdit && connectionStatus !== "AUTHENTICATED" && (
+          <div className="space-y-2">
+            {oauthConfigured ? (
+              <a href={`/api/integrations/orcid/connect?expertProfileId=${expertProfileId}`}>
+                <Button size="sm">Kết nối ORCID qua OAuth thật (khuyến nghị)</Button>
+              </a>
+            ) : (
+              <p className="text-xs text-muted">
+                Server chưa cấu hình ORCID_CLIENT_ID/ORCID_CLIENT_SECRET nên chưa bật được OAuth thật —
+                xem docs/adr/0001-ho-so-dinh-danh-tam-chot-tham-so.md Mục 8.
+              </p>
+            )}
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="0000-0002-1825-0097"
+                value={orcidInput}
+                onChange={(e) => {
+                  setOrcidInput(e.target.value);
+                  setError(null);
+                }}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={pending || !orcidInput}
+                onClick={() =>
+                  startTransition(async () => {
+                    try {
+                      await addOrcidIdentifierAction(expertProfileId, orcidInput);
+                      setOrcidInput("");
+                    } catch (e) {
+                      setError(e instanceof Error ? e.message : "Không lưu được ORCID.");
+                    }
+                  })
+                }
+              >
+                Nhập ORCID thủ công
+              </Button>
+            </div>
+            {error && <p className="text-xs text-danger">{error}</p>}
+            <p className="text-xs text-muted">
+              Nhập thủ công chỉ ở trạng thái &quot;chưa xác thực&quot; — dùng nút OAuth ở trên để xác
+              thực thật.
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 // ---------- Consent ----------

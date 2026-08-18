@@ -10,6 +10,7 @@ import { VerifyActions } from "@/components/experts/verify-actions";
 import { AvatarUploadForm } from "@/components/experts/avatar-upload-form";
 import { formatDate } from "@/lib/utils";
 import type { FieldVisibility } from "@/lib/domain/identity";
+import { isOrcidOAuthConfigured } from "@/lib/integrations/orcid";
 import {
   AdminClaimsSection,
   AffiliationSection,
@@ -19,13 +20,27 @@ import {
   ExpertiseCapabilitySection,
   IdentityMatchSection,
   MergeHistorySection,
+  OrcidSection,
   VisibilitySection,
 } from "@/components/experts/identity-panel";
 
+const ORCID_ERROR_LABEL: Record<string, string> = {
+  denied: "Bạn đã huỷ hoặc ORCID từ chối yêu cầu kết nối.",
+  state: "Yêu cầu kết nối ORCID hết hạn hoặc không hợp lệ, thử lại.",
+  profile: "Không tìm thấy hồ sơ để kết nối ORCID.",
+  forbidden: "Bạn không có quyền kết nối ORCID cho hồ sơ này.",
+  token: "Không xác thực được với ORCID, thử lại.",
+  conflict: "ORCID này đã xác thực trên một hồ sơ khác — đã ghi nhận nghi ngờ trùng để admin xử lý.",
+};
+
 export default async function ExpertDetailPage({
   params,
-}: PageProps<"/dashboard/experts/[id]">) {
+  searchParams,
+}: PageProps<"/dashboard/experts/[id]"> & {
+  searchParams: Promise<{ orcid_connected?: string; orcid_error?: string }>;
+}) {
   const { id } = await params;
+  const { orcid_connected, orcid_error } = await searchParams;
   const session = await auth();
 
   const expert = await db.expertProfile.findUnique({
@@ -39,6 +54,7 @@ export default async function ExpertDetailPage({
       expertise: true,
       capabilities: { include: { evidence: true } },
       affiliations: { include: { organization: true }, orderBy: { createdAt: "asc" } },
+      externalConnections: true,
     },
   });
 
@@ -183,6 +199,21 @@ export default async function ExpertDetailPage({
       )}
 
       {canManage && <AdminClaimsSection claims={pendingClaims} />}
+
+      <OrcidSection
+        expertProfileId={expert.id}
+        orcidValue={expert.identifiers.find((i) => i.type === "ORCID")?.value ?? null}
+        connectionStatus={expert.externalConnections.find((c) => c.sourceType === "ORCID")?.status ?? null}
+        canEdit={canEdit}
+        oauthConfigured={isOrcidOAuthConfigured()}
+        banner={
+          orcid_connected
+            ? { kind: "success", message: "Đã kết nối ORCID qua OAuth thật." }
+            : orcid_error
+              ? { kind: "error", message: ORCID_ERROR_LABEL[orcid_error] ?? "Có lỗi khi kết nối ORCID." }
+              : null
+        }
+      />
 
       <ConsentSection expertProfileId={expert.id} consents={expert.consents} canEdit={canEdit} />
 

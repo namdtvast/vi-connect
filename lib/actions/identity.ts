@@ -2,15 +2,23 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { ForbiddenError, assertOrgScope, requireRole, requireUser } from "@/lib/rbac";
+import {
+  assertOrgScope,
+  requireExpertProfileOwnerOrAdmin,
+  requireRole,
+  requireUser,
+} from "@/lib/rbac";
 import {
   canVerifyCapability,
   classifyIdentityMatch,
   isBulkSafeAccept,
+  isValidOrcidChecksum,
   nameTokenSimilarity,
   scoreIdentityMatch,
   type FieldVisibility,
 } from "@/lib/domain/identity";
+import { extractDoi, fetchCrossrefWorkByDoi } from "@/lib/integrations/crossref";
+import { fetchOpenAlexAuthorByOrcid } from "@/lib/integrations/openalex";
 import type {
   CapabilityEvidenceType,
   ExternalSourceType,
@@ -35,27 +43,6 @@ function coerceValueForField(fieldPath: string, value: string) {
   return { [fieldPath]: value };
 }
 
-/**
- * Cho phép chủ hồ sơ TỰ thao tác, hoặc admin (VAST_ADMIN toàn hệ thống,
- * HOI_ADMIN đúng tổ chức của hồ sơ) thao tác THAY — theo yêu cầu bổ sung
- * quyền quản trị. `actingAsAdmin` dùng để ghi rõ vào AuditLog ai thực sự
- * bấm nút, tránh lẫn với dữ liệu chủ hồ sơ tự khai (VC-NV-011 Mục 3.4, 13.2).
- */
-async function requireProfileOwnerOrAdmin(expertProfileId: string) {
-  const user = await requireUser();
-  const profile = await db.expertProfile.findUniqueOrThrow({ where: { id: expertProfileId } });
-
-  const isOwner = profile.userId === user.id;
-  const isAdmin =
-    user.role === "VAST_ADMIN" ||
-    (user.role === "HOI_ADMIN" && user.organizationId === profile.organizationId);
-
-  if (!isOwner && !isAdmin) {
-    throw new ForbiddenError("Chỉ chủ hồ sơ hoặc quản trị viên tổ chức mới thực hiện được thao tác này.");
-  }
-
-  return { user, profile, actingAsAdmin: !isOwner };
-}
 
 // ---------- Consent (VC-NV-011 Mục 3.2, 01.3) ----------
 
@@ -65,7 +52,7 @@ export async function grantConsentAction(
   purpose: string,
   scopeNote?: string
 ) {
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const consent = await db.consent.create({
     data: { expertProfileId, sourceType, purpose, scopeNote },
@@ -87,7 +74,7 @@ export async function grantConsentAction(
 
 export async function revokeConsentAction(consentId: string) {
   const consent = await db.consent.findUniqueOrThrow({ where: { id: consentId } });
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(consent.expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(consent.expertProfileId);
 
   await db.consent.update({ where: { id: consentId }, data: { revokedAt: new Date() } });
 
@@ -104,29 +91,145 @@ export async function revokeConsentAction(consentId: string) {
   revalidatePath(`/dashboard/experts/${consent.expertProfileId}`);
 }
 
-// ---------- Enrichment MOCK (ADR-0001 Mục 8 — chưa nối API thật) ----------
+// ---------- ORCID (VC-NV-011 Mục 9.1) ----------
 
+/**
+ * Nhập ORCID iD thủ công — trạng thái ENTERED, KHÔNG được coi là đã xác
+ * thực (Mục 6.1). Xác thực thật phải qua OAuth — xem
+ * app/api/integrations/orcid/connect. Không hạ cấp nếu đã AUTHENTICATED.
+ */
+export async function addOrcidIdentifierAction(expertProfileId: string, orcid: string) {
+  const normalized = orcid.trim().toUpperCase();
+  if (!isValidOrcidChecksum(normalized)) {
+    throw new Error("ORCID iD không hợp lệ (sai định dạng hoặc sai checksum).");
+  }
+
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
+
+  const existing = await db.identifier.findUnique({
+    where: { type_value: { type: "ORCID", value: normalized } },
+  });
+  if (existing && existing.expertProfileId !== expertProfileId) {
+    throw new Error("ORCID iD này đã được liên kết với một hồ sơ khác.");
+  }
+
+  await db.$transaction(async (tx) => {
+    if (!existing) {
+      await tx.identifier.create({ data: { type: "ORCID", value: normalized, expertProfileId } });
+    }
+
+    const connection = await tx.externalConnection.findFirst({
+      where: { expertProfileId, sourceType: "ORCID" },
+    });
+    if (connection) {
+      if (connection.status !== "AUTHENTICATED") {
+        await tx.externalConnection.update({
+          where: { id: connection.id },
+          data: { externalId: normalized, status: "ENTERED" },
+        });
+      }
+    } else {
+      await tx.externalConnection.create({
+        data: { expertProfileId, sourceType: "ORCID", externalId: normalized, status: "ENTERED" },
+      });
+    }
+  });
+
+  await db.auditLog.create({
+    data: {
+      userId: user.id,
+      action: "ORCID_IDENTIFIER_ENTERED",
+      entity: "ExpertProfile",
+      entityId: expertProfileId,
+      meta: { orcid: normalized, actingAsAdmin },
+    },
+  });
+
+  revalidatePath(`/dashboard/experts/${expertProfileId}`);
+}
+
+// ---------- Enrichment (VC-NV-011 Mục 7.2, ADR-0001 Mục 8) ----------
+
+/**
+ * Nếu hồ sơ có ORCID (bất kỳ trạng thái) và đã cấp consent OpenAlex/ORCID,
+ * gọi OpenAlex thật lấy publications/lĩnh vực. Không có ORCID hoặc gọi API
+ * lỗi thì fallback về đề xuất mock như cũ (gắn nhãn rõ MOCK/API, không bao
+ * giờ trình bày mock như dữ liệu thật — Mục 3.5).
+ */
 export async function runMockEnrichmentAction(expertProfileId: string) {
-  const { user, profile, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, profile, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const activeConsent = await db.consent.findFirst({
-    where: { expertProfileId, revokedAt: null },
+    where: { expertProfileId, revokedAt: null, sourceType: { in: ["ORCID", "OPENALEX"] } },
   });
-  if (!activeConsent) {
+  const anyActiveConsent =
+    activeConsent ?? (await db.consent.findFirst({ where: { expertProfileId, revokedAt: null } }));
+  if (!anyActiveConsent) {
     throw new Error("Cần cấp consent cho ít nhất một nguồn trước khi làm giàu hồ sơ.");
   }
 
-  const candidates: Array<{ fieldPath: string; proposedValue: string; confidence: number }> = [];
+  const orcidIdentifier = await db.identifier.findFirst({
+    where: { expertProfileId, type: "ORCID" },
+  });
 
-  if (!profile.headline) {
-    candidates.push({
-      fieldPath: "headline",
-      proposedValue: `${profile.title ?? "Chuyên gia"} — ${profile.fields[0] ?? "đa lĩnh vực"}`,
-      confidence: 0.92,
-    });
+  const candidates: Array<{
+    fieldPath: string;
+    proposedValue: string;
+    confidence: number;
+    sourceType: ExternalSourceType;
+    extractionMethod: "API" | "MOCK";
+    evidence?: string;
+  }> = [];
+
+  let usedRealApi = false;
+
+  if (orcidIdentifier && activeConsent) {
+    const author = await fetchOpenAlexAuthorByOrcid(orcidIdentifier.value);
+    if (author) {
+      usedRealApi = true;
+      if (!profile.publications && author.worksCount > 0) {
+        candidates.push({
+          fieldPath: "publications",
+          proposedValue: String(author.worksCount),
+          confidence: 0.85,
+          sourceType: "OPENALEX",
+          extractionMethod: "API",
+          evidence: `OpenAlex ${author.openAlexId} — works_count thật`,
+        });
+      }
+      if (!profile.headline && author.topics[0]) {
+        candidates.push({
+          fieldPath: "headline",
+          proposedValue: `${profile.title ?? "Chuyên gia"} — ${author.topics[0].fieldDisplayName || author.topics[0].displayName}`,
+          confidence: 0.8,
+          sourceType: "OPENALEX",
+          extractionMethod: "API",
+          evidence: `OpenAlex topic thật: ${author.topics[0].displayName}`,
+        });
+      }
+    }
   }
-  if (!profile.publications) {
-    candidates.push({ fieldPath: "publications", proposedValue: "3", confidence: 0.7 });
+
+  // Fallback mock — chỉ dùng khi chưa có ORCID hoặc gọi API thật thất bại/rỗng.
+  if (!usedRealApi) {
+    if (!profile.headline) {
+      candidates.push({
+        fieldPath: "headline",
+        proposedValue: `${profile.title ?? "Chuyên gia"} — ${profile.fields[0] ?? "đa lĩnh vực"}`,
+        confidence: 0.92,
+        sourceType: anyActiveConsent.sourceType,
+        extractionMethod: "MOCK",
+      });
+    }
+    if (!profile.publications) {
+      candidates.push({
+        fieldPath: "publications",
+        proposedValue: "3",
+        confidence: 0.7,
+        sourceType: anyActiveConsent.sourceType,
+        extractionMethod: "MOCK",
+      });
+    }
   }
 
   if (candidates.length === 0) {
@@ -140,9 +243,10 @@ export async function runMockEnrichmentAction(expertProfileId: string) {
           expertProfileId,
           fieldPath: c.fieldPath,
           proposedValue: c.proposedValue,
-          sourceType: activeConsent.sourceType,
-          extractionMethod: "MOCK",
+          sourceType: c.sourceType,
+          extractionMethod: c.extractionMethod,
           confidence: c.confidence,
+          evidence: c.evidence,
           conflictFlags: [],
         },
       })
@@ -152,10 +256,10 @@ export async function runMockEnrichmentAction(expertProfileId: string) {
   await db.auditLog.create({
     data: {
       userId: user.id,
-      action: "ENRICHMENT_MOCK_RUN",
+      action: usedRealApi ? "ENRICHMENT_OPENALEX_RUN" : "ENRICHMENT_MOCK_RUN",
       entity: "ExpertProfile",
       entityId: expertProfileId,
-      meta: { proposalCount: created.length, actingAsAdmin },
+      meta: { proposalCount: created.length, actingAsAdmin, usedRealApi },
     },
   });
 
@@ -171,7 +275,7 @@ export async function decideFieldProposalAction(
   editedValue?: string
 ) {
   const proposal = await db.fieldProposal.findUniqueOrThrow({ where: { id: proposalId } });
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(proposal.expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(proposal.expertProfileId);
 
   if (proposal.decision !== "PENDING") {
     throw new Error("Đề xuất này đã được xử lý.");
@@ -216,7 +320,7 @@ export async function decideFieldProposalAction(
 }
 
 export async function bulkSafeAcceptProposalsAction(expertProfileId: string) {
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const pending = await db.fieldProposal.findMany({
     where: { expertProfileId, decision: "PENDING" },
@@ -339,7 +443,7 @@ export async function setFieldVisibilityAction(
   fieldPath: string,
   visibility: FieldVisibility
 ) {
-  const { user, profile, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, profile, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const current = (profile.visibility as Record<string, FieldVisibility> | null) ?? {};
   const next = { ...current, [fieldPath]: visibility };
@@ -366,7 +470,7 @@ export async function addAffiliationAction(
   organizationId: string,
   input: { department?: string; position?: string; affiliationType?: string; isPrimary?: boolean }
 ) {
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const affiliation = await db.affiliation.create({
     data: {
@@ -418,7 +522,7 @@ export async function verifyAffiliationAction(affiliationId: string) {
 // ---------- Expertise & Capability (VC-NV-011 Mục 12) ----------
 
 export async function addExpertiseAction(expertProfileId: string, label: string) {
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const expertise = await db.expertise.create({
     data: { expertProfileId, label, source: "SELF", confirmedAt: new Date() },
@@ -439,7 +543,7 @@ export async function addExpertiseAction(expertProfileId: string, label: string)
 }
 
 export async function addCapabilityAction(expertProfileId: string, label: string) {
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(expertProfileId);
 
   const capability = await db.capability.create({ data: { expertProfileId, label } });
 
@@ -464,10 +568,26 @@ export async function addCapabilityEvidenceAction(
   referenceUrl?: string
 ) {
   const capability = await db.capability.findUniqueOrThrow({ where: { id: capabilityId } });
-  const { user, actingAsAdmin } = await requireProfileOwnerOrAdmin(capability.expertProfileId);
+  const { user, actingAsAdmin } = await requireExpertProfileOwnerOrAdmin(capability.expertProfileId);
+
+  // PUBLICATION + referenceUrl chứa DOI → xác minh thật qua Crossref, gắn
+  // tiêu đề/tác giả/năm THẬT vào mô tả thay vì tin nguyên văn người nhập.
+  let finalDescription = description;
+  let crossrefVerified = false;
+  if (type === "PUBLICATION" && referenceUrl) {
+    const doi = extractDoi(referenceUrl);
+    if (doi) {
+      const work = await fetchCrossrefWorkByDoi(doi);
+      if (work) {
+        crossrefVerified = true;
+        const authors = work.authors.slice(0, 3).join(", ");
+        finalDescription = `[Crossref xác minh] ${work.title}${authors ? ` — ${authors}` : ""}${work.year ? ` (${work.year})` : ""}${work.containerTitle ? `, ${work.containerTitle}` : ""}`;
+      }
+    }
+  }
 
   const evidence = await db.capabilityEvidence.create({
-    data: { capabilityId, type, description, referenceUrl },
+    data: { capabilityId, type, description: finalDescription, referenceUrl },
   });
 
   await db.auditLog.create({
@@ -476,7 +596,7 @@ export async function addCapabilityEvidenceAction(
       action: "CAPABILITY_EVIDENCE_ADDED",
       entity: "CapabilityEvidence",
       entityId: evidence.id,
-      meta: { actingAsAdmin },
+      meta: { actingAsAdmin, crossrefVerified },
     },
   });
 

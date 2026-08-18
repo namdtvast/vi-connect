@@ -164,3 +164,23 @@ export function isBulkSafeAccept(proposal: FieldProposalSafety): boolean {
 export function canVerifyCapability(evidenceCount: number): boolean {
   return evidenceCount >= 1;
 }
+
+// ---------- ORCID (VC-NV-011 Mục 9.1) ----------
+
+/**
+ * Kiểm tra checksum ISO 7064 mod 11-2 của ORCID iD (không gọi mạng) — chặn
+ * giá trị sai định dạng/gõ nhầm trước khi lưu, không thay thế xác thực OAuth.
+ */
+export function isValidOrcidChecksum(orcid: string): boolean {
+  const digits = orcid.replace(/-/g, "");
+  if (!/^\d{15}[\dX]$/.test(digits)) return false;
+
+  let total = 0;
+  for (let i = 0; i < 15; i++) {
+    total = (total + Number(digits[i])) * 2;
+  }
+  const remainder = total % 11;
+  const result = (12 - remainder) % 11;
+  const expected = result === 10 ? "X" : String(result);
+  return digits[15] === expected;
+}

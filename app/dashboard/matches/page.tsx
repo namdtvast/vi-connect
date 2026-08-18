@@ -64,7 +64,7 @@ export default async function MatchesPage() {
                     <div className="text-xs text-muted">{m.need.organization.name}</div>
                   </td>
                   <td className="px-4 py-3">
-                    {m.supply?.title ?? m.expertProfile?.user.name ?? "—"}
+                    {m.supply?.title ?? m.expertProfile?.user?.name ?? "—"}
                   </td>
                   <td className="px-4 py-3">{(m.score * 100).toFixed(0)}%</td>
                   <td className="px-4 py-3">

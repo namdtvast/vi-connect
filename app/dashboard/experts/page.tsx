@@ -42,7 +42,7 @@ export default async function ExpertsPage() {
                 <div>
                   <div className="font-medium">
                     {e.title ? `${e.title} ` : ""}
-                    {e.user.name}
+                    {e.user?.name ?? "Hồ sơ chưa có người nhận"}
                   </div>
                   <div className="text-xs text-muted">{e.organization.name}</div>
                 </div>

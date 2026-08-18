@@ -64,7 +64,7 @@ export default async function NeedDetailPage({
             score={m.score}
             reasons={m.reasons as MatchReason[]}
             stage={m.stage}
-            label={m.supply ? m.supply.title : (m.expertProfile?.user.name ?? "—")}
+            label={m.supply ? m.supply.title : (m.expertProfile?.user?.name ?? "—")}
             sublabel={m.supply ? "Công nghệ / giải pháp" : "Chuyên gia"}
           />
         ))}

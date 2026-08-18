@@ -32,7 +32,7 @@ export async function convertMatchToProjectAction(matchId: string) {
   if (existing) return existing.id;
 
   const partnerLabel =
-    match.supply?.title ?? match.expertProfile?.user.name ?? "đối tác";
+    match.supply?.title ?? match.expertProfile?.user?.name ?? "đối tác";
 
   const project = await db.project.create({
     data: {

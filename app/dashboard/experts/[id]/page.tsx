@@ -7,6 +7,18 @@ import { fieldLabel } from "@/lib/taxonomy";
 import { VERIFICATION_BADGE, VERIFICATION_LABEL } from "@/lib/verification-labels";
 import { VerifyActions } from "@/components/experts/verify-actions";
 import { formatDate } from "@/lib/utils";
+import type { FieldVisibility } from "@/lib/domain/identity";
+import {
+  AdminClaimsSection,
+  AffiliationSection,
+  ClaimSection,
+  ConsentSection,
+  EnrichmentAndProposalsSection,
+  ExpertiseCapabilitySection,
+  IdentityMatchSection,
+  MergeHistorySection,
+  VisibilitySection,
+} from "@/components/experts/identity-panel";
 
 export default async function ExpertDetailPage({
   params,
@@ -16,7 +28,16 @@ export default async function ExpertDetailPage({
 
   const expert = await db.expertProfile.findUnique({
     where: { id },
-    include: { user: true, organization: true, identifiers: true },
+    include: {
+      user: true,
+      organization: true,
+      identifiers: true,
+      consents: { orderBy: { grantedAt: "desc" } },
+      fieldProposals: { where: { decision: "PENDING" }, orderBy: { createdAt: "desc" } },
+      expertise: true,
+      capabilities: { include: { evidence: true } },
+      affiliations: { include: { organization: true }, orderBy: { createdAt: "asc" } },
+    },
   });
 
   if (!expert) notFound();
@@ -25,14 +46,46 @@ export default async function ExpertDetailPage({
     session?.user.role === "VAST_ADMIN" ||
     (session?.user.role === "HOI_ADMIN" &&
       session.user.organizationId === expert.organizationId);
+  const canMerge = session?.user.role === "VAST_ADMIN";
+  const isOwner = Boolean(session?.user && expert.userId === session.user.id);
+
+  const viewerHasProfile = session?.user
+    ? Boolean(await db.expertProfile.findUnique({ where: { userId: session.user.id } }))
+    : true;
+
+  const [organizations, pendingClaims, identityMatches, mergeHistory] = await Promise.all([
+    isOwner ? db.organization.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }) : Promise.resolve([]),
+    canManage
+      ? db.profileClaim.findMany({
+          where: { expertProfileId: id, status: "PENDING" },
+          include: { claimant: true },
+        })
+      : Promise.resolve([]),
+    canManage
+      ? db.identityMatch.findMany({
+          where: { OR: [{ profileAId: id }, { profileBId: id }], status: { not: "MERGED" } },
+          include: {
+            profileA: { include: { user: true, organization: true } },
+            profileB: { include: { user: true, organization: true } },
+          },
+        })
+      : Promise.resolve([]),
+    canManage
+      ? db.mergeHistory.findMany({
+          where: { targetProfileId: id },
+          include: { sourceProfile: { include: { user: true } } },
+          orderBy: { createdAt: "desc" },
+        })
+      : Promise.resolve([]),
+  ]);
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-3xl">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold">
             {expert.title ? `${expert.title} ` : ""}
-            {expert.user.name}
+            {expert.user?.name ?? "Hồ sơ chưa có người nhận"}
           </h1>
           <p className="text-sm text-muted">{expert.organization.name}</p>
         </div>
@@ -94,6 +147,73 @@ export default async function ExpertDetailPage({
             <VerifyActions expertProfileId={expert.id} />
           </CardContent>
         </Card>
+      )}
+
+      {!expert.userId && session?.user && !viewerHasProfile && (
+        <ClaimSection expertProfileId={expert.id} />
+      )}
+
+      {canManage && <AdminClaimsSection claims={pendingClaims} />}
+
+      <ConsentSection expertProfileId={expert.id} consents={expert.consents} isOwner={isOwner} />
+
+      <EnrichmentAndProposalsSection
+        expertProfileId={expert.id}
+        proposals={expert.fieldProposals}
+        isOwner={isOwner}
+      />
+
+      <ExpertiseCapabilitySection
+        expertProfileId={expert.id}
+        expertise={expert.expertise}
+        capabilities={expert.capabilities}
+        isOwner={isOwner}
+        canVerify={canManage}
+      />
+
+      <AffiliationSection
+        expertProfileId={expert.id}
+        affiliations={expert.affiliations}
+        organizations={organizations}
+        isOwner={isOwner}
+        canVerify={canManage}
+      />
+
+      <VisibilitySection
+        expertProfileId={expert.id}
+        visibility={(expert.visibility as Record<string, FieldVisibility>) ?? {}}
+        isOwner={isOwner}
+      />
+
+      {canManage && (
+        <IdentityMatchSection
+          expertProfileId={expert.id}
+          canMerge={canMerge}
+          matches={identityMatches.map((m) => {
+            const other = m.profileAId === expert.id ? m.profileB : m.profileA;
+            return {
+              id: m.id,
+              score: m.score,
+              status: m.status,
+              otherProfile: {
+                id: other.id,
+                name: other.user?.name ?? other.headline ?? "Hồ sơ chưa có tên",
+                organizationName: other.organization.name,
+              },
+            };
+          })}
+        />
+      )}
+
+      {canManage && (
+        <MergeHistorySection
+          merges={mergeHistory.map((m) => ({
+            id: m.id,
+            reason: m.reason,
+            rolledBackAt: m.rolledBackAt ? m.rolledBackAt.toISOString() : null,
+            sourceProfileName: m.sourceProfile.user?.name ?? m.sourceProfile.headline ?? "hồ sơ khác",
+          }))}
+        />
       )}
     </div>
   );

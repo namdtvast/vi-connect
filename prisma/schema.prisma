@@ -46,13 +46,14 @@ model Organization {
   parent      Organization?    @relation("OrgHierarchy", fields: [parentId], references: [id])
   children    Organization[]   @relation("OrgHierarchy")
 
-  identifiers Identifier[]
-  members     ExpertProfile[]
-  users       User[]
-  supplies    Supply[]
-  needs       Need[]
-  challenges  Challenge[]
+  identifiers    Identifier[]
+  members        ExpertProfile[]
+  users          User[]
+  supplies       Supply[]
+  needs          Need[]
+  challenges     Challenge[]
   fundingSources FundingSource[]
+  affiliations   Affiliation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -69,17 +70,18 @@ enum Role {
 }
 
 model User {
-  id             String        @id @default(cuid())
-  email          String        @unique
+  id             String         @id @default(cuid())
+  email          String         @unique
   passwordHash   String
   name           String
-  role           Role          @default(VIEWER)
+  role           Role           @default(VIEWER)
   organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
   expertProfile  ExpertProfile?
+  profileClaims  ProfileClaim[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   auditLogs AuditLog[]
 }
 
@@ -90,35 +92,62 @@ enum VerificationStatus {
   REJECTED
 }
 
+enum ProfileStatus {
+  UNCLAIMED // candidate profile, chua co nguoi nhan (ADR-0001 Muc 10)
+  CLAIMED
+  SUSPENDED
+  RETIRED
+  MERGED
+}
+
 model ExpertProfile {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String       @id @default(cuid())
+  userId         String?      @unique // null = candidate profile chua duoc claim (ADR-0001 Muc 10)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  title       String? // hoc ham/hoc vi
-  headline    String?
-  bio         String?
-  fields      String[] // linh vuc chuyen mon (taxonomy code)
-  skills      String[]
+  profileStatus ProfileStatus @default(CLAIMED)
+
+  title           String? // hoc ham/hoc vi
+  headline        String?
+  bio             String?
+  fields          String[] // linh vuc chuyen mon (taxonomy code)
+  skills          String[]
   experienceYears Int?
-  publications Int?      @default(0)
-  patents      Int?      @default(0)
+  publications    Int?     @default(0)
+  patents         Int?     @default(0)
+
+  // Field-level visibility: map fieldPath -> FieldVisibility (VC-NV-011 Muc 15, ADR-0001 Muc 10).
+  // Khong co key = ap dung mac dinh Muc 15.2 o tang domain, khong phai PUBLIC ngam dinh.
+  visibility Json?
 
   verificationStatus VerificationStatus @default(UNVERIFIED)
   verifiedById       String?
   verifiedAt         DateTime?
   verificationNote   String?
 
-  identifiers Identifier[]
-  supplies    Supply[]
-  matchesAsExpert Match[] @relation("ExpertMatches")
+  identifiers     Identifier[]
+  supplies        Supply[]
+  matchesAsExpert Match[]      @relation("ExpertMatches")
+
+  affiliations        Affiliation[]
+  consents            Consent[]
+  externalConnections ExternalConnection[]
+  fieldProposals      FieldProposal[]
+  expertise           Expertise[]
+  capabilities        Capability[]
+  claims              ProfileClaim[]
+  identityMatchesAsA  IdentityMatch[]      @relation("IdentityMatchA")
+  identityMatchesAsB  IdentityMatch[]      @relation("IdentityMatchB")
+  mergesAsSource      MergeHistory[]       @relation("MergeSource")
+  mergesAsTarget      MergeHistory[]       @relation("MergeTarget")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([verificationStatus])
+  @@index([profileStatus])
 }
 
 enum IdentifierType {
@@ -130,15 +159,262 @@ enum IdentifierType {
 }
 
 model Identifier {
-  id              String          @id @default(cuid())
+  id              String         @id @default(cuid())
   type            IdentifierType
   value           String
   expertProfileId String?
-  expertProfile   ExpertProfile?  @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+  expertProfile   ExpertProfile? @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
   organizationId  String?
-  organization    Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([type, value])
+}
+
+// ---------- CONNECT: identity & profile core (cau phan 01, VC-NV-011 v2.0) ----------
+// Tam chot theo docs/adr/0001-ho-so-dinh-danh-tam-chot-tham-so.md — chua phai
+// quyet dinh chinh thuc cua Product Owner.
+
+model Affiliation {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id])
+
+  department      String?
+  position        String? // chuc danh, free-text (ADR-0001 Muc 6)
+  affiliationType String? // vd EMPLOYEE|EXPERT|CONSULTANT|MEMBER, free-text (ADR-0001 Muc 6)
+  isPrimary       Boolean   @default(false)
+  startDate       DateTime?
+  endDate         DateTime?
+
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  verifiedById       String?
+  verifiedAt         DateTime?
+  source             String? // "SELF" | "ORGANIZATION" | ten nguon ngoai
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expertProfileId])
+  @@index([organizationId])
+}
+
+enum ExternalSourceType {
+  ORCID
+  OPENALEX
+  CROSSREF
+  ROR
+  ORG_WEBSITE
+  INTERNAL
+  COMMERCIAL
+}
+
+model Consent {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+
+  sourceType    ExternalSourceType
+  purpose       String // vd "IDENTITY_VERIFICATION" | "ENRICHMENT" | "MATCHING", free-text v1
+  scopeNote     String?
+  policyVersion String             @default("1.0")
+
+  grantedAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([expertProfileId, sourceType])
+}
+
+enum ExternalConnectionStatus {
+  ENTERED
+  MATCHED
+  AUTHENTICATED
+  DISPUTED
+  REVOKED
+}
+
+model ExternalConnection {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+
+  sourceType ExternalSourceType
+  externalId String // id/dinh danh tai nguon ngoai, vd ORCID iD
+  status     ExternalConnectionStatus @default(ENTERED)
+
+  connectedAt DateTime  @default(now())
+  revokedAt   DateTime?
+
+  // Rang buoc "1 external identifier da AUTHENTICATED chi gan 1 golden profile"
+  // (VC-NV-011 Muc 17.3) enforce o tang domain/action, chua co unique index
+  // dieu kien (partial index) o Prisma v1 — xem ADR-0001 Muc 8.
+  @@index([sourceType, externalId])
+  @@index([expertProfileId, sourceType])
+}
+
+enum ProposalDecision {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EDITED
+  SUPERSEDED
+}
+
+model FieldProposal {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+
+  fieldPath            String // vd "headline", "bio"
+  proposedValue        Json
+  currentValueSnapshot Json?
+
+  sourceType       ExternalSourceType
+  sourceRecordId   String?
+  sourceUrl        String?
+  collectedAt      DateTime           @default(now())
+  extractionMethod String? // "MOCK" o v1 (ADR-0001 Muc 8)
+  confidence       Float
+  evidence         String?
+  conflictFlags    String[]
+
+  decision     ProposalDecision @default(PENDING)
+  decidedValue Json?
+  decidedById  String?
+  decidedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([expertProfileId, decision])
+}
+
+enum ExpertiseSource {
+  SELF
+  AI_SUGGESTED
+  EVIDENCE
+}
+
+model Expertise {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+
+  label       String // free-text (ADR-0001 Muc 6)
+  source      ExpertiseSource @default(SELF)
+  confirmedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([expertProfileId, label])
+}
+
+enum CapabilityEvidenceType {
+  PUBLICATION
+  PROJECT
+  CERTIFICATE
+  PATENT
+  TECHNOLOGY
+  ORGANIZATION_VERIFICATION
+}
+
+model Capability {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+
+  label              String // free-text (ADR-0001 Muc 6)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+
+  evidence CapabilityEvidence[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([expertProfileId, label])
+}
+
+model CapabilityEvidence {
+  id           String     @id @default(cuid())
+  capabilityId String
+  capability   Capability @relation(fields: [capabilityId], references: [id], onDelete: Cascade)
+
+  type         CapabilityEvidenceType
+  description  String
+  referenceUrl String?
+
+  createdAt DateTime @default(now())
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ProfileClaim {
+  id              String        @id @default(cuid())
+  expertProfileId String
+  expertProfile   ExpertProfile @relation(fields: [expertProfileId], references: [id], onDelete: Cascade)
+  claimantUserId  String
+  claimant        User          @relation(fields: [claimantUserId], references: [id])
+
+  status      ClaimStatus @default(PENDING)
+  note        String?
+  decidedById String?
+  decidedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([expertProfileId, status])
+}
+
+enum IdentityMatchStatus {
+  POTENTIAL_DUPLICATE
+  LIKELY_SAME
+  CONFIRMED_SAME
+  DIFFERENT_PERSON
+  MERGED
+}
+
+model IdentityMatch {
+  id         String        @id @default(cuid())
+  profileAId String
+  profileA   ExpertProfile @relation("IdentityMatchA", fields: [profileAId], references: [id], onDelete: Cascade)
+  profileBId String
+  profileB   ExpertProfile @relation("IdentityMatchB", fields: [profileBId], references: [id], onDelete: Cascade)
+
+  score            Float
+  signals          Json
+  status           IdentityMatchStatus @default(POTENTIAL_DUPLICATE)
+  algorithmVersion String              @default("adr-0001-v1")
+
+  decidedById String?
+  decidedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([profileAId, profileBId])
+  @@index([status])
+}
+
+model MergeHistory {
+  id              String        @id @default(cuid())
+  sourceProfileId String
+  sourceProfile   ExpertProfile @relation("MergeSource", fields: [sourceProfileId], references: [id])
+  targetProfileId String
+  targetProfile   ExpertProfile @relation("MergeTarget", fields: [targetProfileId], references: [id])
+
+  reason         String
+  rollbackData   Json // snapshot du du de rollback (VC-NV-011 Muc 9.3)
+  approvedById   String
+  approvedAt     DateTime  @default(now())
+  rolledBackAt   DateTime?
+  rolledBackById String?
+
+  createdAt DateTime @default(now())
+
+  @@index([targetProfileId])
 }
 
 // ---------- DISCOVER & MATCH ----------
@@ -183,17 +459,17 @@ enum SupplyStatus {
 }
 
 model Supply {
-  id              String        @id @default(cuid())
+  id              String         @id @default(cuid())
   title           String
   description     String
   type            SupplyType
   fields          String[]
   trl             Int? // technology readiness level 1-9
   organizationId  String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organization    Organization?  @relation(fields: [organizationId], references: [id])
   expertProfileId String?
   expertProfile   ExpertProfile? @relation(fields: [expertProfileId], references: [id])
-  status          SupplyStatus  @default(DRAFT)
+  status          SupplyStatus   @default(DRAFT)
   matches         Match[]
 
   createdAt DateTime @default(now())
@@ -223,9 +499,9 @@ model Match {
   expertProfileId String?
   expertProfile   ExpertProfile? @relation("ExpertMatches", fields: [expertProfileId], references: [id])
 
-  score      Float // 0..1 explainable score
-  reasons    Json // structured explanation, e.g. [{factor:"field_overlap", weight:0.4, detail:"..."}]
-  stage      MatchStage @default(SUGGESTED)
+  score   Float // 0..1 explainable score
+  reasons Json // structured explanation, e.g. [{factor:"field_overlap", weight:0.4, detail:"..."}]
+  stage   MatchStage @default(SUGGESTED)
 
   project Project?
 
@@ -276,15 +552,15 @@ enum SolutionStatus {
 }
 
 model Solution {
-  id              String         @id @default(cuid())
-  challengeId     String
-  challenge       Challenge      @relation(fields: [challengeId], references: [id])
-  submittedById   String
-  summary         String
-  approach        String
-  status          SolutionStatus @default(SUBMITTED)
-  reviewScore     Float?
-  reviewNote      String?
+  id            String         @id @default(cuid())
+  challengeId   String
+  challenge     Challenge      @relation(fields: [challengeId], references: [id])
+  submittedById String
+  summary       String
+  approach      String
+  status        SolutionStatus @default(SUBMITTED)
+  reviewScore   Float?
+  reviewNote    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -310,8 +586,8 @@ model Project {
   summary String?
   status  ProjectStatus @default(PLANNING)
 
-  milestones  Milestone[]
-  agreement   Agreement?
+  milestones Milestone[]
+  agreement  Agreement?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -328,12 +604,12 @@ enum MilestoneStatus {
 }
 
 model Milestone {
-  id          String          @id @default(cuid())
-  projectId   String
-  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  title       String
-  dueDate     DateTime?
-  status      MilestoneStatus @default(PLANNED)
+  id           String          @id @default(cuid())
+  projectId    String
+  project      Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title        String
+  dueDate      DateTime?
+  status       MilestoneStatus @default(PLANNED)
   deliverables Deliverable[]
 
   createdAt DateTime @default(now())
@@ -369,14 +645,14 @@ enum AgreementStatus {
 }
 
 model Agreement {
-  id         String          @id @default(cuid())
-  projectId  String          @unique
-  project    Project         @relation(fields: [projectId], references: [id])
-  type       AgreementType
-  status     AgreementStatus @default(DRAFT)
-  valueVnd   BigInt?
-  signedAt   DateTime?
-  note       String?
+  id        String          @id @default(cuid())
+  projectId String          @unique
+  project   Project         @relation(fields: [projectId], references: [id])
+  type      AgreementType
+  status    AgreementStatus @default(DRAFT)
+  valueVnd  BigInt?
+  signedAt  DateTime?
+  note      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -97,12 +97,12 @@ export default async function ExpertsPage() {
                 <span>{e.publications} công bố</span>
                 <span>{e.patents} sáng chế</span>
               </div>
-              {canManage && (
+              {(canManage || e.userId === session?.user.id) && (
                 <Link
                   href={`/dashboard/experts/${e.id}`}
                   className="text-sm text-brand hover:underline mt-1"
                 >
-                  Xem chi tiết / xác minh →
+                  {canManage ? "Xem chi tiết / xác minh →" : "Xem / chỉnh sửa hồ sơ →"}
                 </Link>
               )}
             </CardContent>

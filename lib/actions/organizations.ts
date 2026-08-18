@@ -4,7 +4,28 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireRole } from "@/lib/rbac";
+import { lookupTaxCode, type TaxPayerInfo } from "@/lib/integrations/tax-lookup";
 import type { ActionState } from "@/lib/actions/auth";
+
+const TAX_CODE_RE = /^\d{10}(-\d{3})?$/;
+
+export async function lookupTaxCodeAction(
+  taxCode: string
+): Promise<{ data?: TaxPayerInfo; error?: string }> {
+  await requireRole("SUPERADMIN");
+
+  if (!TAX_CODE_RE.test(taxCode.trim())) {
+    return { error: "Mã số thuế không hợp lệ — cần 10 số (có thể kèm -XXX cho chi nhánh)." };
+  }
+
+  try {
+    const info = await lookupTaxCode(taxCode.trim());
+    if (!info) return { error: "Không tìm thấy thông tin cho mã số thuế này." };
+    return { data: info };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Không thể tra cứu mã số thuế." };
+  }
+}
 
 const orgSchema = z.object({
   name: z.string().min(3, "Tên tổ chức tối thiểu 3 ký tự"),

@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import { createOrganizationAction } from "@/lib/actions/organizations";
+import { useActionState, useState, useTransition } from "react";
+import { createOrganizationAction, lookupTaxCodeAction } from "@/lib/actions/organizations";
 import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Select, Textarea } from "@/components/ui/field";
@@ -16,11 +16,60 @@ export function CreateOrgForm() {
     initialState
   );
 
+  const [taxCode, setTaxCode] = useState("");
+  const [lookupPending, startLookup] = useTransition();
+  const [lookupError, setLookupError] = useState<string | null>(null);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleLookup = () => {
+    setLookupError(null);
+    startLookup(async () => {
+      const result = await lookupTaxCodeAction(taxCode);
+      if (result.error || !result.data) {
+        setLookupError(result.error ?? "Không thể tra cứu mã số thuế.");
+        return;
+      }
+      setName(result.data.name);
+      if (result.data.address) {
+        setDescription(`Địa chỉ theo mã số thuế: ${result.data.address}`);
+      }
+    });
+  };
+
   return (
     <form action={formAction} className="grid md:grid-cols-2 gap-4">
+      <FieldGroup className="md:col-span-2">
+        <Label htmlFor="taxCode">Mã số thuế (không bắt buộc)</Label>
+        <div className="flex gap-2">
+          <Input
+            id="taxCode"
+            value={taxCode}
+            onChange={(e) => setTaxCode(e.target.value)}
+            placeholder="VD: 0101248141"
+            className="max-w-xs"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            disabled={lookupPending || !taxCode.trim()}
+            onClick={handleLookup}
+          >
+            {lookupPending ? "Đang tra cứu..." : "Tra cứu"}
+          </Button>
+        </div>
+        {lookupError && <p className="text-xs text-danger mt-1.5">{lookupError}</p>}
+      </FieldGroup>
       <FieldGroup>
         <Label htmlFor="name">Tên đầy đủ</Label>
-        <Input id="name" name="name" placeholder="VD: Liên hiệp Hội Khoa học và Kỹ thuật TP. Hà Nội" required />
+        <Input
+          id="name"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="VD: Liên hiệp Hội Khoa học và Kỹ thuật TP. Hà Nội"
+          required
+        />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="shortName">Tên viết tắt</Label>
@@ -49,7 +98,14 @@ export function CreateOrgForm() {
       </FieldGroup>
       <FieldGroup className="md:col-span-2">
         <Label htmlFor="description">Mô tả</Label>
-        <Textarea id="description" name="description" rows={2} placeholder="Chức năng, lĩnh vực hoạt động chính..." />
+        <Textarea
+          id="description"
+          name="description"
+          rows={2}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Chức năng, lĩnh vực hoạt động chính..."
+        />
       </FieldGroup>
       <div className="md:col-span-2 flex items-center gap-3">
         <Button type="submit" disabled={pending}>

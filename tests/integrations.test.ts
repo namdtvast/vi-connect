@@ -3,6 +3,28 @@ import test from "node:test";
 import { parseOpenAlexAuthor } from "../lib/integrations/openalex";
 import { parseRorSearchResults } from "../lib/integrations/ror";
 import { extractDoi, parseCrossrefWork } from "../lib/integrations/crossref";
+import { parseTaxPayerResponse } from "../lib/integrations/tax-lookup";
+
+test("parseTaxPayerResponse bóc tách đúng response XInvoice", () => {
+  const info = parseTaxPayerResponse({
+    orgType: "Doanh nghiệp",
+    taxID: "0101248141",
+    name: "CÔNG TY TNHH VÍ DỤ",
+    address: "Số 1, Đường ABC, Hà Nội",
+    taxDepartment: "Cục thuế TP Hà Nội",
+    status: "Đang hoạt động",
+    updatedAt: "2026-01-01",
+  });
+  assert.ok(info);
+  assert.equal(info?.taxId, "0101248141");
+  assert.equal(info?.name, "CÔNG TY TNHH VÍ DỤ");
+  assert.equal(info?.address, "Số 1, Đường ABC, Hà Nội");
+});
+
+test("parseTaxPayerResponse trả null khi thiếu taxID/name", () => {
+  assert.equal(parseTaxPayerResponse({ address: "abc" }), null);
+  assert.equal(parseTaxPayerResponse(null), null);
+});
 
 // Fixture rút gọn từ phản hồi thật của api.openalex.org/authors/orcid:0000-0002-1825-0097
 const OPENALEX_FIXTURE = {

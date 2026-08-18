@@ -6,6 +6,7 @@ import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Select, Textarea } from "@/components/ui/field";
 import { ORG_TYPE_LABEL } from "@/lib/org-labels";
+import { PROVINCES } from "@/lib/provinces";
 
 const initialState: ActionState = {};
 
@@ -37,7 +38,14 @@ export function CreateOrgForm() {
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="province">Tỉnh / thành phố</Label>
-        <Input id="province" name="province" placeholder="VD: Hà Nội" />
+        <Select id="province" name="province" defaultValue="">
+          <option value="">Chọn tỉnh / thành phố</option>
+          {PROVINCES.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </Select>
       </FieldGroup>
       <FieldGroup className="md:col-span-2">
         <Label htmlFor="description">Mô tả</Label>

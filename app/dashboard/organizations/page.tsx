@@ -79,7 +79,11 @@ export default async function OrganizationsPage() {
                   </td>
                   {isAdmin && (
                     <td className="px-4 py-3">
-                      <OrgStatusActions organizationId={org.id} status={org.status} />
+                      <OrgStatusActions
+                        organizationId={org.id}
+                        organizationName={org.name}
+                        status={org.status}
+                      />
                     </td>
                   )}
                 </tr>

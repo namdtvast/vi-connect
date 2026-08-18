@@ -123,7 +123,7 @@ export default async function ExpertDetailPage({
               {expert.title ? `${expert.title} ` : ""}
               {expert.user?.name ?? "Hồ sơ chưa có người nhận"}
             </h1>
-            <p className="text-sm text-muted">{expert.organization.name}</p>
+            <p className="text-base font-semibold text-muted">{expert.organization.name}</p>
           </div>
         </div>
         <Badge variant={VERIFICATION_BADGE[expert.verificationStatus]}>

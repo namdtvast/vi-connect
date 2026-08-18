@@ -504,15 +504,18 @@ export default function HomePage() {
                 <div className="font-semibold text-brand-dark">Project · Collaboration</div>
                 <p className="text-xs text-muted mt-1">Biến kết nối thành dự án và giá trị thực.</p>
               </div>
-              <div className="mt-4 flex flex-wrap items-start justify-center gap-x-1 gap-y-3">
+              <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-2 sm:gap-x-1 sm:gap-y-3">
                 {PROJECT_FLOW.map((p, i) => (
-                  <div key={p.label} className="flex items-center">
+                  <div key={p.label} className="flex flex-col sm:flex-row items-center">
                     <div className="flex flex-col items-center text-center w-[76px]">
                       <p.icon className="w-4 h-4 text-muted" aria-hidden="true" />
                       <div className="text-[10px] text-muted mt-1 leading-tight">{p.label}</div>
                     </div>
                     {i < PROJECT_FLOW.length - 1 && (
-                      <ArrowRight className="w-3 h-3 text-muted/40 shrink-0" aria-hidden="true" />
+                      <ArrowRight
+                        className="w-3 h-3 text-muted/40 shrink-0 rotate-90 my-1 sm:rotate-0 sm:my-0"
+                        aria-hidden="true"
+                      />
                     )}
                   </div>
                 ))}

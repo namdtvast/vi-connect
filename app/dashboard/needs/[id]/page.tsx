@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,7 @@ export default async function NeedDetailPage({
   params,
 }: PageProps<"/dashboard/needs/[id]">) {
   const { id } = await params;
+  const session = await auth();
 
   const need = await db.need.findUnique({
     where: { id },
@@ -25,6 +27,13 @@ export default async function NeedDetailPage({
   });
 
   if (!need) notFound();
+
+  // Cùng điều kiện với generateMatchesAction (lib/actions/matching.ts) — chỉ
+  // hiện nút khi chắc chắn thao tác được, tránh lỗi quyền không xử lý được.
+  const canGenerateMatches =
+    session?.user.role === "VAST_ADMIN" ||
+    ((session?.user.role === "HOI_ADMIN" || session?.user.role === "ENTERPRISE") &&
+      session.user.organizationId === need.organizationId);
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -53,7 +62,7 @@ export default async function NeedDetailPage({
         <h2 className="font-semibold">
           Đề xuất ghép nối ({need.matches.length}) — cấu phần 05
         </h2>
-        <GenerateMatchesButton needId={need.id} />
+        {canGenerateMatches && <GenerateMatchesButton needId={need.id} />}
       </div>
 
       <div className="space-y-3">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Bot,
+  BadgeCheck,
   BrainCircuit,
   Building2,
   Check,
@@ -11,8 +11,7 @@ import {
   Landmark,
   Layers,
   Lightbulb,
-  MapPin,
-  Search,
+  MessageCircle,
   ShieldCheck,
   Sparkles,
   Target,
@@ -37,7 +36,21 @@ const KICKER_WORDS = [
   "LÀ NỀN TẢNG CÓ TRÍ TUỆ, CÓ AI MATCHING",
 ];
 
-const AI_CAPABILITIES = [
+const DIFFERENTIATORS = [
+  {
+    title: "Không phải danh bạ chuyên gia",
+    desc: "Không chỉ trả lời \"ai giỏi lĩnh vực này\" — mà tìm đúng tổ hợp người, tổ chức, công nghệ và nguồn lực cần kết hợp để giải một bài toán.",
+    tag: "Đã có",
+    tagTone: "live" as const,
+    icon: Layers,
+  },
+  {
+    title: "Không phải sàn đăng tin",
+    desc: "Không dừng ở việc giới thiệu hai bên làm quen. Theo bài toán tới tận hợp đồng, mốc triển khai và nghiệm thu, không phải tự liên hệ rồi mất hút.",
+    tag: "Đã có",
+    tagTone: "live" as const,
+    icon: Handshake,
+  },
   {
     title: "AI Matching giải thích được",
     desc: "Mỗi đề xuất ghép nối chuyên gia – bài toán đều hiển thị rõ lý do và trọng số chấm điểm, không phải hộp đen thuật toán.",
@@ -46,32 +59,32 @@ const AI_CAPABILITIES = [
     icon: Sparkles,
   },
   {
-    title: "Semantic Search",
-    desc: "Tìm theo ý nghĩa — chuyên gia, công nghệ, bài toán liên quan — thay vì chỉ khớp từ khóa như tra cứu thông thường.",
-    tag: "Định hướng phát triển",
-    tagTone: "roadmap" as const,
-    icon: Search,
+    title: "Hồ sơ có xác minh",
+    desc: "Hồ sơ được tổ chức đầu mối xác minh trước khi dùng cho ghép nối — không chỉ dựa trên thông tin tự khai.",
+    tag: "Đã có",
+    tagTone: "live" as const,
+    icon: BadgeCheck,
   },
   {
-    title: "AI Agent",
-    desc: "Trợ lý cho chuyên gia, doanh nghiệp và người quản lý dự án — chủ động gợi ý thay vì chỉ chờ người dùng tự tra cứu.",
+    title: "AI hình thành đội ngũ liên ngành",
+    desc: "Không chỉ tìm một chuyên gia — hướng tới đề xuất cả tổ hợp: chuyên gia, tổ chức chủ trì, công nghệ và nguồn tài trợ phù hợp cho cùng một bài toán.",
     tag: "Định hướng phát triển",
     tagTone: "roadmap" as const,
-    icon: Bot,
+    icon: Users,
   },
   {
-    title: "Content Intelligence",
-    desc: "Tự động phân loại tài liệu, trích xuất metadata từ công bố, sáng chế và kết quả nghiên cứu — không cần nhập tay từng trường.",
+    title: "AI Copilot hội thoại tự nhiên",
+    desc: "Trợ lý bằng ngôn ngữ tự nhiên cho mọi tác vụ trên nền tảng — thay vì phải tự mò từng phân hệ.",
     tag: "Định hướng phát triển",
     tagTone: "roadmap" as const,
-    icon: Layers,
+    icon: MessageCircle,
   },
 ];
 
 const COMPARISON = [
   { old: "Dữ liệu tĩnh, cập nhật thủ công theo từng đợt", now: "Knowledge Graph sống, liên kết People – Assets – Opportunities" },
-  { old: "Tìm theo từ khóa, dễ bỏ sót ngữ cảnh", now: "Semantic Search + AI Matching có giải thích lý do đề xuất" },
-  { old: "Đăng tin rồi tự liên hệ, không ai bảo chứng", now: "Trung gian có bảo chứng: chuẩn hóa bài toán, thẩm định, huy động nhóm liên ngành" },
+  { old: "Tìm theo từ khóa, dễ bỏ sót ngữ cảnh", now: "AI Matching có giải thích lý do đề xuất, không phải hộp đen" },
+  { old: "Đăng tin rồi tự liên hệ, không ai bảo chứng", now: "Trung gian có bảo chứng: chuẩn hóa bài toán, thẩm định, đi tới tận hợp đồng và nghiệm thu" },
   { old: "Đo bằng số tài khoản, lượt truy cập", now: "Đo bằng hợp đồng đã ký, nguồn lực đã huy động, tác động đã ghi nhận" },
 ];
 
@@ -81,16 +94,16 @@ const STEPS = [
     label: "CONNECT",
     color: "var(--brand)",
     bg: "var(--brand-light)",
-    title: "Hồ sơ chuyên gia & tổ chức",
-    desc: "Số hóa, xác minh hồ sơ chuyên gia và tổ chức trên một Knowledge Graph dùng chung.",
+    title: "Bài toán thực tiễn & hồ sơ năng lực",
+    desc: "Doanh nghiệp, địa phương đưa lên một bài toán thực tế — chuẩn hóa mục tiêu, yêu cầu, sản phẩm đầu ra. Chuyên gia, tổ chức số hóa và xác minh hồ sơ năng lực trên cùng một Knowledge Graph.",
   },
   {
     step: "02",
     label: "MATCH",
     color: "var(--cyan)",
     bg: "#e3f6fa",
-    title: "Ngân hàng bài toán & ghép nối",
-    desc: "Doanh nghiệp, địa phương đăng bài toán; AI Matching đề xuất chuyên gia và công nghệ phù hợp, luôn kèm giải thích.",
+    title: "AI Matching & thẩm định",
+    desc: "AI phân tích bài toán, đề xuất chuyên gia và công nghệ phù hợp kèm giải thích rõ lý do. Con người thẩm định và quyết định — AI hỗ trợ, không thay thế.",
   },
   {
     step: "03",
@@ -98,54 +111,55 @@ const STEPS = [
     color: "var(--accent)",
     bg: "var(--accent-light)",
     title: "Huy động nguồn lực",
-    desc: "Kết nối chuyên gia, phòng thí nghiệm, tài trợ và đầu tư cần thiết để đưa bài toán thành dự án thật.",
+    desc: "Kết nối chuyên gia, phòng thí nghiệm, tài trợ và đầu tư cần thiết để đưa phương án đã thẩm định thành dự án thật.",
   },
   {
     step: "04",
     label: "EXECUTE",
     color: "var(--red)",
     bg: "var(--red-light)",
-    title: "Dự án & hợp đồng",
-    desc: "Chuyển kết quả huy động thành dự án có mốc, sản phẩm bàn giao và hợp đồng theo dõi được.",
+    title: "Dự án, hợp đồng & triển khai",
+    desc: "Chuyển kết quả huy động thành dự án có mốc, sản phẩm bàn giao và hợp đồng theo dõi được đến khi nghiệm thu.",
   },
   {
     step: "05",
     label: "IMPACT",
     color: "var(--gold)",
     bg: "var(--gold-light)",
-    title: "Đo lường tác động",
-    desc: "Theo dõi nhiệm vụ nghiệm thu, công nghệ chuyển giao và hiệu quả kinh tế - xã hội đo lường được.",
+    title: "Chuyển giao & đo lường tác động",
+    desc: "Theo dõi công nghệ chuyển giao, nhiệm vụ nghiệm thu và hiệu quả kinh tế - xã hội — kết quả này làm giàu Knowledge Graph cho những bài toán tiếp theo.",
   },
 ];
 
 const AUDIENCES = [
   {
     icon: Users,
-    title: "Chuyên gia & nhà khoa học",
-    desc: "Số hóa hồ sơ năng lực, được đề xuất đúng bài toán phù hợp lĩnh vực, tham gia dự án hợp tác thực tế.",
+    title: "Nhà khoa học & Chuyên gia",
+    desc: "Tiếp cận bài toán thật đúng năng lực, tham gia nhóm liên ngành, xây hồ sơ năng lực có bằng chứng qua từng nhiệm vụ đã thực hiện.",
     cta: "Đăng ký hồ sơ chuyên gia",
     href: "/register",
   },
   {
-    icon: Building2,
-    title: "Doanh nghiệp",
-    desc: "Đăng bài toán công nghệ cần giải, tiếp cận mạng lưới chuyên gia và công nghệ đã được xác minh trên toàn quốc.",
-    cta: "Xem ngân hàng bài toán",
-    href: "/dashboard/challenges",
+    icon: FlaskConical,
+    title: "Tổ chức KH&CN",
+    desc: "Đưa chuyên gia, công nghệ, phòng thí nghiệm và thiết bị của tổ chức vào mạng lưới để được AI Matching sử dụng khi có bài toán phù hợp.",
+    cta: "Đăng nhập quản trị tổ chức",
+    href: "/login",
   },
   {
-    icon: MapPin,
-    title: "Địa phương & sở, ban, ngành",
-    desc: "Kết nối nhu cầu chuyển giao công nghệ của địa phương với nguồn lực khoa học trong mạng lưới.",
-    cta: "Xem ngân hàng bài toán",
+    icon: Building2,
+    title: "Doanh nghiệp & Địa phương",
+    desc: "Bắt đầu từ vấn đề cần giải quyết — VI CONNECT giúp chuẩn hóa bài toán, tìm đúng chuyên gia và công nghệ thay vì tự tìm và đánh giá từng nơi.",
+    cta: "Đăng bài toán của bạn",
     href: "/dashboard/challenges",
   },
   {
     icon: Landmark,
-    title: "Hội thành viên & tổ chức KH&CN",
-    desc: "Quản trị hồ sơ tổ chức, phân quyền quản trị theo đơn vị, theo dõi hoạt động kết nối của thành viên.",
-    cta: "Đăng nhập quản trị tổ chức",
-    href: "/login",
+    title: "Quỹ, Nhà tài trợ & Nhà đầu tư",
+    desc: "Định hướng: tiếp cận dòng bài toán và dự án đã được chuẩn hóa, hồ sơ minh bạch, theo dõi tiến độ và tác động theo mốc cụ thể.",
+    tag: "Định hướng phát triển",
+    cta: "Xem cơ hội hợp tác",
+    href: "/dashboard/challenges",
   },
 ];
 
@@ -176,6 +190,15 @@ const JOIN_STEPS = [
   { step: "1", title: "Tạo hồ sơ", desc: "Điền lĩnh vực, kinh nghiệm và thế mạnh chuyên môn — khoảng 2 phút." },
   { step: "2", title: "Được xác minh", desc: "Tổ chức đầu mối xác minh hồ sơ để đảm bảo độ tin cậy trên mạng lưới." },
   { step: "3", title: "Nhận đề xuất phù hợp", desc: "AI Matching gợi ý đúng bài toán, kèm giải thích rõ ràng — không đoán mò." },
+];
+
+const NORTH_STAR = [
+  "Hợp đồng",
+  "Tài trợ & Đầu tư",
+  "Nhiệm vụ",
+  "Công nghệ",
+  "Thu nhập",
+  "Tác động",
 ];
 
 const KG_NODES = [
@@ -244,7 +267,11 @@ export default function HomePage() {
             Kết nối tri thức.{" "}
             <span style={{ color: "var(--gold)" }}>Kiến tạo giá trị.</span>
           </h1>
-          <p className="mt-6 text-white/85 max-w-xl text-lg leading-relaxed">
+          <p className="mt-4 text-white/90 max-w-xl text-lg font-medium leading-snug">
+            Biến bài toán thành đội ngũ. Biến tri thức thành dự án. Biến nguồn lực
+            thành kết quả.
+          </p>
+          <p className="mt-4 text-white/85 max-w-xl leading-relaxed">
             VI CONNECT là nền tảng có trí tuệ, vận hành trên một Knowledge Graph sống,
             kết nối và kích hoạt nguồn lực theo năm bước Connect – Match – Mobilize –
             Execute – Impact, với AI Matching giải thích được xuyên suốt.
@@ -266,7 +293,7 @@ export default function HomePage() {
                 variant="ghost"
                 className="text-white hover:bg-white/10 border border-white/40"
               >
-                Xem ngân hàng bài toán
+                Đăng bài toán của bạn
               </Button>
             </Link>
           </div>
@@ -337,11 +364,11 @@ export default function HomePage() {
               Là một nền tảng có trí tuệ.
             </h2>
             <p className="mt-4 text-muted leading-relaxed">
-              Danh bạ chuyên gia hay sàn đăng tin công nghệ thông thường chỉ lưu trữ
-              thông tin tĩnh, cập nhật thủ công, tìm bằng từ khóa. VI CONNECT xây dựng
-              quanh một Knowledge Graph sống — liên kết ba trụ cột People, Assets,
-              Opportunities — với một lớp trí tuệ nhân tạo xuyên suốt để chủ động hiểu,
-              ghép nối và đề xuất, thay vì chỉ chờ người dùng tự tra cứu.
+              VI CONNECT không thay thế các cơ sở dữ liệu, sàn giao dịch công nghệ hay
+              quỹ hiện có. Vai trò của nền tảng là tạo ra lớp kết nối và điều phối
+              thông minh, giúp biến dữ liệu và nguồn lực đang phân tán thành quan hệ
+              hợp tác, dự án và kết quả thực tế — quanh một Knowledge Graph sống liên
+              kết ba trụ cột People, Assets, Opportunities.
             </p>
           </div>
         </Reveal>
@@ -386,7 +413,7 @@ export default function HomePage() {
               <span className="absolute top-3 right-3 w-2 h-2 rounded-full motion-safe:animate-pulse" style={{ background: "var(--accent)" }} aria-hidden="true" />
               <BrainCircuit className="w-6 h-6 mx-auto mb-1.5 text-brand" aria-hidden="true" />
               <div className="font-bold text-brand-dark">AI Matching Engine</div>
-              <div className="text-xs text-muted mt-1">Semantic Search · Explainable Ranking · AI Agent</div>
+              <div className="text-xs text-muted mt-1">Explainable Ranking · Team Formation · AI Copilot</div>
             </div>
 
             <div className="flex justify-center my-3 text-muted">
@@ -401,9 +428,9 @@ export default function HomePage() {
           </div>
         </Reveal>
 
-        {/* AI capability chips */}
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {AI_CAPABILITIES.map((c, i) => (
+        {/* Differentiators */}
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {DIFFERENTIATORS.map((c, i) => (
             <Reveal key={c.title} delay={i * 60}>
               <Card className={`h-full ${cardHover}`}>
                 <CardContent className="py-6">
@@ -535,6 +562,9 @@ export default function HomePage() {
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark text-balance">
               Từ hồ sơ đến tác động, theo năm bước rõ ràng
             </h2>
+            <p className="mt-3 text-sm text-muted">
+              AI đề xuất — con người thẩm định, quyết định và chịu trách nhiệm.
+            </p>
           </div>
         </Reveal>
         <div className="relative mt-10 grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -572,11 +602,21 @@ export default function HomePage() {
             <Reveal key={a.title} delay={i * 60}>
               <Card className={`h-full ${cardHover}`}>
                 <CardContent className="py-6 flex flex-col h-full">
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
-                    style={{ background: "var(--brand-light)", color: "var(--brand)" }}
-                  >
-                    <a.icon className="w-5 h-5" />
+                  <div className="flex items-start justify-between gap-2">
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
+                      style={{ background: "var(--brand-light)", color: "var(--brand)" }}
+                    >
+                      <a.icon className="w-5 h-5" />
+                    </div>
+                    {"tag" in a && a.tag && (
+                      <span
+                        className="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 whitespace-nowrap"
+                        style={{ background: "var(--background)", color: "var(--muted)" }}
+                      >
+                        {a.tag}
+                      </span>
+                    )}
                   </div>
                   <div className="font-semibold text-brand-dark text-lg">{a.title}</div>
                   <p className="text-sm text-muted mt-2 leading-relaxed flex-1">{a.desc}</p>
@@ -606,6 +646,19 @@ export default function HomePage() {
               Không phải cơ sở dữ liệu. Không phải sàn đăng tin. Là tầng kết nối có
               trí tuệ, với AI Matching giải thích được xuyên suốt.
             </p>
+            <p className="mt-8 text-xs font-semibold uppercase tracking-wide text-white/50">
+              Đo bằng giá trị được kích hoạt
+            </p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              {NORTH_STAR.map((label) => (
+                <span
+                  key={label}
+                  className="text-xs font-medium rounded-full border border-white/20 bg-white/5 px-3 py-1.5"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
         </Reveal>
       </section>
@@ -618,8 +671,9 @@ export default function HomePage() {
               Sẵn sàng kết nối với hệ sinh thái khoa học công nghệ Việt Nam?
             </h2>
             <p className="mt-3 text-muted max-w-xl mx-auto">
-              Tham gia VI CONNECT — miễn phí đăng ký, hồ sơ được xác minh, ghép nối
-              luôn có giải thích.
+              Bạn là nhà khoa học, tổ chức KH&amp;CN, doanh nghiệp, địa phương hay quỹ
+              / nhà đầu tư? Hãy bắt đầu từ nhu cầu thực tế của bạn — miễn phí đăng ký,
+              hồ sơ được xác minh, ghép nối luôn có giải thích.
             </p>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-6 text-left max-w-2xl mx-auto">

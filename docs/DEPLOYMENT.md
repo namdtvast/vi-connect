@@ -88,6 +88,22 @@ Nội dung `.env` cần có (xem chi tiết từng biến trong
 
 **Không commit file `.env` này lên git** — nó đã nằm trong `.gitignore`.
 
+### Biến môi trường tuỳ chọn — tích hợp bên ngoài
+
+Các tích hợp dưới đây **không bắt buộc** để app chạy được — thiếu thì tính
+năng liên quan tự ẩn/báo lỗi rõ ràng, không giả vờ đã kết nối. Chủ repo tự
+đăng ký tài khoản ở dịch vụ ngoài (AI không tự đăng ký thay được), rồi khai
+báo vào `.env`:
+
+| Biến | Dùng cho | Đăng ký ở đâu |
+| --- | --- | --- |
+| `ORCID_CLIENT_ID` / `ORCID_CLIENT_SECRET` | Kết nối ORCID iD thật cho hồ sơ chuyên gia (cấu phần 01) — thiếu thì chỉ nhập ORCID thủ công, không xác thực | [orcid.org/developer-tools](https://orcid.org/developer-tools), redirect URI: `https://viconnect.manai.vn/api/integrations/orcid/callback` |
+| `ORCID_ENV` | `"production"` (mặc định) hoặc `"sandbox"` khi thử nghiệm | — |
+| `OPENALEX_POLITE_POOL_EMAIL` | Email liên hệ gửi kèm khi gọi OpenAlex/Crossref (API mở, không cần key) — giảm rủi ro bị giới hạn tốc độ | Không cần đăng ký, chỉ cần điền email liên hệ |
+| `XINVOICE_CLIENT_ID` / `XINVOICE_API_KEY` | Tra cứu mã số thuế để tự điền form "Thêm tổ chức" (cấu phần 01) — thiếu thì nút "Tra cứu" báo lỗi, vẫn nhập tay bình thường | [xinvoice.vn/apis/tra-cuu-ma-so-thue](https://xinvoice.vn/apis/tra-cuu-ma-so-thue) — dịch vụ bên thứ ba, không phải API chính thức của Tổng cục Thuế (cổng chính thức có CAPTCHA nên không gọi tự động được) |
+
+Chi tiết từng biến xem thêm comment trong `.env.production.example`.
+
 ## 6. Migrate database & build
 
 ```bash

@@ -11,6 +11,7 @@ const initialState: ActionState = {};
 
 export function EditProfileForm({
   expertProfileId,
+  name,
   title,
   headline,
   bio,
@@ -21,6 +22,7 @@ export function EditProfileForm({
   patents,
 }: {
   expertProfileId: string;
+  name: string | null;
   title: string | null;
   headline: string | null;
   bio: string | null;
@@ -35,9 +37,15 @@ export function EditProfileForm({
   return (
     <form action={formAction} className="space-y-4">
       <input type="hidden" name="expertProfileId" value={expertProfileId} />
+      {name !== null && (
+        <FieldGroup>
+          <Label htmlFor="name">Họ và tên</Label>
+          <Input id="name" name="name" placeholder="VD: Nguyễn Văn A" defaultValue={name} required />
+        </FieldGroup>
+      )}
       <FieldGroup>
         <Label htmlFor="title">Học hàm / học vị</Label>
-        <Input id="title" name="title" placeholder="VD: TS., PGS.TS." defaultValue={title ?? ""} />
+        <Input id="title" name="title" placeholder="VD: TS., PGS. TS." defaultValue={title ?? ""} />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="headline">Chức danh ngắn</Label>

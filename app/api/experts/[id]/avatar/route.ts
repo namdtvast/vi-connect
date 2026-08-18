@@ -9,7 +9,7 @@ const MIME_BY_EXT: Record<string, string> = {
 };
 
 // Hồ sơ chuyên gia hiển thị toàn nền tảng cho user đã đăng nhập (trang danh
-// sách/chi tiết không giới hạn theo tổ chức, trừ khi viewer là HOI_ADMIN lọc
+// sách/chi tiết không giới hạn theo tổ chức, trừ khi viewer là ADMIN lọc
 // theo tổ chức mình) — ảnh đại diện dùng chung mức truy cập với hồ sơ.
 export async function GET(
   _request: Request,

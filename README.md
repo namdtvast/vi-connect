@@ -55,7 +55,7 @@ npx prisma migrate dev
 npx prisma db seed
 ```
 
-Đăng nhập demo: `admin@vi-connect.demo` / `Password123!` (VAST_ADMIN). Xem thêm tài
+Đăng nhập demo: `admin@vi-connect.demo` / `Password123!` (SUPERADMIN). Xem thêm tài
 khoản demo khác trong `prisma/seed.ts`.
 
 ## Trong scope Giai đoạn 1 (đã code thật, không mock)
@@ -64,7 +64,7 @@ khoản demo khác trong `prisma/seed.ts`.
 ([VC-NV-001](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)):
 
 - **01 — Hồ sơ & Định danh**: đăng ký/xác minh hồ sơ chuyên gia, danh mục hội thành
-  viên/tổ chức KH&CN, delegated administration theo tổ chức (`HOI_ADMIN` chỉ thấy dữ
+  viên/tổ chức KH&CN, delegated administration theo tổ chức (`ADMIN` chỉ thấy dữ
   liệu của mình).
 - **02 — Công nghệ & Giải pháp**: đăng nguồn cung công nghệ/giải pháp kèm TRL.
 - **04 — Bài toán & Nhu cầu**: đăng nhu cầu, ngân hàng bài toán đầy đủ vòng đời (tiếp
@@ -78,7 +78,7 @@ khoản demo khác trong `prisma/seed.ts`.
   ngân thật.
 - **07 — Dự án & Giao dịch**: chuyển match đã chấp nhận thành dự án, mốc thực hiện,
   hợp đồng/thỏa thuận (chỉ theo dõi trạng thái, chưa xử lý thanh toán thật).
-- **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `VAST_ADMIN`
+- **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `SUPERADMIN`
   xem được toàn bộ — chưa có màn hình chính sách/rủi ro/quy trình phê duyệt.
 - **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực
   tiếp từ dữ liệu sống, Match Funnel theo đúng mô hình đề án.

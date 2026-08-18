@@ -392,7 +392,7 @@ export async function claimProfileAction(expertProfileId: string) {
 export async function decideClaimAction(claimId: string, approve: boolean) {
   const claim = await db.profileClaim.findUniqueOrThrow({ where: { id: claimId } });
   const profile = await db.expertProfile.findUniqueOrThrow({ where: { id: claim.expertProfileId } });
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
   assertOrgScope(user, profile.organizationId);
 
   if (claim.status !== "PENDING") {
@@ -504,7 +504,7 @@ export async function addAffiliationAction(
 
 export async function verifyAffiliationAction(affiliationId: string) {
   const affiliation = await db.affiliation.findUniqueOrThrow({ where: { id: affiliationId } });
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
   assertOrgScope(user, affiliation.organizationId);
 
   await db.affiliation.update({
@@ -609,7 +609,7 @@ export async function verifyCapabilityAction(capabilityId: string) {
     where: { id: capabilityId },
     include: { evidence: true, expertProfile: true },
   });
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
   assertOrgScope(user, capability.expertProfile.organizationId);
 
   if (!canVerifyCapability(capability.evidence.length)) {
@@ -628,7 +628,7 @@ export async function verifyCapabilityAction(capabilityId: string) {
 // ---------- Identity resolution & merge (VC-NV-011 Mục 9, ADR-0001 Mục 3, 5) ----------
 
 export async function computeIdentityMatchesAction(expertProfileId: string) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
 
   const profile = await db.expertProfile.findUniqueOrThrow({
     where: { id: expertProfileId },
@@ -714,7 +714,7 @@ export async function approveMergeAction(
   targetProfileId: string,
   reason: string
 ) {
-  const user = await requireRole("VAST_ADMIN");
+  const user = await requireRole("SUPERADMIN");
 
   if (sourceProfileId === targetProfileId) {
     throw new Error("Không thể hợp nhất một hồ sơ với chính nó.");
@@ -811,7 +811,7 @@ export async function approveMergeAction(
 }
 
 export async function rollbackMergeAction(mergeHistoryId: string) {
-  const user = await requireRole("VAST_ADMIN");
+  const user = await requireRole("SUPERADMIN");
 
   const merge = await db.mergeHistory.findUniqueOrThrow({ where: { id: mergeHistoryId } });
   if (merge.rolledBackAt) {

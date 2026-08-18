@@ -31,8 +31,8 @@ export default async function NeedDetailPage({
   // Cùng điều kiện với generateMatchesAction (lib/actions/matching.ts) — chỉ
   // hiện nút khi chắc chắn thao tác được, tránh lỗi quyền không xử lý được.
   const canGenerateMatches =
-    session?.user.role === "VAST_ADMIN" ||
-    ((session?.user.role === "HOI_ADMIN" || session?.user.role === "ENTERPRISE") &&
+    session?.user.role === "SUPERADMIN" ||
+    ((session?.user.role === "ADMIN" || session?.user.role === "ENTERPRISE") &&
       session.user.organizationId === need.organizationId);
 
   return (

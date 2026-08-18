@@ -23,7 +23,7 @@ export default async function AuditLogPage({
   searchParams: Promise<{ q?: string; page?: string }>;
 }) {
   const session = await auth();
-  if (session?.user.role !== "VAST_ADMIN") redirect("/dashboard");
+  if (session?.user.role !== "SUPERADMIN") redirect("/dashboard");
 
   const params = await searchParams;
   const query = (params.q ?? "").trim();
@@ -59,7 +59,7 @@ export default async function AuditLogPage({
         <h1 className="text-xl font-semibold">Quản trị &amp; Tuân thủ (cấu phần 10)</h1>
         <p className="text-sm text-muted mt-1">
           Nhật ký audit hệ thống — mọi thao tác tạo/ghép nối/thay đổi trạng thái quan
-          trọng đều được ghi lại tự động, phục vụ truy vết và tuân thủ. Chỉ VAST_ADMIN
+          trọng đều được ghi lại tự động, phục vụ truy vết và tuân thủ. Chỉ SUPERADMIN
           xem được toàn bộ nhật ký. Giai đoạn 1 chưa có màn hình chính sách/rủi ro/quy
           trình phê duyệt — thuộc backlog Giai đoạn 2-3.
         </p>

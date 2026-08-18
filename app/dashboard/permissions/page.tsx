@@ -4,15 +4,15 @@ import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ROLE_LABEL } from "@/lib/role-labels";
-import { ADMIN_ROLES, ALL_ROLES, ASSIGNABLE_BY_HOI_ADMIN } from "@/lib/permissions";
+import { ADMIN_ROLES, ALL_ROLES, ASSIGNABLE_BY_ADMIN } from "@/lib/permissions";
 import { UpdateRoleForm } from "@/components/users/update-role-form";
 
 export default async function PermissionsPage() {
   const session = await auth();
   const role = session?.user.role;
-  if (role !== "VAST_ADMIN" && role !== "HOI_ADMIN") redirect("/dashboard");
+  if (role !== "SUPERADMIN" && role !== "ADMIN") redirect("/dashboard");
 
-  const isPlatformAdmin = role === "VAST_ADMIN";
+  const isPlatformAdmin = role === "SUPERADMIN";
   const currentUserId = session!.user.id;
 
   const users = await db.user.findMany({
@@ -21,7 +21,7 @@ export default async function PermissionsPage() {
     orderBy: [{ organizationId: "asc" }, { createdAt: "asc" }],
   });
 
-  const assignableRoles = isPlatformAdmin ? ALL_ROLES : ASSIGNABLE_BY_HOI_ADMIN;
+  const assignableRoles = isPlatformAdmin ? ALL_ROLES : ASSIGNABLE_BY_ADMIN;
 
   return (
     <div className="space-y-6">

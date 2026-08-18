@@ -46,8 +46,8 @@ export async function GET(request: Request) {
 
   const isOwner = profile.userId === session.user.id;
   const isAdmin =
-    session.user.role === "VAST_ADMIN" ||
-    (session.user.role === "HOI_ADMIN" && session.user.organizationId === profile.organizationId);
+    session.user.role === "SUPERADMIN" ||
+    (session.user.role === "ADMIN" && session.user.organizationId === profile.organizationId);
   if (!isOwner && !isAdmin) {
     return Response.redirect(
       new URL(`/dashboard/experts/${expertProfileId}?orcid_error=forbidden`, request.url),

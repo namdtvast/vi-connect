@@ -12,8 +12,8 @@ import { Paperclip } from "lucide-react";
 export default async function ChallengesPage() {
   const session = await auth();
   const canPost =
-    session?.user.role === "VAST_ADMIN" ||
-    session?.user.role === "HOI_ADMIN" ||
+    session?.user.role === "SUPERADMIN" ||
+    session?.user.role === "ADMIN" ||
     session?.user.role === "ENTERPRISE";
 
   const challenges = await db.challenge.findMany({

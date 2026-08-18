@@ -9,7 +9,7 @@ export default async function FundingSourcesPage() {
   const session = await auth();
   const canCreate =
     !!session?.user.role &&
-    ["VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE"].includes(session.user.role);
+    ["SUPERADMIN", "ADMIN", "ENTERPRISE"].includes(session.user.role);
 
   const sources = await db.fundingSource.findMany({
     include: { organization: true },

@@ -4,11 +4,11 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { assertOrgScope, requireRole } from "@/lib/rbac";
 import { ForbiddenError } from "@/lib/domain/access-control";
-import { ADMIN_ROLES, ASSIGNABLE_BY_HOI_ADMIN } from "@/lib/permissions";
+import { ADMIN_ROLES, ASSIGNABLE_BY_ADMIN } from "@/lib/permissions";
 import type { Role } from "@/lib/generated/prisma/enums";
 
 export async function updateUserRoleAction(userId: string, role: Role) {
-  const actor = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const actor = await requireRole("SUPERADMIN", "ADMIN");
 
   if (userId === actor.id) {
     throw new ForbiddenError("Không thể tự đổi vai trò của chính mình.");
@@ -16,7 +16,7 @@ export async function updateUserRoleAction(userId: string, role: Role) {
 
   const target = await db.user.findUniqueOrThrow({ where: { id: userId } });
 
-  if (actor.role === "HOI_ADMIN") {
+  if (actor.role === "ADMIN") {
     if (!target.organizationId) {
       throw new ForbiddenError("Tài khoản này chưa gắn với tổ chức nào.");
     }
@@ -24,7 +24,7 @@ export async function updateUserRoleAction(userId: string, role: Role) {
     if (ADMIN_ROLES.includes(target.role)) {
       throw new ForbiddenError("Bạn không có quyền đổi vai trò của tài khoản quản trị.");
     }
-    if (!ASSIGNABLE_BY_HOI_ADMIN.includes(role)) {
+    if (!ASSIGNABLE_BY_ADMIN.includes(role)) {
       throw new ForbiddenError("Chỉ quản trị VAST được gán vai trò quản trị.");
     }
   }

@@ -9,13 +9,13 @@ import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
 import type { VerificationStatus } from "@/lib/generated/prisma/enums";
 
-// Chủ hồ sơ tự sửa dữ liệu của mình; admin (VAST_ADMIN toàn hệ thống,
-// HOI_ADMIN đúng tổ chức) được thao tác thay chủ hồ sơ — ADR-0001 Mục 5.1.
+// Chủ hồ sơ tự sửa dữ liệu của mình; admin (SUPERADMIN toàn hệ thống,
+// ADMIN đúng tổ chức) được thao tác thay chủ hồ sơ — ADR-0001 Mục 5.1.
 function canEditProfile(user: CurrentUser, profile: { userId: string | null; organizationId: string }) {
   return (
     profile.userId === user.id ||
-    user.role === "VAST_ADMIN" ||
-    (user.role === "HOI_ADMIN" && user.organizationId === profile.organizationId)
+    user.role === "SUPERADMIN" ||
+    (user.role === "ADMIN" && user.organizationId === profile.organizationId)
   );
 }
 
@@ -24,7 +24,7 @@ export async function verifyExpertAction(
   status: VerificationStatus,
   note?: string
 ) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
 
   const profile = await db.expertProfile.findUniqueOrThrow({
     where: { id: expertProfileId },
@@ -95,6 +95,7 @@ export async function updateAvatarAction(
 }
 
 const profileSchema = z.object({
+  name: z.string().trim().min(1).max(120).optional(),
   title: z.string().max(50).optional(),
   headline: z.string().max(200).optional(),
   bio: z.string().max(2000).optional(),
@@ -122,6 +123,7 @@ export async function updateProfileAction(
 
   const validCodes = new Set<string>(FIELDS.map((f) => f.code));
   const parsed = profileSchema.safeParse({
+    name: formData.get("name") || undefined,
     title: formData.get("title") || undefined,
     headline: formData.get("headline") || undefined,
     bio: formData.get("bio") || undefined,
@@ -138,6 +140,13 @@ export async function updateProfileAction(
   const skills = parsed.data.skills
     ? parsed.data.skills.split(",").map((s) => s.trim()).filter(Boolean)
     : [];
+
+  if (parsed.data.name && profile.userId) {
+    await db.user.update({
+      where: { id: profile.userId },
+      data: { name: parsed.data.name },
+    });
+  }
 
   await db.expertProfile.update({
     where: { id: expertProfileId },

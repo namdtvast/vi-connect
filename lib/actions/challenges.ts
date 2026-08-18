@@ -22,7 +22,7 @@ export async function createChallengeAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   if (!user.organizationId) return { error: "Tài khoản chưa gắn với tổ chức." };
 
   const validCodes = new Set<string>(FIELDS.map((f) => f.code));
@@ -71,7 +71,7 @@ export async function createChallengeAction(
 }
 
 export async function setChallengeStatusAction(challengeId: string, status: ChallengeStatus) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const challenge = await db.challenge.findUniqueOrThrow({ where: { id: challengeId } });
   assertOrgScope(user, challenge.organizationId);
 
@@ -120,7 +120,7 @@ export async function reviewSolutionAction(
   status: SolutionStatus,
   reviewScore?: number
 ) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const solution = await db.solution.update({
     where: { id: solutionId },
     data: { status, reviewScore },

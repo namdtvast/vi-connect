@@ -62,8 +62,8 @@ model Organization {
 }
 
 enum Role {
-  VAST_ADMIN // quan tri toan he thong
-  HOI_ADMIN // delegated admin cua 1 hoi/to chuc (10.6)
+  SUPERADMIN // quan tri toan he thong
+  ADMIN // delegated admin cua 1 hoi/to chuc (10.6)
   EXPERT
   ENTERPRISE
   VIEWER

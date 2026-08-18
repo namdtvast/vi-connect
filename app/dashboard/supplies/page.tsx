@@ -14,7 +14,7 @@ const TYPE_LABEL: Record<string, string> = {
 
 export default async function SuppliesPage() {
   const session = await auth();
-  const canPost = session?.user.role === "VAST_ADMIN" || session?.user.role === "HOI_ADMIN";
+  const canPost = session?.user.role === "SUPERADMIN" || session?.user.role === "ADMIN";
 
   const supplies = await db.supply.findMany({
     where: { status: "PUBLISHED" },

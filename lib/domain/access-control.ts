@@ -6,14 +6,14 @@ export type OrganizationScopedUser = {
 export class ForbiddenError extends Error {}
 
 /** Role được phép hành động trong phạm vi tổ chức của chính họ (VC-KT-002 Mục 5, 7). */
-const ORG_SCOPED_ROLES = new Set(["HOI_ADMIN", "ENTERPRISE"]);
+const ORG_SCOPED_ROLES = new Set(["ADMIN", "ENTERPRISE"]);
 
 /** Pure authorization rule, shared by server actions and unit tests. */
 export function assertOrgScope(
   user: OrganizationScopedUser,
   organizationId: string
 ): void {
-  if (user.role === "VAST_ADMIN") return;
+  if (user.role === "SUPERADMIN") return;
   if (ORG_SCOPED_ROLES.has(user.role) && user.organizationId === organizationId) return;
   throw new ForbiddenError("Bạn không có quyền trên tổ chức này.");
 }
@@ -44,7 +44,7 @@ export function assertPartyScope(
   user: OrganizationScopedUser,
   partyOrganizationIds: string[]
 ): void {
-  if (user.role === "VAST_ADMIN") return;
+  if (user.role === "SUPERADMIN") return;
   if (
     ORG_SCOPED_ROLES.has(user.role) &&
     user.organizationId !== null &&

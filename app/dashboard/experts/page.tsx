@@ -36,10 +36,10 @@ function ExpertAvatar({
 export default async function ExpertsPage() {
   const session = await auth();
   const canManage =
-    session?.user.role === "VAST_ADMIN" || session?.user.role === "HOI_ADMIN";
+    session?.user.role === "SUPERADMIN" || session?.user.role === "ADMIN";
 
   const where =
-    session?.user.role === "HOI_ADMIN" && session.user.organizationId
+    session?.user.role === "ADMIN" && session.user.organizationId
       ? { organizationId: session.user.organizationId }
       : {};
 
@@ -56,7 +56,7 @@ export default async function ExpertsPage() {
         <p className="text-sm text-muted mt-1">
           Trusted Expert Registry — nền móng cho ghép nối, hội đồng chuyên gia và
           Knowledge Graph.
-          {session?.user.role === "HOI_ADMIN" &&
+          {session?.user.role === "ADMIN" &&
             " Bạn đang xem hồ sơ thuộc phạm vi tổ chức của mình."}
         </p>
       </div>

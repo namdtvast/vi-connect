@@ -17,7 +17,7 @@ export async function createFundingSourceAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   if (!user.organizationId) return { error: "Tài khoản chưa gắn với tổ chức." };
 
   const validCodes = new Set<string>(FIELDS.map((f) => f.code));

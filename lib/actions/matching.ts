@@ -21,7 +21,7 @@ export async function createNeedAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   if (!user.organizationId) return { error: "Tài khoản chưa gắn với tổ chức." };
 
   const validCodes = new Set<string>(FIELDS.map((f) => f.code));
@@ -78,7 +78,7 @@ export async function createSupplyAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN");
+  const user = await requireRole("SUPERADMIN", "ADMIN");
   if (!user.organizationId) return { error: "Tài khoản chưa gắn với tổ chức." };
 
   const validCodes = new Set<string>(FIELDS.map((f) => f.code));
@@ -112,7 +112,7 @@ export async function createSupplyAction(
 
 /** Cấu phần 05: chạy lại đề xuất ghép nối cho 1 nhu cầu (explainable scoring). */
 export async function generateMatchesAction(needId: string) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
 
   const need = await db.need.findUniqueOrThrow({ where: { id: needId } });
   assertOrgScope(user, need.organizationId);
@@ -153,7 +153,7 @@ export async function generateMatchesAction(needId: string) {
 }
 
 export async function updateMatchStageAction(matchId: string, stage: MatchStage) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const existing = await db.match.findUniqueOrThrow({
     where: { id: matchId },
     include: { need: true },

@@ -20,7 +20,7 @@ const matchWithPartiesInclude = {
 
 /** Cấu phần 04: chuyển 1 match đã chấp nhận thành dự án hợp tác. */
 export async function convertMatchToProjectAction(matchId: string) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
 
   const match = await db.match.findUniqueOrThrow({
     where: { id: matchId },
@@ -74,7 +74,7 @@ export async function addMilestoneAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const project = await db.project.findUniqueOrThrow({
     where: { id: projectId },
     include: { match: { include: matchWithPartiesInclude } },
@@ -107,7 +107,7 @@ export async function setMilestoneStatusAction(
   milestoneId: string,
   status: MilestoneStatus
 ) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const milestone = await db.milestone.findUniqueOrThrow({
     where: { id: milestoneId },
     include: { project: { include: { match: { include: matchWithPartiesInclude } } } },
@@ -126,7 +126,7 @@ export async function createAgreementAction(
   type: AgreementType,
   valueVnd?: string
 ) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const project = await db.project.findUniqueOrThrow({
     where: { id: projectId },
     include: { match: { include: matchWithPartiesInclude } },
@@ -152,7 +152,7 @@ export async function createAgreementAction(
 }
 
 export async function signAgreementAction(projectId: string) {
-  const user = await requireRole("VAST_ADMIN", "HOI_ADMIN", "ENTERPRISE");
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
   const project = await db.project.findUniqueOrThrow({
     where: { id: projectId },
     include: { match: { include: matchWithPartiesInclude } },

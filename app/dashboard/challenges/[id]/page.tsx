@@ -33,9 +33,9 @@ export default async function ChallengeDetailPage({
   const submitterName = (id: string) => submitters.find((u) => u.id === id)?.name ?? "—";
 
   const canReview =
-    session?.user.role === "VAST_ADMIN" ||
+    session?.user.role === "SUPERADMIN" ||
     (session?.user.organizationId === challenge.organizationId &&
-      (session?.user.role === "HOI_ADMIN" || session?.user.role === "ENTERPRISE"));
+      (session?.user.role === "ADMIN" || session?.user.role === "ENTERPRISE"));
 
   return (
     <div className="space-y-6 max-w-3xl">

@@ -67,6 +67,9 @@ Các thay đổi đáng chú ý của VI CONNECT được ghi tại đây. Phiê
   `VC-NV-011-HoSoDinhDanh-DRAFT_v2.0` (chưa thay thế `v1.0 APPROVED` ở bảng
   chính cho tới khi được duyệt), cập nhật liên kết tham chiếu ở `README.md` và
   `00_QUAN-TRI/README.md`.
+- Vá lệch dữ liệu ở `VC-QT-003` (v1.4): dòng `VC-KT-003` vẫn ghi `DRAFT | v0.1`
+  trỏ tới đường dẫn không tồn tại, trong khi file thật trên đĩa đã
+  `APPROVED | v1.0` — cập nhật dòng này khớp đúng hiện trạng.
 
 ### Fixed
 
@@ -84,6 +87,19 @@ Các thay đổi đáng chú ý của VI CONNECT được ghi tại đây. Phiê
   thuận hợp tác (`signAgreementAction`, trước đây thiếu).
 - Thêm test cho `assertOrgScope`, `assertPartyScope`, `partyOrganizationIdsOfMatch`
   tại `tests/access-control.test.ts`.
+
+- Đổi tên `Role` enum trong toàn bộ hệ thống, một lần, không chia giai đoạn:
+  `VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN` (`VC-KT-002` Phụ lục B, B11).
+  Migration `20260818115702_rename_role_superadmin_admin` dùng
+  `ALTER TYPE "Role" RENAME VALUE` (không mất dữ liệu — xác nhận qua
+  `SELECT role, count(*) FROM "User" GROUP BY role` trước/sau khi áp dụng).
+  Cập nhật đồng loạt 31 file: `prisma/schema.prisma`, `prisma/seed.ts`, toàn bộ
+  `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, các trang
+  `app/dashboard/*`, route OAuth ORCID, `components/layout/sidebar-nav.tsx`,
+  `lib/permissions.ts` (đổi luôn tên hằng số `ASSIGNABLE_BY_HOI_ADMIN` →
+  `ASSIGNABLE_BY_ADMIN`), `lib/role-labels.ts`, `docs/adr/0001-...`, `README.md`
+  và `tests/access-control.test.ts`. `npm run check` (lint, typecheck, test,
+  prisma validate, build) qua sau khi đổi.
 
 ### Removed
 

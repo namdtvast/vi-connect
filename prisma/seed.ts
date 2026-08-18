@@ -76,7 +76,7 @@ async function main() {
       email: "admin@vi-connect.demo",
       name: "Quản trị viên VAST (demo)",
       passwordHash,
-      role: "VAST_ADMIN",
+      role: "SUPERADMIN",
       organizationId: vast.id,
     },
   });
@@ -86,7 +86,7 @@ async function main() {
       email: "hoihanoi@vi-connect.demo",
       name: "Cán bộ đầu mối LHH Hà Nội (demo)",
       passwordHash,
-      role: "HOI_ADMIN",
+      role: "ADMIN",
       organizationId: hoiHaNoi.id,
     },
   });

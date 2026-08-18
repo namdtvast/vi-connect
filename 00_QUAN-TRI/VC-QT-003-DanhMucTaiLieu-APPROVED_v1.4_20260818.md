@@ -29,7 +29,7 @@
 | VC-NV-021 | Phân tích và tác động | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/11_phan-tich-tac-dong/VC-NV-021-PhanTichTacDong-APPROVED_v1.0_20260817.md` |
 | VC-KT-001 | Sơ đồ hạ tầng CNTT | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/01_SO-DO-HA-TANG/VC-KT-001-SoDoHaTangCntt-DRAFT_v0.1_20260817.png` |
 | VC-KT-002 | Thiết kế phân quyền | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-002-ThietKePhanQuyen-DRAFT_v0.1_20260817.md` |
-| VC-KT-003 | Kiến trúc bảo mật | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-003-KienTrucBaoMat-DRAFT_v0.1_20260817.md` |
+| VC-KT-003 | Kiến trúc bảo mật | Kiến trúc kỹ thuật | APPROVED | v1.0 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-003-KienTrucBaoMat-APPROVED_v1.0_20260817.md` |
 | VC-PL-001 | Tờ khai đăng ký nhãn hiệu | Pháp lý | REVIEW | v0.9 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/01_HO-SO-DANG-KY/VC-PL-001-ToKhaiDangKyNhanHieu-REVIEW_v0.9_20260816.docx` |
 | VC-PL-002 | Biểu mẫu tờ khai nhãn hiệu | Pháp lý | REFERENCE | v1.0 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/02_BIEU-MAU-THAM-KHAO/VC-PL-002-BieuMauToKhaiNhanHieu-REFERENCE_v1.0_20260816.docx` |
 | VC-TK-001 | VUSTA CONNECT Platform | Tham khảo | REFERENCE | v1.0 | `04_SAN-PHAM-THUONG-HIEU/05_INFOGRAPHIC/THAM-KHAO-VUSTA/VC-TK-001-VustaConnectPlatform-REFERENCE_v1.0_20260809.png` |

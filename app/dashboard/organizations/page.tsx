@@ -8,7 +8,7 @@ import { ORG_STATUS_LABEL, ORG_TYPE_LABEL } from "@/lib/org-labels";
 
 export default async function OrganizationsPage() {
   const session = await auth();
-  const isAdmin = session?.user.role === "VAST_ADMIN";
+  const isAdmin = session?.user.role === "SUPERADMIN";
 
   const organizations = await db.organization.findMany({
     orderBy: { createdAt: "asc" },

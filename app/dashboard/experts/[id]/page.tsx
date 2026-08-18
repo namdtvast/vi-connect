@@ -62,12 +62,12 @@ export default async function ExpertDetailPage({
   if (!expert) notFound();
 
   const canManage =
-    session?.user.role === "VAST_ADMIN" ||
-    (session?.user.role === "HOI_ADMIN" &&
+    session?.user.role === "SUPERADMIN" ||
+    (session?.user.role === "ADMIN" &&
       session.user.organizationId === expert.organizationId);
-  const canMerge = session?.user.role === "VAST_ADMIN";
+  const canMerge = session?.user.role === "SUPERADMIN";
   const isOwner = Boolean(session?.user && expert.userId === session.user.id);
-  // Admin (VAST_ADMIN toàn hệ thống, HOI_ADMIN đúng tổ chức) được thao tác
+  // Admin (SUPERADMIN toàn hệ thống, ADMIN đúng tổ chức) được thao tác
   // thay chủ hồ sơ — ADR-0001 Mục 5.1. lib/actions/identity.ts tự kiểm tra
   // lại quyền này ở server, đây chỉ là điều kiện hiển thị form.
   const canEdit = isOwner || canManage;
@@ -131,10 +131,23 @@ export default async function ExpertDetailPage({
         </Badge>
       </div>
 
+      {expert.verificationStatus === "REJECTED" && expert.verificationNote && (
+        <Card>
+          <CardContent>
+            <div className="text-xs uppercase text-danger mb-1">Lý do từ chối</div>
+            <p className="text-sm">{expert.verificationNote}</p>
+            {expert.verifiedAt && (
+              <p className="text-xs text-muted mt-1">
+                Từ chối lúc: {formatDate(expert.verifiedAt)}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {canEdit && (
         <Card>
           <CardContent>
-            <div className="text-sm font-medium mb-2">Ảnh chân dung</div>
             <AvatarUploadForm expertProfileId={expert.id} />
           </CardContent>
         </Card>
@@ -146,6 +159,7 @@ export default async function ExpertDetailPage({
             <div className="text-sm font-medium mb-2">Chỉnh sửa thông tin hồ sơ</div>
             <EditProfileForm
               expertProfileId={expert.id}
+              name={expert.user?.name ?? null}
               title={expert.title}
               headline={expert.headline}
               bio={expert.bio}

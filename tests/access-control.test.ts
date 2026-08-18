@@ -7,19 +7,19 @@ import {
   partyOrganizationIdsOfMatch,
 } from "../lib/domain/access-control";
 
-test("VAST_ADMIN được thao tác trên mọi tổ chức", () => {
+test("SUPERADMIN được thao tác trên mọi tổ chức", () => {
   assert.doesNotThrow(() =>
-    assertOrgScope({ role: "VAST_ADMIN", organizationId: null }, "org-2")
+    assertOrgScope({ role: "SUPERADMIN", organizationId: null }, "org-2")
   );
 });
 
-test("HOI_ADMIN chỉ được thao tác trong tổ chức của mình", () => {
+test("ADMIN chỉ được thao tác trong tổ chức của mình", () => {
   assert.doesNotThrow(() =>
-    assertOrgScope({ role: "HOI_ADMIN", organizationId: "org-1" }, "org-1")
+    assertOrgScope({ role: "ADMIN", organizationId: "org-1" }, "org-1")
   );
   assert.throws(
     () =>
-      assertOrgScope({ role: "HOI_ADMIN", organizationId: "org-1" }, "org-2"),
+      assertOrgScope({ role: "ADMIN", organizationId: "org-1" }, "org-2"),
     ForbiddenError
   );
 });
@@ -79,7 +79,7 @@ test("assertPartyScope cho phép tổ chức ở bên cung (Supply/Expert), khô
   });
 
   assert.doesNotThrow(() =>
-    assertPartyScope({ role: "HOI_ADMIN", organizationId: "org-need" }, partyOrgIds)
+    assertPartyScope({ role: "ADMIN", organizationId: "org-need" }, partyOrgIds)
   );
   assert.doesNotThrow(() =>
     assertPartyScope(
@@ -90,12 +90,12 @@ test("assertPartyScope cho phép tổ chức ở bên cung (Supply/Expert), khô
   assert.throws(
     () =>
       assertPartyScope(
-        { role: "HOI_ADMIN", organizationId: "org-khac" },
+        { role: "ADMIN", organizationId: "org-khac" },
         partyOrgIds
       ),
     ForbiddenError
   );
   assert.doesNotThrow(() =>
-    assertPartyScope({ role: "VAST_ADMIN", organizationId: null }, [])
+    assertPartyScope({ role: "SUPERADMIN", organizationId: null }, [])
   );
 });

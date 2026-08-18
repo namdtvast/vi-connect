@@ -43,12 +43,12 @@ const NAV_GROUPS: NavGroup[] = [
       {
         href: "/dashboard/permissions",
         label: "10 · Quản lý phân quyền",
-        roles: ["VAST_ADMIN", "HOI_ADMIN"],
+        roles: ["SUPERADMIN", "ADMIN"],
       },
       {
         href: "/dashboard/audit-log",
         label: "10 · Nhật ký hệ thống",
-        roles: ["VAST_ADMIN"],
+        roles: ["SUPERADMIN"],
       },
     ],
   },

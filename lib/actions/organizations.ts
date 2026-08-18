@@ -25,7 +25,7 @@ export async function createOrganizationAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const user = await requireRole("VAST_ADMIN");
+  const user = await requireRole("SUPERADMIN");
 
   const parsed = orgSchema.safeParse({
     name: formData.get("name"),
@@ -60,7 +60,7 @@ export async function setOrganizationStatusAction(
   organizationId: string,
   status: "ACTIVE" | "SUSPENDED" | "PENDING"
 ) {
-  const user = await requireRole("VAST_ADMIN");
+  const user = await requireRole("SUPERADMIN");
   await db.organization.update({ where: { id: organizationId }, data: { status } });
   await db.auditLog.create({
     data: {

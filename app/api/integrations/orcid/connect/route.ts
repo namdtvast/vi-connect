@@ -38,8 +38,8 @@ export async function GET(request: Request) {
 
   const isOwner = profile.userId === session.user.id;
   const isAdmin =
-    session.user.role === "VAST_ADMIN" ||
-    (session.user.role === "HOI_ADMIN" && session.user.organizationId === profile.organizationId);
+    session.user.role === "SUPERADMIN" ||
+    (session.user.role === "ADMIN" && session.user.organizationId === profile.organizationId);
   if (!isOwner && !isAdmin) {
     return new Response("Không có quyền kết nối ORCID cho hồ sơ này.", { status: 403 });
   }

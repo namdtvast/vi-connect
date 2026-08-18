@@ -53,10 +53,10 @@ nhất một `CapabilityEvidence` liên kết. Không có ngoại lệ ở v1.
 Theo đúng `assertOrgScope` đã có ở `lib/domain/access-control.ts`
 (`VC-KT-002`):
 
-- `VAST_ADMIN`: toàn hệ thống.
-- `HOI_ADMIN`: chỉ trong tổ chức của mình (affiliation, verify).
-- **Merge (approve)**: chỉ `VAST_ADMIN` ở v1 — rủi ro cao (gộp identity), giữ
-  tập trung, không phân quyền xuống `HOI_ADMIN` cho tới khi có quy trình
+- `SUPERADMIN`: toàn hệ thống.
+- `ADMIN`: chỉ trong tổ chức của mình (affiliation, verify).
+- **Merge (approve)**: chỉ `SUPERADMIN` ở v1 — rủi ro cao (gộp identity), giữ
+  tập trung, không phân quyền xuống `ADMIN` cho tới khi có quy trình
   Maker-Checker riêng.
 - Chủ hồ sơ (`EXPERT`, scope `OWN`): claim, accept/reject/edit proposal,
   consent, đặt field visibility cho hồ sơ của chính mình.
@@ -64,7 +64,7 @@ Theo đúng `assertOrgScope` đã có ở `lib/domain/access-control.ts`
 ### 5.1. Admin thao tác thay chủ hồ sơ (bổ sung 2026-08-18)
 
 Theo yêu cầu vận hành thực tế (nhiều chuyên gia cần admin hỗ trợ nhập liệu),
-`VAST_ADMIN` và `HOI_ADMIN` (đúng tổ chức của hồ sơ, theo `assertOrgScope`)
+`SUPERADMIN` và `ADMIN` (đúng tổ chức của hồ sơ, theo `assertOrgScope`)
 **được phép thao tác thay** chủ hồ sơ ở toàn bộ các action vốn chỉ dành cho
 chủ hồ sơ: cấp/thu hồi consent, chạy enrichment mock, duyệt/từ chối/điều
 chỉnh field proposal, bulk-safe-accept, đặt field visibility, thêm

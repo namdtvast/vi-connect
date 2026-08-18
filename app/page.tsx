@@ -5,6 +5,7 @@ import {
   BrainCircuit,
   Building2,
   Check,
+  Clock,
   FlaskConical,
   Handshake,
   Landmark,
@@ -12,7 +13,9 @@ import {
   Lightbulb,
   MapPin,
   Search,
+  ShieldCheck,
   Sparkles,
+  Target,
   Users,
   X,
 } from "lucide-react";
@@ -38,7 +41,7 @@ const AI_CAPABILITIES = [
   {
     title: "AI Matching giải thích được",
     desc: "Mỗi đề xuất ghép nối chuyên gia – bài toán đều hiển thị rõ lý do và trọng số chấm điểm, không phải hộp đen thuật toán.",
-    tag: "Đã có — Giai đoạn 1",
+    tag: "Đã có",
     tagTone: "live" as const,
     icon: Sparkles,
   },
@@ -144,6 +147,35 @@ const AUDIENCES = [
     cta: "Đăng nhập quản trị tổ chức",
     href: "/login",
   },
+];
+
+const WHY_JOIN = [
+  {
+    icon: Target,
+    title: "Được đề xuất đúng bài toán",
+    desc: "AI Matching tự tìm bài toán phù hợp lĩnh vực của bạn — không cần rà từng tin đăng thủ công.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Hồ sơ được xác minh",
+    desc: "Hồ sơ có xác minh giúp doanh nghiệp, tổ chức tin tưởng và chủ động liên hệ bạn trước.",
+  },
+  {
+    icon: Handshake,
+    title: "Không rao vặt, không quảng cáo",
+    desc: "Chỉ có bài toán thật từ doanh nghiệp, địa phương đã đăng ký trên mạng lưới — không tin rác.",
+  },
+  {
+    icon: Clock,
+    title: "Miễn phí, đăng ký 2 phút",
+    desc: "Không mất phí tham gia. Điền hồ sơ, chờ xác minh, sẵn sàng nhận đề xuất ghép nối.",
+  },
+];
+
+const JOIN_STEPS = [
+  { step: "1", title: "Tạo hồ sơ", desc: "Điền lĩnh vực, kinh nghiệm và thế mạnh chuyên môn — khoảng 2 phút." },
+  { step: "2", title: "Được xác minh", desc: "Tổ chức đầu mối xác minh hồ sơ để đảm bảo độ tin cậy trên mạng lưới." },
+  { step: "3", title: "Nhận đề xuất phù hợp", desc: "AI Matching gợi ý đúng bài toán, kèm giải thích rõ ràng — không đoán mò." },
 ];
 
 const KG_NODES = [
@@ -282,9 +314,11 @@ export default function HomePage() {
             </Card>
             <Card className={`shadow-sm ${cardHover}`}>
               <CardContent className="text-center py-6">
-                <div className="text-2xl md:text-3xl font-bold text-brand-dark">Giai đoạn 1</div>
+                <div className="text-2xl md:text-3xl font-bold text-brand-dark">
+                  <CountUp value={100} suffix="%" />
+                </div>
                 <div className="text-xs md:text-sm text-muted mt-1">
-                  Đang xây dựng thật — không dữ liệu mock
+                  Đề xuất ghép nối luôn kèm giải thích, không hộp đen thuật toán
                 </div>
               </CardContent>
             </Card>
@@ -434,6 +468,36 @@ export default function HomePage() {
         </Reveal>
       </section>
 
+      {/* Why join */}
+      <section className="max-w-6xl mx-auto px-6 pt-20 pb-4 w-full">
+        <Reveal>
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold text-brand uppercase tracking-wide">Vì sao tham gia</p>
+            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-brand-dark text-balance">
+              Chuyên gia tham gia VI CONNECT được gì?
+            </h2>
+          </div>
+        </Reveal>
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {WHY_JOIN.map((b, i) => (
+            <Reveal key={b.title} delay={i * 60}>
+              <Card className={`h-full ${cardHover}`}>
+                <CardContent className="py-6">
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ background: "var(--accent-light)", color: "var(--accent-dark)" }}
+                  >
+                    <b.icon className="w-5 h-5" />
+                  </div>
+                  <div className="font-semibold text-brand-dark mt-4">{b.title}</div>
+                  <p className="text-sm text-muted mt-2 leading-relaxed">{b.desc}</p>
+                </CardContent>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       {/* Mid-page CTA */}
       <section className="mt-20">
         <div className="max-w-6xl mx-auto px-6">
@@ -557,7 +621,23 @@ export default function HomePage() {
               Tham gia VI CONNECT — miễn phí đăng ký, hồ sơ được xác minh, ghép nối
               luôn có giải thích.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+
+            <div className="mt-10 grid sm:grid-cols-3 gap-6 text-left max-w-2xl mx-auto">
+              {JOIN_STEPS.map((s) => (
+                <div key={s.step}>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                    style={{ background: "var(--brand-light)", color: "var(--brand)" }}
+                  >
+                    {s.step}
+                  </div>
+                  <div className="font-semibold text-brand-dark mt-2.5 text-sm">{s.title}</div>
+                  <p className="text-xs text-muted mt-1 leading-relaxed">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link href="/register">
                 <Button size="lg" className="group">
                   Tham gia mạng lưới chuyên gia
@@ -575,8 +655,8 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted">
-        VI CONNECT — Giai đoạn 1 (thí điểm). Nền tảng kết nối hệ sinh thái khoa học,
-        công nghệ & đổi mới sáng tạo Việt Nam.
+        VI CONNECT — Nền tảng kết nối hệ sinh thái khoa học, công nghệ & đổi mới
+        sáng tạo Việt Nam.
       </footer>
     </div>
   );

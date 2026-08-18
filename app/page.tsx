@@ -2,19 +2,28 @@ import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
+  BarChart3,
+  Bot,
   BrainCircuit,
   Building2,
   Check,
   Clock,
+  FileText,
   FlaskConical,
+  Gem,
   Handshake,
   Landmark,
   Layers,
+  LineChart,
   Lightbulb,
   MessageCircle,
+  Network,
+  Package,
+  Search,
   ShieldCheck,
   Sparkles,
   Target,
+  TrendingUp,
   Users,
   X,
 } from "lucide-react";
@@ -202,9 +211,54 @@ const NORTH_STAR = [
 ];
 
 const KG_NODES = [
-  { icon: Users, label: "People", desc: "Chuyên gia, tổ chức", color: "var(--cyan)", bg: "#e3f6fa" },
-  { icon: FlaskConical, label: "Assets", desc: "Công nghệ, sáng chế, kết quả nghiên cứu", color: "var(--accent)", bg: "var(--accent-light)" },
-  { icon: Lightbulb, label: "Opportunities", desc: "Bài toán, tài trợ, đầu tư", color: "var(--gold)", bg: "var(--gold-light)" },
+  {
+    icon: Users,
+    label: "People",
+    title: "Con người & Tổ chức",
+    desc: "Kết nối chuyên gia, nhà khoa học, tổ chức KH&CN và doanh nghiệp KH&CN.",
+    tags: ["Chuyên gia", "Nhà khoa học", "Tổ chức KH&CN", "DN KH&CN"],
+    color: "var(--cyan)",
+    bg: "#e3f6fa",
+  },
+  {
+    icon: FlaskConical,
+    label: "Assets",
+    title: "Năng lực & Tài sản KH&CN",
+    desc: "Tập hợp, chuẩn hóa và kết nối công nghệ, giải pháp, sáng chế, thiết bị, phòng thí nghiệm và kết quả nghiên cứu.",
+    tags: ["Công nghệ", "Giải pháp", "Sáng chế", "Thiết bị", "PTN", "KQNC"],
+    color: "var(--accent)",
+    bg: "var(--accent-light)",
+  },
+  {
+    icon: Lightbulb,
+    label: "Opportunities",
+    title: "Bài toán & Cơ hội",
+    desc: "Đưa bài toán, nhu cầu thực tế, nhiệm vụ, tài trợ, đầu tư và nhu cầu hợp tác lên nền tảng.",
+    tags: ["Bài toán", "Nhiệm vụ", "Tài trợ", "Đầu tư", "Hợp tác"],
+    color: "var(--gold)",
+    bg: "var(--gold-light)",
+  },
+];
+
+const AI_FEATURES = [
+  { icon: Search, title: "Semantic Search", desc: "Tìm kiếm ngữ nghĩa, hiểu ngữ cảnh" },
+  { icon: BarChart3, title: "Explainable Ranking", desc: "Đánh giá & xếp hạng có giải thích" },
+  { icon: Bot, title: "AI Agent", desc: "Đề xuất chủ động & hỗ trợ ra quyết định" },
+];
+
+const PROJECT_FLOW = [
+  { icon: Handshake, label: "Kết nối đối tác" },
+  { icon: Package, label: "Huy động nguồn lực" },
+  { icon: FileText, label: "Hợp đồng & triển khai" },
+  { icon: LineChart, label: "Theo dõi tiến độ" },
+  { icon: Target, label: "Kết quả & tác động" },
+];
+
+const VALUE_PROPS = [
+  { icon: Network, title: "Kết nối thông minh", desc: "Đúng người – đúng năng lực – đúng nhu cầu" },
+  { icon: ShieldCheck, title: "Hợp tác hiệu quả", desc: "Rút ngắn thời gian tìm kiếm, tăng tỷ lệ thành công" },
+  { icon: Gem, title: "Minh bạch & tin cậy", desc: "Dữ liệu chuẩn hóa, đánh giá có căn cứ, truy vết rõ ràng" },
+  { icon: TrendingUp, title: "Kiến tạo giá trị bền vững", desc: "Tối ưu nguồn lực, tạo ra kết quả và tác động thực tiễn" },
 ];
 
 function RingMotif({ className }: { className?: string }) {
@@ -380,11 +434,11 @@ export default function HomePage() {
               {KG_NODES.map((n) => (
                 <div
                   key={n.label}
-                  className="rounded-xl p-4 text-center border border-border"
+                  className="rounded-xl p-4 border border-border"
                   style={{ background: n.bg }}
                 >
                   <div
-                    className="w-9 h-9 mx-auto rounded-full flex items-center justify-center mb-2"
+                    className="w-9 h-9 rounded-full flex items-center justify-center mb-2"
                     style={{ background: "rgba(255,255,255,0.6)", color: n.color }}
                   >
                     <n.icon className="w-4 h-4" />
@@ -392,7 +446,18 @@ export default function HomePage() {
                   <div className="font-semibold" style={{ color: n.color }}>
                     {n.label}
                   </div>
-                  <div className="text-xs text-muted mt-1">{n.desc}</div>
+                  <div className="text-xs font-medium text-brand-dark mt-0.5">{n.title}</div>
+                  <p className="text-xs text-muted mt-1.5 leading-relaxed">{n.desc}</p>
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {n.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="text-[10px] font-medium rounded-full border border-border bg-background/70 px-2 py-0.5 text-muted"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -407,24 +472,65 @@ export default function HomePage() {
             </div>
 
             <div
-              className="relative mx-auto max-w-sm text-center rounded-2xl border-2 py-5 px-6"
+              className="relative mx-auto max-w-lg rounded-2xl border-2 py-5 px-6"
               style={{ borderColor: "var(--brand)", background: "var(--brand-light)" }}
             >
               <span className="absolute top-3 right-3 w-2 h-2 rounded-full motion-safe:animate-pulse" style={{ background: "var(--accent)" }} aria-hidden="true" />
-              <BrainCircuit className="w-6 h-6 mx-auto mb-1.5 text-brand" aria-hidden="true" />
-              <div className="font-bold text-brand-dark">AI Matching Engine</div>
-              <div className="text-xs text-muted mt-1">Explainable Ranking · Team Formation · AI Copilot</div>
+              <div className="text-center">
+                <BrainCircuit className="w-6 h-6 mx-auto mb-1.5 text-brand" aria-hidden="true" />
+                <div className="font-bold text-brand-dark">AI Matching Engine</div>
+                <p className="text-xs text-muted mt-1">
+                  Sử dụng AI để hiểu ngữ cảnh, đánh giá mức độ phù hợp và đề xuất kết nối tối ưu.
+                </p>
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {AI_FEATURES.map((f) => (
+                  <div key={f.title} className="text-center">
+                    <f.icon className="w-4 h-4 mx-auto text-brand" aria-hidden="true" />
+                    <div className="text-[11px] font-semibold text-brand-dark mt-1">{f.title}</div>
+                    <div className="text-[10px] text-muted mt-0.5 leading-tight">{f.desc}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex justify-center my-3 text-muted">
               <ArrowRight className="w-5 h-5 rotate-90" aria-hidden="true" />
             </div>
 
-            <div className="mx-auto max-w-sm text-center rounded-2xl border border-border bg-background py-5 px-6">
-              <Handshake className="w-6 h-6 mx-auto mb-1.5 text-brand-dark" aria-hidden="true" />
-              <div className="font-semibold text-brand-dark">Project · Collaboration</div>
-              <div className="text-xs text-muted mt-1">Hợp đồng, nguồn lực huy động, tác động thực</div>
+            <div className="mx-auto max-w-lg rounded-2xl border border-border bg-background py-5 px-6">
+              <div className="text-center">
+                <Handshake className="w-6 h-6 mx-auto mb-1.5 text-brand-dark" aria-hidden="true" />
+                <div className="font-semibold text-brand-dark">Project · Collaboration</div>
+                <p className="text-xs text-muted mt-1">Biến kết nối thành dự án và giá trị thực.</p>
+              </div>
+              <div className="mt-4 flex flex-wrap items-start justify-center gap-x-1 gap-y-3">
+                {PROJECT_FLOW.map((p, i) => (
+                  <div key={p.label} className="flex items-center">
+                    <div className="flex flex-col items-center text-center w-[76px]">
+                      <p.icon className="w-4 h-4 text-muted" aria-hidden="true" />
+                      <div className="text-[10px] text-muted mt-1 leading-tight">{p.label}</div>
+                    </div>
+                    {i < PROJECT_FLOW.length - 1 && (
+                      <ArrowRight className="w-3 h-3 text-muted/40 shrink-0" aria-hidden="true" />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
+          </div>
+        </Reveal>
+
+        {/* Value props */}
+        <Reveal delay={140}>
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {VALUE_PROPS.map((v) => (
+              <div key={v.title} className="rounded-xl border border-border p-4">
+                <v.icon className="w-5 h-5 text-brand" aria-hidden="true" />
+                <div className="text-sm font-semibold text-brand-dark mt-2">{v.title}</div>
+                <p className="text-xs text-muted mt-1 leading-relaxed">{v.desc}</p>
+              </div>
+            ))}
           </div>
         </Reveal>
 

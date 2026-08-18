@@ -135,7 +135,7 @@ const AUDIENCES = [
   {
     icon: Users,
     title: "Nhà khoa học & Chuyên gia",
-    desc: "Tiếp cận bài toán thật đúng năng lực, tham gia nhóm liên ngành, xây hồ sơ năng lực có bằng chứng qua từng nhiệm vụ đã thực hiện.",
+    desc: "VI CONNECT giúp nhà khoa học và chuyên gia xây dựng hồ sơ năng lực số, kết nối với các bài toán, nhiệm vụ, dự án, tổ chức và đối tác phù hợp thông qua AI Matching. Nền tảng đồng thời ghi nhận quá trình tham gia, kết quả thực hiện và đóng góp chuyên môn để hình thành hồ sơ năng lực có minh chứng, tăng cơ hội hợp tác, nghiên cứu, tư vấn và chuyển giao công nghệ.",
     cta: "Đăng ký hồ sơ chuyên gia",
     href: "/register",
   },

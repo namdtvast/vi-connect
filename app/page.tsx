@@ -156,9 +156,9 @@ const AUDIENCES = [
   {
     icon: Landmark,
     title: "Quỹ, Nhà tài trợ & Nhà đầu tư",
-    desc: "Định hướng: tiếp cận dòng bài toán và dự án đã được chuẩn hóa, hồ sơ minh bạch, theo dõi tiến độ và tác động theo mốc cụ thể.",
+    desc: "VI CONNECT tập hợp và chuẩn hóa các bài toán, nhiệm vụ, công nghệ, dự án và nhu cầu vốn, đồng thời sử dụng AI Matching để kết nối với quỹ, nhà tài trợ và nhà đầu tư phù hợp. Nền tảng hỗ trợ đánh giá hồ sơ, theo dõi tiến độ, kết quả và tác động, giúp việc tài trợ và đầu tư minh bạch, có căn cứ và dễ ra quyết định hơn.",
     tag: "Định hướng phát triển",
-    cta: "Xem cơ hội hợp tác",
+    cta: "Xem cơ hội tài trợ & đầu tư",
     href: "/dashboard/challenges",
   },
 ];

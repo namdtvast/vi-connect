@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { fieldLabel } from "@/lib/taxonomy";
 import { VERIFICATION_BADGE, VERIFICATION_LABEL } from "@/lib/verification-labels";
 import { VerifyActions } from "@/components/experts/verify-actions";
+import { AvatarUploadForm } from "@/components/experts/avatar-upload-form";
 import { formatDate } from "@/lib/utils";
 import type { FieldVisibility } from "@/lib/domain/identity";
 import {
@@ -85,18 +87,41 @@ export default async function ExpertDetailPage({
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">
-            {expert.title ? `${expert.title} ` : ""}
-            {expert.user?.name ?? "Hồ sơ chưa có người nhận"}
-          </h1>
-          <p className="text-sm text-muted">{expert.organization.name}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-4 min-w-0">
+          {expert.avatarPath ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`/api/experts/${expert.id}/avatar`}
+              alt={expert.user?.name ?? "Ảnh chuyên gia"}
+              className="w-20 h-20 rounded-full object-cover border border-border shrink-0"
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-surface border border-border flex items-center justify-center shrink-0">
+              <User className="w-8 h-8 text-muted" />
+            </div>
+          )}
+          <div>
+            <h1 className="text-xl font-semibold">
+              {expert.title ? `${expert.title} ` : ""}
+              {expert.user?.name ?? "Hồ sơ chưa có người nhận"}
+            </h1>
+            <p className="text-sm text-muted">{expert.organization.name}</p>
+          </div>
         </div>
         <Badge variant={VERIFICATION_BADGE[expert.verificationStatus]}>
           {VERIFICATION_LABEL[expert.verificationStatus]}
         </Badge>
       </div>
+
+      {canEdit && (
+        <Card>
+          <CardContent>
+            <div className="text-sm font-medium mb-2">Ảnh chân dung</div>
+            <AvatarUploadForm expertProfileId={expert.id} />
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardContent className="space-y-4">

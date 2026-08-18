@@ -1,10 +1,37 @@
 import Link from "next/link";
+import { User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { fieldLabel } from "@/lib/taxonomy";
 import { VERIFICATION_BADGE, VERIFICATION_LABEL } from "@/lib/verification-labels";
+
+function ExpertAvatar({
+  expertId,
+  avatarPath,
+  name,
+}: {
+  expertId: string;
+  avatarPath: string | null;
+  name: string;
+}) {
+  if (avatarPath) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={`/api/experts/${expertId}/avatar`}
+        alt={name}
+        className="w-12 h-12 rounded-full object-cover border border-border shrink-0"
+      />
+    );
+  }
+  return (
+    <div className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center shrink-0">
+      <User className="w-5 h-5 text-muted" />
+    </div>
+  );
+}
 
 export default async function ExpertsPage() {
   const session = await auth();
@@ -38,13 +65,20 @@ export default async function ExpertsPage() {
         {experts.map((e) => (
           <Card key={e.id}>
             <CardContent className="flex flex-col gap-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="font-medium">
-                    {e.title ? `${e.title} ` : ""}
-                    {e.user?.name ?? "Hồ sơ chưa có người nhận"}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <ExpertAvatar
+                    expertId={e.id}
+                    avatarPath={e.avatarPath}
+                    name={e.user?.name ?? "Hồ sơ chưa có người nhận"}
+                  />
+                  <div className="min-w-0">
+                    <div className="font-medium truncate">
+                      {e.title ? `${e.title} ` : ""}
+                      {e.user?.name ?? "Hồ sơ chưa có người nhận"}
+                    </div>
+                    <div className="text-xs text-muted truncate">{e.organization.name}</div>
                   </div>
-                  <div className="text-xs text-muted">{e.organization.name}</div>
                 </div>
                 <Badge variant={VERIFICATION_BADGE[e.verificationStatus]}>
                   {VERIFICATION_LABEL[e.verificationStatus]}

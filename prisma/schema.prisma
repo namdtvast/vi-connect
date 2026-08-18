@@ -117,6 +117,8 @@ model ExpertProfile {
   experienceYears Int?
   publications    Int?     @default(0)
   patents         Int?     @default(0)
+  avatarPath      String? // duong dan tuong doi trong uploads/, phuc vu qua route co xac thuc
+  avatarName      String?
 
   // Field-level visibility: map fieldPath -> FieldVisibility (VC-NV-011 Muc 15, ADR-0001 Muc 10).
   // Khong co key = ap dung mac dinh Muc 15.2 o tang domain, khong phai PUBLIC ngam dinh.

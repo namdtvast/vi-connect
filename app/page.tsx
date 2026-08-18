@@ -148,7 +148,7 @@ const AUDIENCES = [
   },
   {
     icon: Building2,
-    title: "Doanh nghiệp & Địa phương",
+    title: "Bộ/ Ngành/ Địa phương; Cơ quan Ngoại giao ở nước ngoài; Doanh nghiệp",
     desc: "Bắt đầu từ vấn đề cần giải quyết — VI CONNECT giúp chuẩn hóa bài toán, tìm đúng chuyên gia và công nghệ thay vì tự tìm và đánh giá từng nơi.",
     cta: "Đăng bài toán của bạn",
     href: "/dashboard/challenges",

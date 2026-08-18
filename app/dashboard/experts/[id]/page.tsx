@@ -8,6 +8,7 @@ import { fieldLabel } from "@/lib/taxonomy";
 import { VERIFICATION_BADGE, VERIFICATION_LABEL } from "@/lib/verification-labels";
 import { VerifyActions } from "@/components/experts/verify-actions";
 import { AvatarUploadForm } from "@/components/experts/avatar-upload-form";
+import { EditProfileForm } from "@/components/experts/edit-profile-form";
 import { formatDate } from "@/lib/utils";
 import type { FieldVisibility } from "@/lib/domain/identity";
 import { isOrcidOAuthConfigured } from "@/lib/integrations/orcid";
@@ -135,6 +136,25 @@ export default async function ExpertDetailPage({
           <CardContent>
             <div className="text-sm font-medium mb-2">Ảnh chân dung</div>
             <AvatarUploadForm expertProfileId={expert.id} />
+          </CardContent>
+        </Card>
+      )}
+
+      {canEdit && (
+        <Card>
+          <CardContent>
+            <div className="text-sm font-medium mb-2">Chỉnh sửa thông tin hồ sơ</div>
+            <EditProfileForm
+              expertProfileId={expert.id}
+              title={expert.title}
+              headline={expert.headline}
+              bio={expert.bio}
+              fields={expert.fields}
+              skills={expert.skills}
+              experienceYears={expert.experienceYears}
+              publications={expert.publications}
+              patents={expert.patents}
+            />
           </CardContent>
         </Card>
       )}

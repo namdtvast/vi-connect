@@ -141,8 +141,8 @@ const AUDIENCES = [
   },
   {
     icon: FlaskConical,
-    title: "Tổ chức KH&CN",
-    desc: "Đưa chuyên gia, công nghệ, phòng thí nghiệm và thiết bị của tổ chức vào mạng lưới để được AI Matching sử dụng khi có bài toán phù hợp.",
+    title: "Tổ chức KH&CN & Doanh nghiệp KH&CN",
+    desc: "Các viện, trung tâm, trường/PTN, tổ chức nghiên cứu, doanh nghiệp KH&CN cung cấp chuyên gia – công nghệ – thiết bị – phòng thí nghiệm – giải pháp – sản phẩm KH&CN.",
     cta: "Đăng nhập quản trị tổ chức",
     href: "/login",
   },

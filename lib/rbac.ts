@@ -1,6 +1,11 @@
 import "server-only";
 import { auth } from "@/lib/auth";
-export { assertOrgScope, ForbiddenError } from "@/lib/domain/access-control";
+export {
+  assertOrgScope,
+  assertPartyScope,
+  partyOrganizationIdsOfMatch,
+  ForbiddenError,
+} from "@/lib/domain/access-control";
 import { ForbiddenError } from "@/lib/domain/access-control";
 import type { Role } from "@/lib/generated/prisma/enums";
 

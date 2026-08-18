@@ -21,10 +21,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         const user = await db.user.findUnique({ where: { email } });
-        if (!user) return null;
+        if (!user) {
+          await db.auditLog.create({
+            data: {
+              action: "LOGIN_FAILED",
+              entity: "User",
+              meta: { email, reason: "user_not_found" },
+            },
+          });
+          return null;
+        }
 
         const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+        if (!valid) {
+          await db.auditLog.create({
+            data: {
+              userId: user.id,
+              action: "LOGIN_FAILED",
+              entity: "User",
+              entityId: user.id,
+              meta: { reason: "invalid_password" },
+            },
+          });
+          return null;
+        }
 
         return {
           id: user.id,

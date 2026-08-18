@@ -1,4 +1,4 @@
-# THIẾT KẾ PHÂN QUYỀN VI CONNECT
+# KIẾN TRÚC PHÂN QUYỀN VI CONNECT
 
 **Mã tài liệu:** VC-KT-002
 **Phiên bản:** v0.1
@@ -32,7 +32,7 @@ thực hoá duy nhất. Không thay đổi `prisma/schema.prisma` trong bản n�
 bổ sung nêu ở Mục 14; đây là tài liệu thiết kế, việc code hoá thực hiện ở các PR
 riêng sau khi tài liệu được duyệt (`APPROVED`).
 
-## 2. Căn cứ
+### 2. Căcứ
 
 - Yêu cầu phân quyền gốc (58 mục) do chủ đề án cung cấp — kiến trúc IAM đầy đủ cho
   nền tảng multi-tenant SaaS.
@@ -116,13 +116,13 @@ Role/Permission bên dưới.
 
 ## 5. Danh mục Role
 
-| Role | Mô tả | Gắn với |
-|---|---|---|
-| `SUPERADMIN` *(trước đây `VAST_ADMIN`)* | Quản trị toàn nền tảng | Không giới hạn tổ chức |
-| `ADMIN` *(trước đây `HOI_ADMIN`)* | Quản trị được ủy quyền (delegated admin) của 1 tổ chức | `organizationId` (qua Membership) |
-| `EXPERT` | Chuyên gia — cá nhân có hồ sơ năng lực | `organizationId` (đơn vị chủ quản) |
-| `ENTERPRISE` | Đại diện tổ chức cầu (doanh nghiệp/quỹ đầu tư) đăng nhu cầu/bài toán | `organizationId` |
-| `VIEWER` | Chỉ xem dữ liệu công khai/đã publish | Không bắt buộc |
+| Role                                              | Mô tả                                                                              | Gắn với                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------- |
+| `SUPERADMIN` *(trước đây `VAST_ADMIN`)* | Quản trị toàn nền tảng                                                          | Không giới hạn tổ chức               |
+| `ADMIN` *(trước đây `HOI_ADMIN`)*       | Quản trị được ủy quyền (delegated admin) của 1 tổ chức                     | `organizationId` (qua Membership)       |
+| `EXPERT`                                        | Chuyên gia — cá nhân có hồ sơ năng lực                                      | `organizationId` (đơn vị chủ quản) |
+| `ENTERPRISE`                                    | Đại diện tổ chức cầu (doanh nghiệp/quỹ đầu tư) đăng nhu cầu/bài toán | `organizationId`                        |
+| `VIEWER`                                        | Chỉ xem dữ liệu công khai/đã publish                                           | Không bắt buộc                         |
 
 Trong toàn tài liệu dùng tên role mới (`SUPERADMIN`/`ADMIN`) thay cho tên cũ
 (`VAST_ADMIN`/`HOI_ADMIN`). Khi trích nguyên văn đoạn code hiện tại (chưa đổi
@@ -136,13 +136,13 @@ Mục 3, điểm 8 đã cho phép thêm role mới bất cứ lúc nào mà khô
 
 ## 6. Data Scope
 
-| Scope | Ý nghĩa |
-|---|---|
-| `OWN` | Chỉ bản ghi user tự tạo/sở hữu (VD: `ExpertProfile` của chính mình) |
-| `ORGANIZATION` | Mọi bản ghi thuộc `organizationId` của user |
-| `PARTY` | Bản ghi thuộc domain EXECUTE (`Project/Milestone/Deliverable/Agreement`) mà tổ chức của user là **một trong các bên** tham gia `Match` gốc (bên `Need` hoặc bên `Supply`/`ExpertProfile`) — xem Mục 7.3 |
-| `PLATFORM` | Toàn hệ thống (chỉ `SUPERADMIN`) — tương đương scope `TENANT` khi VI CONNECT vận hành nhiều tenant (Mục 4) |
-| `PLATFORM*` | Toàn hệ thống nhưng **chỉ bản ghi ở trạng thái công khai** (`PUBLISHED`) — dùng cho hành vi đọc kiểu marketplace |
+| Scope            | Ý nghĩa                                                                                                                                                                                                                               |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OWN`          | Chỉ bản ghi user tự tạo/sở hữu (VD:`ExpertProfile` của chính mình)                                                                                                                                                           |
+| `ORGANIZATION` | Mọi bản ghi thuộc`organizationId` của user                                                                                                                                                                                        |
+| `PARTY`        | Bản ghi thuộc domain EXECUTE (`Project/Milestone/Deliverable/Agreement`) mà tổ chức của user là **một trong các bên** tham gia `Match` gốc (bên `Need` hoặc bên `Supply`/`ExpertProfile`) — xem Mục 7.3 |
+| `PLATFORM`     | Toàn hệ thống (chỉ`SUPERADMIN`) — tương đương scope `TENANT` khi VI CONNECT vận hành nhiều tenant (Mục 4)                                                                                                             |
+| `PLATFORM*`    | Toàn hệ thống nhưng**chỉ bản ghi ở trạng thái công khai** (`PUBLISHED`) — dùng cho hành vi đọc kiểu marketplace                                                                                                 |
 
 Không dùng `TEAM/DEPARTMENT/UNIT/NETWORK/CUSTOM` như yêu cầu gốc §6 — schema hiện
 tại không có đơn vị/phòng ban dưới `Organization`; bổ sung khi nghiệp vụ thật cần
@@ -166,19 +166,19 @@ xem Mục 13 về điều kiện bật thêm.
 
 ### 7.1 CONNECT — tổ chức, tài khoản, hồ sơ chuyên gia
 
-| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
-|---|---|---|---|---|---|
-| `organization.view` | P | O + P* | O + P* | O + P* | P* |
-| `organization.create` | P | — | — | — | — |
-| `organization.update` (hồ sơ tổ chức) | P | O | — | — | — |
-| `organization.manage` (kích hoạt/tạm ngưng) | P | — | — | — | — |
-| `user.view` | P | O | W | W | — |
-| `user.create` (thêm thành viên vào tổ chức) | P | O | — | — | — |
-| `user.update` | P | O | W | W | — |
-| `user.disable` | P | O¹ | — | — | — |
-| `expertProfile.view` | P | O | W | — | P* |
-| `expertProfile.update` | P | — | W | — | — |
-| `expertProfile.verify` | P | O | — | — | — |
+| Permission                                          | SUPERADMIN | ADMIN  | EXPERT | ENTERPRISE | VIEWER |
+| --------------------------------------------------- | ---------- | ------ | ------ | ---------- | ------ |
+| `organization.view`                               | P          | O + P* | O + P* | O + P*     | P*     |
+| `organization.create`                             | P          | —     | —     | —         | —     |
+| `organization.update` (hồ sơ tổ chức)         | P          | O      | —     | —         | —     |
+| `organization.manage` (kích hoạt/tạm ngưng)   | P          | —     | —     | —         | —     |
+| `user.view`                                       | P          | O      | W      | W          | —     |
+| `user.create` (thêm thành viên vào tổ chức) | P          | O      | —     | —         | —     |
+| `user.update`                                     | P          | O      | W      | W          | —     |
+| `user.disable`                                    | P          | O¹    | —     | —         | —     |
+| `expertProfile.view`                              | P          | O      | W      | —         | P*     |
+| `expertProfile.update`                            | P          | —     | W      | —         | —     |
+| `expertProfile.verify`                            | P          | O      | —     | —         | —     |
 
 ¹ `ADMIN` chỉ được `user.disable` với tài khoản thuộc chính tổ chức mình — hệ quả
 của mô hình 1 user–1 org hiện tại (Mục 4). Khi bổ sung bảng `Membership`, quyền
@@ -188,26 +188,25 @@ hưởng Membership ở tổ chức khác), khớp §23 của yêu cầu gốc m
 
 ### 7.2 DISCOVER & MATCH — cung cầu, bài toán, ghép nối
 
-| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
-|---|---|---|---|---|---|
-| `need.view` | P | O + P* | P* | O + P* | P* |
-| `need.create` / `.update` / `.publish` / `.close` | P | O | — | O | — |
-| `supply.view` | P | O + P* | O + P* | P* | P* |
-| `supply.create` / `.update` / `.publish` / `.archive` | P | O | W² | — | — |
-| `challenge.view` | P | O + P* | P* | O + P* | P* |
-| `challenge.create` / `.update` / `.publish` / `.close` | P | O | — | O | — |
-| `solution.view` | P | O (bài toán của tổ chức mình) | W | O (bài toán của tổ chức mình) | — |
-| `solution.submit` | P | O | W | O | — |
-| `solution.review` | P | O | — | O | — |
-| `match.view` | P | O (theo `Need` của tổ chức mình) | W (theo `ExpertProfile` của mình) | O | — |
-| `match.generate` | P | O | — | O | — |
-| `match.updateStage` | P | O | — | O | — |
-| `match.convertToProject` | P | O | — | O | — |
+| Permission                                                     | SUPERADMIN | ADMIN                                 | EXPERT                               | ENTERPRISE                          | VIEWER |
+| -------------------------------------------------------------- | ---------- | ------------------------------------- | ------------------------------------ | ----------------------------------- | ------ |
+| `need.view`                                                  | P          | O + P*                                | P*                                   | O + P*                              | P*     |
+| `need.create` / `.update` / `.publish` / `.close`      | P          | O                                     | —                                   | O                                   | —     |
+| `supply.view`                                                | P          | O + P*                                | O + P*                               | P*                                  | P*     |
+| `supply.create` / `.update` / `.publish` / `.archive`  | P          | O                                     | W²                                  | —                                  | —     |
+| `challenge.view`                                             | P          | O + P*                                | P*                                   | O + P*                              | P*     |
+| `challenge.create` / `.update` / `.publish` / `.close` | P          | O                                     | —                                   | O                                   | —     |
+| `solution.view`                                              | P          | O (bài toán của tổ chức mình)   | W                                    | O (bài toán của tổ chức mình) | —     |
+| `solution.submit`                                            | P          | O                                     | W                                    | O                                   | —     |
+| `solution.review`                                            | P          | O                                     | —                                   | O                                   | —     |
+| `match.view`                                                 | P          | O (theo`Need` của tổ chức mình) | W (theo`ExpertProfile` của mình) | O                                   | —     |
+| `match.generate`                                             | P          | O                                     | —                                   | O                                   | —     |
+| `match.updateStage`                                          | P          | O                                     | —                                   | O                                   | —     |
+| `match.convertToProject`                                     | P          | O                                     | —                                   | O                                   | —     |
 
 ² `EXPERT` có quyền `supply.*` ở scope `OWN` theo **thiết kế mục tiêu** khớp mô tả
 README ("01+10 — Hồ sơ & tổ chức... đăng nhu cầu/công nghệ"), nhưng mã hiện tại
-(`createSupplyAction` trong `lib/actions/matching.ts:65`) chỉ cho `VAST_ADMIN,
-HOI_ADMIN` (= `SUPERADMIN, ADMIN` sau khi đổi tên) — đây là khoảng trống cần xác
+(`createSupplyAction` trong `lib/actions/matching.ts:65`) chỉ cho `VAST_ADMIN, HOI_ADMIN` (= `SUPERADMIN, ADMIN` sau khi đổi tên) — đây là khoảng trống cần xác
 nhận nghiệp vụ trước khi code hoá, ghi ở Phụ lục B.
 
 ### 7.3 EXECUTE — dự án, hợp đồng
@@ -218,19 +217,18 @@ nhận nghiệp vụ trước khi code hoá, ghi ở Phụ lục B.
 `PARTY` thay vì `ORGANIZATION` đơn: tổ chức của user chỉ cần là **một trong hai
 bên** liên quan đến `Match` gốc, không nhất thiết là bên tạo `Need`.
 
-| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
-|---|---|---|---|---|---|
-| `project.view` | P | PARTY³ | W (dự án phát sinh từ match của mình) | PARTY³ | — |
-| `project.update` | P | PARTY³ | — | PARTY³ | — |
-| `milestone.create` / `.updateStatus` | P | PARTY³ | — | PARTY³ | — |
-| `deliverable.view` | P | PARTY³ | W | PARTY³ | — |
-| `deliverable.accept` | P | PARTY³ | — | PARTY³ | — |
-| `agreement.view` | P | PARTY³ | W | PARTY³ | — |
-| `agreement.create` / `.sign` | P | PARTY³ | — | PARTY³ | — |
+| Permission                               | SUPERADMIN | ADMIN   | EXPERT                                      | ENTERPRISE | VIEWER |
+| ---------------------------------------- | ---------- | ------- | ------------------------------------------- | ---------- | ------ |
+| `project.view`                         | P          | PARTY³ | W (dự án phát sinh từ match của mình) | PARTY³    | —     |
+| `project.update`                       | P          | PARTY³ | —                                          | PARTY³    | —     |
+| `milestone.create` / `.updateStatus` | P          | PARTY³ | —                                          | PARTY³    | —     |
+| `deliverable.view`                     | P          | PARTY³ | W                                           | PARTY³    | —     |
+| `deliverable.accept`                   | P          | PARTY³ | —                                          | PARTY³    | —     |
+| `agreement.view`                       | P          | PARTY³ | W                                           | PARTY³    | —     |
+| `agreement.create` / `.sign`         | P          | PARTY³ | —                                          | PARTY³    | —     |
 
 ³ `PARTY` = `user.organizationId` nằm trong tập
-`{match.need.organizationId, match.supply?.organizationId,
-match.expertProfile?.organization.id}` của `Match` gắn với `Project` (qua
+`{match.need.organizationId, match.supply?.organizationId, match.expertProfile?.organization.id}` của `Match` gắn với `Project` (qua
 `Project.matchId`). Việc này đòi hỏi một hàm mới `assertPartyScope(user, project)`
 — load `Project` kèm `match.need`, `match.supply`, `match.expertProfile.organization`
 rồi kiểm tra `user.organizationId` có thuộc tập trên không — khác với
@@ -239,25 +237,26 @@ chưa tồn tại trong `lib/domain/access-control.ts`, bổ sung ở Mục 14.
 
 ### 7.4 MOBILIZE — chỉ phần stub đã có (không phải Funding Hub thật)
 
-| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
-|---|---|---|---|---|---|
-| `fundingSource.view` | P | O | — | O | — |
-| `fundingSource.create` (chỉ ghi chú, không phê duyệt/giải ngân) | P | O | — | O | — |
+| Permission                                                               | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| ------------------------------------------------------------------------ | ---------- | ----- | ------ | ---------- | ------ |
+| `fundingSource.view`                                                   | P          | O     | —     | O          | —     |
+| `fundingSource.create` (chỉ ghi chú, không phê duyệt/giải ngân) | P          | O     | —     | O          | —     |
 
 Không bật `funding.review`, `funding.approve`, `investment.decision`,
 `due_diligence.view` — không phải vì mô hình không hỗ trợ (mô hình `resource.action`
+
 + scope ở Mục 5-6 đủ tổng quát để thêm các permission này), mà vì `AGENTS.md`
-hiện cấm mở rộng mã nguồn sang giải ngân/đầu tư (Mục 2, Mục 13, điểm 1). Khi đề
-án phê duyệt xây Funding Hub thật, thêm các dòng này vào bảng trên với scope phù
-hợp (nhiều khả năng `ORGANIZATION` cho review nội bộ + `PARTY`/quy trình
-Maker-Checker riêng cho approve) — không cần đổi cấu trúc Role/Permission/Scope.
+  hiện cấm mở rộng mã nguồn sang giải ngân/đầu tư (Mục 2, Mục 13, điểm 1). Khi đề
+  án phê duyệt xây Funding Hub thật, thêm các dòng này vào bảng trên với scope phù
+  hợp (nhiều khả năng `ORGANIZATION` cho review nội bộ + `PARTY`/quy trình
+  Maker-Checker riêng cho approve) — không cần đổi cấu trúc Role/Permission/Scope.
 
 ### 7.5 IMPACT / GOVERNANCE
 
-| Permission | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
-|---|---|---|---|---|---|
-| `kpi.view` | P | O⁴ | — | — | — |
-| `auditLog.view` | P | — | — | — | — |
+| Permission        | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
+| ----------------- | ---------- | ----- | ------ | ---------- | ------ |
+| `kpi.view`      | P          | O⁴   | —     | —         | —     |
+| `auditLog.view` | P          | —    | —     | —         | —     |
 
 ⁴ KPI theo scope tổ chức (`kpi.view = O` cho `ADMIN`) là **mục tiêu thiết kế**;
 cần đối chiếu với dashboard KPI hiện tại (`11 — KPI Dashboard`) xem có đang tính
@@ -318,16 +317,16 @@ thiểu có giá trị cao (không cần đủ bộ `IPAddress/UserAgent/Correla
 gốc/`VC-TK-004` Mục 32 ngay từ đầu, nhưng `before/after` có giá trị cao cho các
 hành vi nhạy):
 
-| Hành vi bắt buộc ghi audit | Đã ghi trong mã nguồn? |
-|---|---|
-| `VERIFY_EXPERT_*` | Có (`lib/actions/experts.ts:30`) |
-| `REVIEW_SOLUTION_*` | Có (`lib/actions/challenges.ts:113`) |
-| `CREATE_ORGANIZATION`, `SET_ORG_STATUS_*` | Có (`lib/actions/organizations.ts`) |
-| `CONVERT_MATCH_TO_PROJECT`, `CREATE_AGREEMENT` | Có (`lib/actions/projects.ts`) |
-| `MATCH_STAGE_*` | Có (`lib/actions/matching.ts:142`) |
-| Đăng nhập thất bại (`FailedLogin`) | **Chưa** — `lib/auth.ts` không ghi audit khi `authorize` trả `null` |
-| Đổi role/permission của user | **Chưa có UI/action** — backlog Mục 14 |
-| `signAgreementAction` | **Chưa** — không có `auditLog.create` (lib/actions/projects.ts:123-130) |
+| Hành vi bắt buộc ghi audit                      | Đã ghi trong mã nguồn?                                                          |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `VERIFY_EXPERT_*`                                | Có (`lib/actions/experts.ts:30`)                                                 |
+| `REVIEW_SOLUTION_*`                              | Có (`lib/actions/challenges.ts:113`)                                             |
+| `CREATE_ORGANIZATION`, `SET_ORG_STATUS_*`      | Có (`lib/actions/organizations.ts`)                                              |
+| `CONVERT_MATCH_TO_PROJECT`, `CREATE_AGREEMENT` | Có (`lib/actions/projects.ts`)                                                   |
+| `MATCH_STAGE_*`                                  | Có (`lib/actions/matching.ts:142`)                                               |
+| Đăng nhập thất bại (`FailedLogin`)          | **Chưa** — `lib/auth.ts` không ghi audit khi `authorize` trả `null` |
+| Đổi role/permission của user                    | **Chưa có UI/action** — backlog Mục 14                                    |
+| `signAgreementAction`                            | **Chưa** — không có `auditLog.create` (lib/actions/projects.ts:123-130) |
 
 ## 11. Trường hợp đặc biệt
 
@@ -392,15 +391,15 @@ nghiệp vụ/mã nguồn thật tương ứng, hoặc bị `AGENTS.md` giới h
 
 ## 14. Kế hoạch triển khai kỹ thuật (khi tài liệu này được duyệt)
 
-| Việc | File | Ghi chú |
-|---|---|---|
-| Bảng permission tĩnh `Record<Role, string[]>` theo Mục 7 | `lib/domain/access-control.ts` (mới: `permissions.ts` cùng thư mục) | Thay dần các `role === "..."` rải rác |
-| Hàm `assertPermission(user, "resource.action", {organizationId?, ownerId?})` | `lib/domain/access-control.ts` | Mở rộng `assertOrgScope` hiện có, giữ tương thích ngược |
-| Hàm `assertPartyScope(user, project)` cho domain EXECUTE (Mục 7.3, chú thích ³) | `lib/domain/access-control.ts` | Load `Project.match.{need, supply, expertProfile.organization}`, kiểm tra `user.organizationId` thuộc tập organizationId liên quan; dùng cho `project/milestone/deliverable/agreement.*` |
-| Đổi tên `Role` enum: `VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN` | `prisma/schema.prisma` + migration mới + `prisma/seed.ts` | Breaking change: migration phải rename giá trị enum, cập nhật toàn bộ `requireRole(...)`/`role === "..."` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`; cập nhật nhãn UI hiển thị role — xem Phụ lục B, B11 |
-| Thêm `User.status ACTIVE\|DISABLED` | `prisma/schema.prisma` + migration mới | Không sửa migration cũ, đúng `AGENTS.md` |
-| Mở rộng `AuditLog`: `before Json?`, `after Json?` | `prisma/schema.prisma` + migration mới | `ipAddress/userAgent/correlationId` khi có middleware phù hợp |
-| Vá các khoảng trống ở Phụ lục B | `lib/actions/projects.ts`, `lib/actions/matching.ts` | Ưu tiên trước khi có dữ liệu thật nhiều tổ chức |
+| Việc                                                                                 | File                                                                        | Ghi chú                                                                                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bảng permission tĩnh`Record<Role, string[]>` theo Mục 7                          | `lib/domain/access-control.ts` (mới: `permissions.ts` cùng thư mục) | Thay dần các`role === "..."` rải rác                                                                                                                                                                                                                                      |
+| Hàm`assertPermission(user, "resource.action", {organizationId?, ownerId?})`        | `lib/domain/access-control.ts`                                            | Mở rộng`assertOrgScope` hiện có, giữ tương thích ngược                                                                                                                                                                                                              |
+| Hàm`assertPartyScope(user, project)` cho domain EXECUTE (Mục 7.3, chú thích ³) | `lib/domain/access-control.ts`                                            | Load`Project.match.{need, supply, expertProfile.organization}`, kiểm tra `user.organizationId` thuộc tập organizationId liên quan; dùng cho `project/milestone/deliverable/agreement.*`                                                                              |
+| Đổi tên`Role` enum: `VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN`         | `prisma/schema.prisma` + migration mới + `prisma/seed.ts`              | Breaking change: migration phải rename giá trị enum, cập nhật toàn bộ`requireRole(...)`/`role === "..."` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`; cập nhật nhãn UI hiển thị role — xem Phụ lục B, B11 |
+| Thêm`User.status ACTIVE\|DISABLED`                                                  | `prisma/schema.prisma` + migration mới                                   | Không sửa migration cũ, đúng`AGENTS.md`                                                                                                                                                                                                                                  |
+| Mở rộng`AuditLog`: `before Json?`, `after Json?`                              | `prisma/schema.prisma` + migration mới                                   | `ipAddress/userAgent/correlationId` khi có middleware phù hợp                                                                                                                                                                                                              |
+| Vá các khoảng trống ở Phụ lục B                                                | `lib/actions/projects.ts`, `lib/actions/matching.ts`                    | Ưu tiên trước khi có dữ liệu thật nhiều tổ chức                                                                                                                                                                                                                      |
 
 ## 15. Test bắt buộc tối thiểu
 
@@ -409,8 +408,7 @@ nghiệp vụ/mã nguồn thật tương ứng, hoặc bị `AGENTS.md` giới h
    ngược lại, `ENTERPRISE`/`ADMIN` ở **bên cung** (`Supply`/chuyên gia thuộc tổ
    chức mình) vẫn phải xem/sửa được `Project` dù không phải bên tạo `Need` (kiểm
    tra `assertPartyScope`, không phải `assertOrgScope` — Mục 7.3).
-3. `EXPERT`/`VIEWER` không gọi được các action giới hạn `requireRole("SUPERADMIN",
-   "ADMIN", "ENTERPRISE")`.
+3. `EXPERT`/`VIEWER` không gọi được các action giới hạn `requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE")`.
 4. `VIEWER` chỉ thấy `Need`/`Supply`/`Challenge` có `status = PUBLISHED`.
 5. `reviewSolutionAction` chặn người review chính là người nộp giải pháp.
 6. `User.status = DISABLED` không đăng nhập được (`authorize()` trả `null`).
@@ -423,14 +421,14 @@ nghiệp vụ/mã nguồn thật tương ứng, hoặc bị `AGENTS.md` giới h
 ## 16. Đối chiếu với mô hình Multi-Tenant Architecture phổ biến (tham khảo ngoài)
 
 Tham khảo: "Cơ bản về Multi-Tenant Architecture" — Viblo,
-<https://viblo.asia/p/co-ban-ve-multi-tenant-architecture-QyJKzZO74Me> (truy cập
+[https://viblo.asia/p/co-ban-ve-multi-tenant-architecture-QyJKzZO74Me](https://viblo.asia/p/co-ban-ve-multi-tenant-architecture-QyJKzZO74Me) (truy cập
 2026-08-17). Bài viết trình bày 3 mô hình triển khai multi-tenant phổ biến:
 
-| Mô hình | Mô tả | Phù hợp cho (theo bài viết) |
-|---|---|---|
-| Shared Database, Shared Schema | 1 database, 1 bộ bảng, phân biệt bằng cột định danh khách thuê (`tenant_id`) | Dự án nhỏ, chi phí thấp |
-| Shared Database, Separate Schema | 1 database, mỗi khách thuê 1 schema riêng | Cần cô lập logic tốt hơn; đánh đổi bằng độ phức tạp quản trị và rủi ro "Noisy Neighbor" |
-| Separate Database per Tenant | Mỗi khách thuê 1 database/server riêng | Khách hàng Enterprise, ngành tài chính, cần bảo mật/mở rộng độc lập tuyệt đối |
+| Mô hình                        | Mô tả                                                                                  | Phù hợp cho (theo bài viết)                                                                           |
+| -------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Shared Database, Shared Schema   | 1 database, 1 bộ bảng, phân biệt bằng cột định danh khách thuê (`tenant_id`) | Dự án nhỏ, chi phí thấp                                                                              |
+| Shared Database, Separate Schema | 1 database, mỗi khách thuê 1 schema riêng                                            | Cần cô lập logic tốt hơn; đánh đổi bằng độ phức tạp quản trị và rủi ro "Noisy Neighbor" |
+| Separate Database per Tenant     | Mỗi khách thuê 1 database/server riêng                                               | Khách hàng Enterprise, ngành tài chính, cần bảo mật/mở rộng độc lập tuyệt đối             |
 
 ### 16.1 Đối chiếu với VI CONNECT
 
@@ -478,45 +476,53 @@ hiện tại.
 
 ## Phụ lục A — Đối chiếu với yêu cầu 58 mục gốc
 
-| Nhóm mục gốc | Trạng thái |
-|---|---|
-| §1, §29 (nguyên tắc chung, allow-based) | Áp dụng, rút gọn — Mục 3, 11 |
-| §2-§6 (Membership/Tenant/Unit/resource.action/scope) | Rút gọn còn mô hình Mục 4, scope Mục 6, permission Mục 7 |
-| §7-§9 (Workspace Selector, Personal Workspace) | Chưa bật — Mục 13, điểm 3 |
-| §10-§14 (nhiều đơn vị, nhiều role, kế thừa role, lãnh đạo/trưởng phòng) | Không áp dụng hiện tại — không có Unit/Department dưới Organization; enum scope có thể mở rộng khi cần (Mục 6) |
-| §15-§19 (chuyên gia, reviewer, funder, guest, người ngoài tổ chức) | Áp dụng phần chuyên gia/reviewer/guest (Mục 7); Funder chưa bật (Mục 13, điểm 2) |
-| §20-§22 (cross-tenant, public/private, phân loại dữ liệu) | Thay bằng quy tắc PUBLISHED — Mục 8 |
-| §23-§28 (disable, rời tổ chức, đổi role, quyền tạm thời, ủy quyền) | Áp dụng tối thiểu (disable) — Mục 11; còn lại chưa bật — Mục 13, điểm 7 |
-| §31 (Maker-Checker) | Chưa bật — gắn với Funding module chưa xây (Mục 13, điểm 2) |
-| §32-§33 (SuperAdmin/TenantAdmin) | Rút gọn còn `SUPERADMIN`/`ADMIN` — Mục 5 |
-| §34-§39 (API flow, IDOR, tenant giả, export, download, search) | Áp dụng — Mục 9; export/search chưa có tính năng, ghi nhận là việc cần làm khi tính năng xuất hiện |
-| §40-§41 (AI Assistant, background job) | AI Assistant áp dụng nguyên tắc — Mục 12; background job: chưa có job nào cần TenantContext |
-| §42-§44 (cache, notification, session) | Chưa có cache/notification theo tenant; session đã đúng cấu trúc tối thiểu qua JWT |
-| §45 (SSO) | Chưa bật — Mục 13, điểm 5 |
-| §46-§48 (chưa có membership, invitation, xoá user) | Invitation chưa bật — Mục 13, điểm 7; xoá user: đã dùng soft-status — Mục 11 |
-| §49 (audit) | Áp dụng tối thiểu — Mục 10 |
-| §50-§55 (UI convenience, màn hình quản trị, ma trận quyền, entity, authorize function, thứ tự ưu tiên) | Áp dụng — Mục 7, 9; màn hình quản trị quyền là việc UI cần làm riêng |
-| §56 (56 test) | Rút gọn còn 8 test cốt lõi — Mục 15 |
-| §57-§58 (kiến trúc chính thức, yêu cầu coder) | Rút gọn theo Mục 3-4; các cấm chỉ (không hard-code role, không tin TenantId client...) giữ nguyên |
+| Nhóm mục gốc                                                                                                    | Trạng thái                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| §1, §29 (nguyên tắc chung, allow-based)                                                                        | Áp dụng, rút gọn — Mục 3, 11                                                                                             |
+| §2-§6 (Membership/Tenant/Unit/resource.action/scope)                                                             | Rút gọn còn mô hình Mục 4, scope Mục 6, permission Mục 7                                                               |
+| §7-§9 (Workspace Selector, Personal Workspace)                                                                   | Chưa bật — Mục 13, điểm 3                                                                                                |
+| §10-§14 (nhiều đơn vị, nhiều role, kế thừa role, lãnh đạo/trưởng phòng)                             | Không áp dụng hiện tại — không có Unit/Department dưới Organization; enum scope có thể mở rộng khi cần (Mục 6) |
+| §15-§19 (chuyên gia, reviewer, funder, guest, người ngoài tổ chức)                                         | Áp dụng phần chuyên gia/reviewer/guest (Mục 7); Funder chưa bật (Mục 13, điểm 2)                                     |
+| §20-§22 (cross-tenant, public/private, phân loại dữ liệu)                                                    | Thay bằng quy tắc PUBLISHED — Mục 8                                                                                        |
+| §23-§28 (disable, rời tổ chức, đổi role, quyền tạm thời, ủy quyền)                                     | Áp dụng tối thiểu (disable) — Mục 11; còn lại chưa bật — Mục 13, điểm 7                                          |
+| §31 (Maker-Checker)                                                                                               | Chưa bật — gắn với Funding module chưa xây (Mục 13, điểm 2)                                                          |
+| §32-§33 (SuperAdmin/TenantAdmin)                                                                                 | Rút gọn còn`SUPERADMIN`/`ADMIN` — Mục 5                                                                               |
+| §34-§39 (API flow, IDOR, tenant giả, export, download, search)                                                  | Áp dụng — Mục 9; export/search chưa có tính năng, ghi nhận là việc cần làm khi tính năng xuất hiện            |
+| §40-§41 (AI Assistant, background job)                                                                           | AI Assistant áp dụng nguyên tắc — Mục 12; background job: chưa có job nào cần TenantContext                          |
+| §42-§44 (cache, notification, session)                                                                           | Chưa có cache/notification theo tenant; session đã đúng cấu trúc tối thiểu qua JWT                                   |
+| §45 (SSO)                                                                                                         | Chưa bật — Mục 13, điểm 5                                                                                                |
+| §46-§48 (chưa có membership, invitation, xoá user)                                                            | Invitation chưa bật — Mục 13, điểm 7; xoá user: đã dùng soft-status — Mục 11                                       |
+| §49 (audit)                                                                                                       | Áp dụng tối thiểu — Mục 10                                                                                               |
+| §50-§55 (UI convenience, màn hình quản trị, ma trận quyền, entity, authorize function, thứ tự ưu tiên) | Áp dụng — Mục 7, 9; màn hình quản trị quyền là việc UI cần làm riêng                                             |
+| §56 (56 test)                                                                                                     | Rút gọn còn 8 test cốt lõi — Mục 15                                                                                     |
+| §57-§58 (kiến trúc chính thức, yêu cầu coder)                                                              | Rút gọn theo Mục 3-4; các cấm chỉ (không hard-code role, không tin TenantId client...) giữ nguyên                    |
 
 ## Phụ lục B — Khoảng trống đã phát hiện trong mã nguồn hiện tại
 
 Phát hiện khi đối chiếu yêu cầu với `lib/actions/*.ts`; **chưa sửa trong tài liệu
 này**, cần PR riêng sau khi thiết kế được duyệt.
 
-| # | Vị trí | Vấn đề | Mức độ |
-|---|---|---|---|
-| B1 | `lib/actions/projects.ts:65` `addMilestoneAction`, `:93` `setMilestoneStatusAction` | Chỉ `requireUser()`, không `assertOrgScope`/`assertPartyScope` theo tổ chức liên quan `Project` → user bất kỳ tổ chức nào cũng sửa được milestone của project bất kỳ | Cao (IDOR) |
-| B2 | `lib/actions/matching.ts:99` `generateMatchesAction` | Chỉ `requireUser()`, không kiểm tra `need.organizationId` thuộc phạm vi user | Trung bình |
-| B3 | `lib/actions/matching.ts:138` `updateMatchStageAction` | Chỉ `requireUser()`, không `assertOrgScope` → đổi được stage của match bất kỳ tổ chức nào | Cao (IDOR) |
-| B4 | `lib/actions/projects.ts:11` `convertMatchToProjectAction`, `:98` `createAgreementAction`, `:123` `signAgreementAction` | Có `requireRole` nhưng thiếu `assertPartyScope` theo các tổ chức liên quan `Match` gốc → `ADMIN`/`ENTERPRISE` tổ chức A thao tác được trên project của tổ chức B dù không liên quan | Cao (IDOR) |
-| B5 | `lib/actions/challenges.ts:77` `submitSolutionAction` | Chỉ `requireUser()` — cần quyết định nghiệp vụ: `VIEWER` có được nộp giải pháp không | Thấp (cần quyết định, không phải lỗi) |
-| B6 | `lib/actions/matching.ts:65` `createSupplyAction` | `requireRole("VAST_ADMIN", "HOI_ADMIN")` (= `SUPERADMIN, ADMIN`) — không có `EXPERT`, trong khi README mô tả chuyên gia đăng công nghệ/dịch vụ của mình | Cần xác nhận nghiệp vụ (Mục 7.2, chú thích ²) |
-| B7 | `lib/auth.ts` (hàm `authorize`) | Không ghi `AuditLog` khi đăng nhập thất bại | Thấp |
-| B8 | `lib/actions/matching.ts` (`createNeedAction`, `createSupplyAction`) | Không có action `update`/`publish`/`close` cho `Need`, không có `update`/`archive` cho `Supply` — Mục 7.2 liệt kê các quyền này như đã có nhưng chưa code hoá; mọi `Need`/`Supply` được set thẳng `status: PUBLISHED` khi tạo, không có bước `DRAFT` nào trong luồng thật (Mục 8 hiện không áp dụng cho dữ liệu thật) | Tài liệu vượt trước mã nguồn |
-| B9 | `lib/actions/` (toàn bộ) | Không có action nào tạo/mời thành viên vào tổ chức (`user.create`, Mục 7.1) — tài khoản hiện chỉ tạo qua `prisma/seed.ts` | Tài liệu vượt trước mã nguồn |
-| B10 | `prisma/schema.prisma` (`User.organizationId` và `ExpertProfile.organizationId`) | Hai trường độc lập, không có ràng buộc đảm bảo luôn khớp nhau — các scope check trong Mục 9 dựa trên `session.user.organizationId`, có thể sai với `ExpertProfile` thật nếu 2 giá trị lệch nhau | Rủi ro dữ liệu |
-| B11 | `prisma/schema.prisma` (`Role` enum), toàn bộ `requireRole("VAST_ADMIN"...)`/`role === "VAST_ADMIN"` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`, `prisma/seed.ts` | Đổi tên role (`VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN`) ở Mục 5 **chưa áp dụng vào mã nguồn** — cần 1 migration Prisma đổi giá trị enum, cập nhật mọi lời gọi `requireRole`/so sánh role, cập nhật tài khoản demo trong seed và nhãn hiển thị role trên UI | Breaking change (schema) |
+| #   | Vị trí                                                                                                                                                                                                                          | Vấn đề                                                                                                                                                                                                                                                                                                                                                                         | Mức độ                                              | Trạng thái                                                                                                                                                                                                        |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1  | `lib/actions/projects.ts` `addMilestoneAction`, `setMilestoneStatusAction`                                                                                                                                                  | Chỉ`requireUser()`, không `assertOrgScope`/`assertPartyScope` theo tổ chức liên quan `Project` → user bất kỳ tổ chức nào cũng sửa được milestone của project bất kỳ                                                                                                                                                                                    | Cao (IDOR)                                             | **Đã vá** — thêm `requireRole` + `assertPartyScope`; `setMilestoneStatusAction` còn kiểm tra thêm `milestone.projectId === projectId` (chặn milestoneId thuộc project khác bị dùng lẫn) |
+| B2  | `lib/actions/matching.ts` `generateMatchesAction`                                                                                                                                                                             | Chỉ`requireUser()`, không kiểm tra `need.organizationId` thuộc phạm vi user                                                                                                                                                                                                                                                                                              | Trung bình                                            | **Đã vá** — thêm `requireRole` + `assertOrgScope(need.organizationId)`                                                                                                                               |
+| B3  | `lib/actions/matching.ts` `updateMatchStageAction`                                                                                                                                                                            | Chỉ`requireUser()`, không `assertOrgScope` → đổi được stage của match bất kỳ tổ chức nào                                                                                                                                                                                                                                                                        | Cao (IDOR)                                             | **Đã vá** — thêm `requireRole` + `assertOrgScope(match.need.organizationId)`                                                                                                                         |
+| B4  | `lib/actions/projects.ts` `convertMatchToProjectAction`, `createAgreementAction`, `signAgreementAction`                                                                                                                   | Có`requireRole` nhưng thiếu `assertPartyScope` theo các tổ chức liên quan `Match` gốc → `ADMIN`/`ENTERPRISE` tổ chức A thao tác được trên project của tổ chức B dù không liên quan                                                                                                                                                                | Cao (IDOR)                                             | **Đã vá** — thêm `assertPartyScope` cho cả 3 action; `signAgreementAction` được bổ sung thêm `auditLog.create` (trước đây thiếu, xem Mục 10)                                           |
+| B5  | `lib/actions/challenges.ts:77` `submitSolutionAction`                                                                                                                                                                         | Chỉ`requireUser()` — cần quyết định nghiệp vụ: `VIEWER` có được nộp giải pháp không                                                                                                                                                                                                                                                                           | Thấp (cần quyết định, không phải lỗi)          | Chưa xử lý — chờ quyết định nghiệp vụ                                                                                                                                                                     |
+| B6  | `lib/actions/matching.ts:65` `createSupplyAction`                                                                                                                                                                             | `requireRole("VAST_ADMIN", "HOI_ADMIN")` (= `SUPERADMIN, ADMIN`) — không có `EXPERT`, trong khi README mô tả chuyên gia đăng công nghệ/dịch vụ của mình                                                                                                                                                                                                       | Cần xác nhận nghiệp vụ (Mục 7.2, chú thích ²) | Chưa xử lý — chờ quyết định nghiệp vụ                                                                                                                                                                     |
+| B7  | `lib/auth.ts` (hàm `authorize`)                                                                                                                                                                                              | Không ghi`AuditLog` khi đăng nhập thất bại                                                                                                                                                                                                                                                                                                                                | Thấp                                                  | **Đã vá** — ghi `LOGIN_FAILED` (không lưu password) cho cả 2 trường hợp: email không tồn tại và sai mật khẩu                                                                                |
+| B8  | `lib/actions/matching.ts` (`createNeedAction`, `createSupplyAction`)                                                                                                                                                        | Không có action`update`/`publish`/`close` cho `Need`, không có `update`/`archive` cho `Supply` — Mục 7.2 liệt kê các quyền này như đã có nhưng chưa code hoá; mọi `Need`/`Supply` được set thẳng `status: PUBLISHED` khi tạo, không có bước `DRAFT` nào trong luồng thật (Mục 8 hiện không áp dụng cho dữ liệu thật) | Tài liệu vượt trước mã nguồn                   | Chưa xử lý — là tính năng mới, không phải lỗ hổng                                                                                                                                                       |
+| B9  | `lib/actions/` (toàn bộ)                                                                                                                                                                                                      | Không có action nào tạo/mời thành viên vào tổ chức (`user.create`, Mục 7.1) — tài khoản hiện chỉ tạo qua `prisma/seed.ts`                                                                                                                                                                                                                                    | Tài liệu vượt trước mã nguồn                   | Chưa xử lý — là tính năng mới, không phải lỗ hổng                                                                                                                                                       |
+| B10 | `prisma/schema.prisma` (`User.organizationId` và `ExpertProfile.organizationId`)                                                                                                                                           | Hai trường độc lập, không có ràng buộc đảm bảo luôn khớp nhau — các scope check trong Mục 9 dựa trên`session.user.organizationId`, có thể sai với `ExpertProfile` thật nếu 2 giá trị lệch nhau                                                                                                                                                     | Rủi ro dữ liệu                                      | Chưa xử lý — cần ràng buộc ở tầng action tạo/sửa`ExpertProfile`                                                                                                                                        |
+| B11 | `prisma/schema.prisma` (`Role` enum), toàn bộ `requireRole("VAST_ADMIN"...)`/`role === "VAST_ADMIN"` trong `lib/rbac.ts`, `lib/domain/access-control.ts`, `lib/actions/*.ts`, `lib/auth.ts`, `prisma/seed.ts` | Đổi tên role (`VAST_ADMIN → SUPERADMIN`, `HOI_ADMIN → ADMIN`) ở Mục 5 **chưa áp dụng vào mã nguồn** — cần 1 migration Prisma đổi giá trị enum, cập nhật mọi lời gọi `requireRole`/so sánh role, cập nhật tài khoản demo trong seed và nhãn hiển thị role trên UI                                                                    | Breaking change (schema)                               | Chưa xử lý — việc riêng, xem lượt trước                                                                                                                                                                   |
+| B12 | `lib/domain/access-control.ts` `assertOrgScope` (phát hiện khi vá B4)                                                                                                                                                      | Trước khi vá: hàm chỉ cho qua`VAST_ADMIN` hoặc `HOI_ADMIN` khớp tổ chức — **`ENTERPRISE` luôn bị `ForbiddenError` dù đúng tổ chức mình**, dù `requireRole` ở nhiều action đã cho phép `ENTERPRISE` (VD: `setChallengeStatusAction`). Đây là lỗi làm mất chức năng (over-restrictive), không phải IDOR                       | Cao (chức năng ENTERPRISE bị chặn nhầm)           | **Đã vá** — `assertOrgScope` dùng `ORG_SCOPED_ROLES = {HOI_ADMIN, ENTERPRISE}`; `assertPartyScope` dùng chung tập role này                                                                      |
+
+Đã vá B1-B4, B7 và B12 trong `lib/domain/access-control.ts`, `lib/rbac.ts`,
+`lib/actions/projects.ts`, `lib/actions/matching.ts`, `lib/auth.ts`; thêm test
+cho `assertOrgScope`/`assertPartyScope`/`partyOrganizationIdsOfMatch` tại
+`tests/access-control.test.ts`. `npm run check` (lint, typecheck, test, prisma
+validate, build) đã chạy qua sau khi vá. B5, B6, B8-B11 còn treo — cần quyết định
+nghiệp vụ hoặc là việc riêng (không phải lỗ hổng bảo mật).
 
 ---
 

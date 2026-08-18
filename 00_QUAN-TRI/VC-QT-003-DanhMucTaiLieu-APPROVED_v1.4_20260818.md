@@ -1,8 +1,8 @@
 # DANH MỤC TÀI LIỆU VI CONNECT
 
 **Mã tài liệu:** VC-QT-003  
-**Phiên bản:** v1.2  
-**Ngày cập nhật:** 2026-08-17  
+**Phiên bản:** v1.4  
+**Ngày cập nhật:** 2026-08-18  
 **Trạng thái:** APPROVED
 
 Đây là danh mục trung tâm để kiểm tra mã đã sử dụng, phiên bản hiện hành và nơi lưu chuẩn trước khi tạo hoặc cập nhật tài liệu.
@@ -13,7 +13,7 @@
 |---|---|---|---|---|---|
 | VC-QT-001 | Quy ước đặt tên và lưu trữ file | Quản trị | APPROVED | v1.2 | `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.2_20260817.md` |
 | VC-QT-002 | Báo cáo chuẩn hoá thư mục và file | Quản trị | APPROVED | v1.3 | `00_QUAN-TRI/VC-QT-002-BaoCaoChuanHoaThuMucVaFile-APPROVED_v1.3_20260817.md` |
-| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.2 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.2_20260817.md` |
+| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.4 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.4_20260818.md` |
 | VC-DA-001 | Thuyết minh đề án | Đề án | DRAFT | v0.6 | `01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx` |
 | VC-NV-001 | Baseline 11 cấu phần, DATA và ISO | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md` |
 | VC-NV-011 | Hồ sơ và định danh | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/01_ho-so-dinh-danh/VC-NV-011-HoSoDinhDanh-APPROVED_v1.0_20260817.md` |
@@ -29,12 +29,23 @@
 | VC-NV-021 | Phân tích và tác động | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/11_phan-tich-tac-dong/VC-NV-021-PhanTichTacDong-APPROVED_v1.0_20260817.md` |
 | VC-KT-001 | Sơ đồ hạ tầng CNTT | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/01_SO-DO-HA-TANG/VC-KT-001-SoDoHaTangCntt-DRAFT_v0.1_20260817.png` |
 | VC-KT-002 | Thiết kế phân quyền | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-002-ThietKePhanQuyen-DRAFT_v0.1_20260817.md` |
+| VC-KT-003 | Kiến trúc bảo mật | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-003-KienTrucBaoMat-DRAFT_v0.1_20260817.md` |
 | VC-PL-001 | Tờ khai đăng ký nhãn hiệu | Pháp lý | REVIEW | v0.9 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/01_HO-SO-DANG-KY/VC-PL-001-ToKhaiDangKyNhanHieu-REVIEW_v0.9_20260816.docx` |
 | VC-PL-002 | Biểu mẫu tờ khai nhãn hiệu | Pháp lý | REFERENCE | v1.0 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/02_BIEU-MAU-THAM-KHAO/VC-PL-002-BieuMauToKhaiNhanHieu-REFERENCE_v1.0_20260816.docx` |
 | VC-TK-001 | VUSTA CONNECT Platform | Tham khảo | REFERENCE | v1.0 | `04_SAN-PHAM-THUONG-HIEU/05_INFOGRAPHIC/THAM-KHAO-VUSTA/VC-TK-001-VustaConnectPlatform-REFERENCE_v1.0_20260809.png` |
 | VC-TK-002 | Sơ đồ định vị kiến trúc VUSTA CONNECT | Tham khảo | REFERENCE | v1.0 | `04_SAN-PHAM-THUONG-HIEU/05_INFOGRAPHIC/THAM-KHAO-VUSTA/VC-TK-002-VustaConnectSoDoDinhVi-REFERENCE_v1.0_20260809.png` |
 | VC-TK-003 | NICE 2026 | Tham khảo | REFERENCE | v1.0 | `08_NGHIEN-CUU-THAM-KHAO/03_TIEU-CHUAN-QUY-DINH/VC-TK-003-Nice2026-REFERENCE_v1.0_20260816.pdf` |
 | VC-TK-004 | Kiến trúc multi-tenant đích (nguồn Codex, chưa phê duyệt) | Tham khảo | REFERENCE | v1.0 | `08_NGHIEN-CUU-THAM-KHAO/02_KIEN-TRUC-THAM-KHAO/VC-TK-004-KienTrucMultiTenantDich-REFERENCE_v1.0_20260817.md` |
+
+## Bản đang soát xét
+
+Tài liệu có bản sửa đổi đang lấy ý kiến, **chưa thay thế** phiên bản hiện hành ở
+bảng trên cho tới khi được duyệt (Mục 2, `VC-QT-001` — không sửa trực tiếp file
+đã phê duyệt, bản mới tạo file riêng cùng thư mục).
+
+| Mã | Tên tài liệu | Trạng thái | Phiên bản | Đường dẫn | Ghi chú |
+|---|---|---|---|---|---|
+| VC-NV-011 | Hồ sơ và định danh | DRAFT | v2.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/01_ho-so-dinh-danh/VC-NV-011-HoSoDinhDanh-DRAFT_v2.0_20260818.md` | Mở rộng baseline `v1.0` theo nguyên tắc AI thu thập/đề xuất, người dùng đồng ý/không đồng ý/điều chỉnh. Khi được duyệt: đổi trạng thái file `v1.0` thành `SUPERSEDED` và cập nhật dòng `VC-NV-011` ở bảng trên trỏ sang `v2.0`. |
 
 ## Lịch sử VC-DA-001
 

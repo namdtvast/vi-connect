@@ -540,5 +540,5 @@ chứng nhận.
 Owner trả lời 2 câu hỏi Mục 6.2 và câu hỏi Mục 11 điểm 5, (2) xác nhận Mục 11
 điểm 1 (phê duyệt mở giai đoạn), (3) `06_PHAP-LY-TUAN-THU` xác nhận Mục 11 điểm
 3. Sau khi duyệt, cập nhật
-`00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.6_20260819.md` theo đúng quy
+`00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.7_20260820.md` theo đúng quy
 trình `VC-QT-001` Mục 8.*

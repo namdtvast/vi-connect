@@ -11,6 +11,8 @@ const badgeVariants = cva(
         success: "bg-accent/10 text-accent",
         warning: "bg-warning/10 text-warning",
         danger: "bg-danger/10 text-danger",
+        cyan: "bg-cyan/10 text-cyan",
+        gold: "bg-gold/20 text-brand-dark",
       },
     },
     defaultVariants: { variant: "default" },

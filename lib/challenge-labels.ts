@@ -9,6 +9,18 @@ export const CHALLENGE_STATUS_LABEL: Record<ChallengeStatus, string> = {
   CLOSED: "Đã đóng",
 };
 
+export const CHALLENGE_STATUS_BADGE: Record<
+  ChallengeStatus,
+  "default" | "success" | "warning" | "danger" | "brand" | "cyan"
+> = {
+  INTAKE: "default",
+  STANDARDIZING: "warning",
+  PUBLISHED: "brand",
+  SOLUTION_REVIEW: "cyan",
+  MATCHED: "success",
+  CLOSED: "default",
+};
+
 export const SOLUTION_STATUS_LABEL: Record<SolutionStatus, string> = {
   SUBMITTED: "Đã nộp",
   UNDER_REVIEW: "Đang xem xét",

@@ -1,11 +1,8 @@
-import Link from "next/link";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { fieldLabel } from "@/lib/taxonomy";
+import { PageHeader } from "@/components/dashboard/page-header";
 import { CreateNeedForm } from "@/components/matching/create-need-form";
-import { formatVnd } from "@/lib/utils";
-import { Paperclip } from "lucide-react";
+import { NeedsListClient } from "@/components/matching/needs-list-client";
 
 export default async function NeedsPage() {
   const needs = await db.need.findMany({
@@ -15,12 +12,11 @@ export default async function NeedsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold">Nhu cầu (cấu phần 04)</h1>
-        <p className="text-sm text-muted mt-1">
-          Nhu cầu công nghệ / chuyên gia / R&amp;D do doanh nghiệp, hội thành viên đăng.
-        </p>
-      </div>
+      <PageHeader
+        title="Nhu cầu"
+        badge="Cấu phần 04"
+        description="Nhu cầu công nghệ / chuyên gia / R&D do doanh nghiệp, hội thành viên đăng."
+      />
 
       <Card>
         <CardHeader>
@@ -31,46 +27,7 @@ export default async function NeedsPage() {
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {needs.map((n) => (
-          <Card key={n.id}>
-            <CardContent>
-              <div className="flex items-start justify-between gap-2">
-                <div className="font-medium">{n.title}</div>
-                <Badge variant="brand">{n._count.matches} đề xuất</Badge>
-              </div>
-              <div className="text-xs text-muted mt-1">{n.organization.name}</div>
-              <p className="text-sm text-muted mt-2 line-clamp-2">{n.description}</p>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {n.fields.map((f) => (
-                  <Badge key={f}>{fieldLabel(f)}</Badge>
-                ))}
-              </div>
-              {n.budgetVnd && (
-                <div className="text-xs text-muted mt-2">
-                  Ngân sách: {formatVnd(n.budgetVnd)}
-                </div>
-              )}
-              {n.attachmentPath && (
-                <a
-                  href={`/api/needs/${n.id}/attachment`}
-                  className="text-sm text-brand hover:underline mt-2 inline-flex items-center gap-1"
-                >
-                  <Paperclip className="w-3.5 h-3.5" />
-                  {n.attachmentName ?? "Tệp đính kèm"}
-                </a>
-              )}
-              <Link
-                href={`/dashboard/needs/${n.id}`}
-                className="text-sm text-brand hover:underline mt-2 block"
-              >
-                Xem đề xuất ghép nối →
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
-        {needs.length === 0 && <p className="text-sm text-muted">Chưa có nhu cầu nào.</p>}
-      </div>
+      <NeedsListClient needs={needs} />
     </div>
   );
 }

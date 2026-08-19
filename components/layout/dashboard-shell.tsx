@@ -2,14 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { Logo } from "@/components/brand/logo";
+import { X } from "lucide-react";
+import { TopHeader } from "@/components/layout/top-header";
 
 export function DashboardShell({
   sidebar,
+  userName,
+  roleLabel,
+  avatarSrc,
   children,
 }: {
   sidebar: React.ReactNode;
+  userName: string;
+  roleLabel: string;
+  avatarSrc?: string | null;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -24,18 +30,6 @@ export function DashboardShell({
 
   return (
     <div className="flex-1 flex flex-col md:flex-row">
-      <div className="md:hidden flex items-center justify-between h-14 px-4 border-b border-border bg-surface shrink-0">
-        <Logo className="h-8 w-auto" />
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Mở menu điều hướng"
-          className="p-2 -mr-2 text-foreground/80"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      </div>
-
       {open && (
         <div
           className="md:hidden fixed inset-0 z-40 bg-black/40"
@@ -60,7 +54,15 @@ export function DashboardShell({
         {sidebar}
       </aside>
 
-      <main className="flex-1 min-w-0 p-6 bg-background overflow-auto">{children}</main>
+      <div className="flex-1 min-w-0 flex flex-col">
+        <TopHeader
+          onMenuClick={() => setOpen(true)}
+          userName={userName}
+          roleLabel={roleLabel}
+          avatarSrc={avatarSrc}
+        />
+        <main className="flex-1 p-6 bg-background overflow-auto">{children}</main>
+      </div>
     </div>
   );
 }

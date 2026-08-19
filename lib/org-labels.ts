@@ -14,3 +14,12 @@ export const ORG_STATUS_LABEL: Record<OrgStatus, string> = {
   ACTIVE: "Đang hoạt động",
   SUSPENDED: "Tạm ngưng",
 };
+
+export const ORG_STATUS_BADGE: Record<
+  OrgStatus,
+  "default" | "success" | "warning" | "danger"
+> = {
+  PENDING: "warning",
+  ACTIVE: "success",
+  SUSPENDED: "danger",
+};

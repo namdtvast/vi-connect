@@ -8,6 +8,17 @@ export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
   TERMINATED: "Chấm dứt",
 };
 
+export const PROJECT_STATUS_BADGE: Record<
+  ProjectStatus,
+  "default" | "success" | "warning" | "danger" | "brand"
+> = {
+  PLANNING: "warning",
+  ACTIVE: "brand",
+  ON_HOLD: "default",
+  COMPLETED: "success",
+  TERMINATED: "danger",
+};
+
 export const MILESTONE_STATUS_LABEL: Record<MilestoneStatus, string> = {
   PLANNED: "Kế hoạch",
   IN_PROGRESS: "Đang thực hiện",

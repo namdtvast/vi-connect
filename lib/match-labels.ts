@@ -10,6 +10,19 @@ export const MATCH_STAGE_LABEL: Record<MatchStage, string> = {
   REJECTED: "Từ chối",
 };
 
+export const MATCH_STAGE_BADGE: Record<
+  MatchStage,
+  "default" | "success" | "warning" | "danger" | "brand" | "cyan"
+> = {
+  SUGGESTED: "default",
+  VIEWED: "cyan",
+  ACCEPTED: "brand",
+  CONTACTED: "brand",
+  COLLABORATING: "warning",
+  CONVERTED_PROJECT: "success",
+  REJECTED: "danger",
+};
+
 // Match Funnel order per proposal §11.3
 export const MATCH_FUNNEL: MatchStage[] = [
   "SUGGESTED",

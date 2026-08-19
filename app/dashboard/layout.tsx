@@ -6,7 +6,7 @@ import { Logo } from "@/components/brand/logo";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { DemoBanner } from "@/components/demo-banner";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { Avatar } from "@/components/ui/avatar";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { ROLE_LABEL } from "@/lib/role-labels";
 
@@ -15,6 +15,8 @@ export default async function DashboardLayout({
 }: LayoutProps<"/dashboard">) {
   const session = await auth();
   if (!session?.user) redirect("/login");
+
+  const roleLabel = ROLE_LABEL[session.user.role];
 
   const sidebar = (
     <>
@@ -31,13 +33,15 @@ export default async function DashboardLayout({
       </div>
       <SidebarNav role={session.user.role} />
       <div className="mt-auto pt-4 border-t border-border">
-        <div className="px-1 text-sm">
-          <div className="font-medium truncate">{session.user.name}</div>
-          <div className="text-muted text-xs">{ROLE_LABEL[session.user.role]}</div>
+        <div className="flex items-center gap-2 px-1">
+          <Avatar name={session.user.name ?? "?"} size="sm" />
+          <div className="min-w-0 text-sm">
+            <div className="font-medium truncate">{session.user.name}</div>
+            <div className="text-muted text-xs truncate">{roleLabel}</div>
+          </div>
         </div>
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-3">
           <SignOutButton />
-          <ThemeToggle />
         </div>
       </div>
     </>
@@ -46,7 +50,9 @@ export default async function DashboardLayout({
   return (
     <div className="flex-1 flex flex-col">
       <DemoBanner />
-      <DashboardShell sidebar={sidebar}>{children}</DashboardShell>
+      <DashboardShell sidebar={sidebar} userName={session.user.name ?? "?"} roleLabel={roleLabel}>
+        {children}
+      </DashboardShell>
     </div>
   );
 }

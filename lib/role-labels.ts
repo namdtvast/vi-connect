@@ -7,3 +7,14 @@ export const ROLE_LABEL: Record<Role, string> = {
   ENTERPRISE: "Doanh nghiệp",
   VIEWER: "Người xem",
 };
+
+export const ROLE_BADGE: Record<
+  Role,
+  "default" | "success" | "warning" | "danger" | "brand" | "cyan" | "gold"
+> = {
+  SUPERADMIN: "danger",
+  ADMIN: "gold",
+  EXPERT: "brand",
+  ENTERPRISE: "cyan",
+  VIEWER: "default",
+};

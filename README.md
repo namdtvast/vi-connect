@@ -7,8 +7,8 @@ Nam (VAST). Xây dựng theo tài liệu `VC-DA-001`, phạm vi rút gọn về 
 
 ## Bắt đầu từ đâu
 
-- [Quy ước quản lý file](00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.2_20260817.md)
-- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.4_20260818.md)
+- [Quy ước quản lý file](00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md)
+- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.6_20260819.md)
 - [Thuyết minh đề án hiện hành](01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx)
 - [Kiến trúc nghiệp vụ 11 cấu phần](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md)
 - [Kiến trúc ứng dụng](ARCHITECTURE.md)

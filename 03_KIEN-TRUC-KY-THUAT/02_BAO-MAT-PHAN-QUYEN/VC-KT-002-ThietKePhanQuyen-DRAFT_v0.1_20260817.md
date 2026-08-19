@@ -528,4 +528,4 @@ bảo mật hay việc kỹ thuật đơn thuần.
 *Tài liệu này ở trạng thái DRAFT. Sau khi rà soát nghiệp vụ (đặc biệt B5, B6, B8-B10
 và chú thích ⁴ ở Mục 7.5), cập nhật thành `v1.0` với trạng thái `APPROVED`, đồng
 thời cập nhật
-`00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.4_20260818.md`.*
+`00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.6_20260819.md`.*

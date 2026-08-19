@@ -1,8 +1,8 @@
 # DANH MỤC TÀI LIỆU VI CONNECT
 
 **Mã tài liệu:** VC-QT-003  
-**Phiên bản:** v1.4  
-**Ngày cập nhật:** 2026-08-18  
+**Phiên bản:** v1.6  
+**Ngày cập nhật:** 2026-08-19  
 **Trạng thái:** APPROVED
 
 Đây là danh mục trung tâm để kiểm tra mã đã sử dụng, phiên bản hiện hành và nơi lưu chuẩn trước khi tạo hoặc cập nhật tài liệu.
@@ -11,9 +11,9 @@
 
 | Mã | Tên tài liệu | Nhóm | Trạng thái | Phiên bản | Đường dẫn chuẩn |
 |---|---|---|---|---|---|
-| VC-QT-001 | Quy ước đặt tên và lưu trữ file | Quản trị | APPROVED | v1.2 | `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.2_20260817.md` |
+| VC-QT-001 | Quy ước đặt tên và lưu trữ file | Quản trị | APPROVED | v1.3 | `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md` |
 | VC-QT-002 | Báo cáo chuẩn hoá thư mục và file | Quản trị | APPROVED | v1.3 | `00_QUAN-TRI/VC-QT-002-BaoCaoChuanHoaThuMucVaFile-APPROVED_v1.3_20260817.md` |
-| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.4 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.4_20260818.md` |
+| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.6 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.6_20260819.md` |
 | VC-DA-001 | Thuyết minh đề án | Đề án | DRAFT | v0.6 | `01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx` |
 | VC-NV-001 | Baseline 11 cấu phần, DATA và ISO | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md` |
 | VC-NV-011 | Hồ sơ và định danh | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/01_ho-so-dinh-danh/VC-NV-011-HoSoDinhDanh-APPROVED_v1.0_20260817.md` |
@@ -30,6 +30,7 @@
 | VC-KT-001 | Sơ đồ hạ tầng CNTT | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/01_SO-DO-HA-TANG/VC-KT-001-SoDoHaTangCntt-DRAFT_v0.1_20260817.png` |
 | VC-KT-002 | Thiết kế phân quyền | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-002-ThietKePhanQuyen-DRAFT_v0.1_20260817.md` |
 | VC-KT-003 | Kiến trúc bảo mật | Kiến trúc kỹ thuật | APPROVED | v1.0 | `03_KIEN-TRUC-KY-THUAT/02_BAO-MAT-PHAN-QUYEN/VC-KT-003-KienTrucBaoMat-APPROVED_v1.0_20260817.md` |
+| VC-KT-013 | Kiến trúc kỹ thuật cấu phần 03 — Tri thức & Dữ liệu | Kiến trúc kỹ thuật | DRAFT | v0.1 | `03_KIEN-TRUC-KY-THUAT/03_TRI-THUC-DU-LIEU/VC-KT-013-KienTrucTriThucDuLieu-DRAFT_v0.1_20260819.md` |
 | VC-PL-001 | Tờ khai đăng ký nhãn hiệu | Pháp lý | REVIEW | v0.9 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/01_HO-SO-DANG-KY/VC-PL-001-ToKhaiDangKyNhanHieu-REVIEW_v0.9_20260816.docx` |
 | VC-PL-002 | Biểu mẫu tờ khai nhãn hiệu | Pháp lý | REFERENCE | v1.0 | `06_PHAP-LY-TUAN-THU/04_SO-HUU-TRI-TUE/02_BIEU-MAU-THAM-KHAO/VC-PL-002-BieuMauToKhaiNhanHieu-REFERENCE_v1.0_20260816.docx` |
 | VC-TK-001 | VUSTA CONNECT Platform | Tham khảo | REFERENCE | v1.0 | `04_SAN-PHAM-THUONG-HIEU/05_INFOGRAPHIC/THAM-KHAO-VUSTA/VC-TK-001-VustaConnectPlatform-REFERENCE_v1.0_20260809.png` |

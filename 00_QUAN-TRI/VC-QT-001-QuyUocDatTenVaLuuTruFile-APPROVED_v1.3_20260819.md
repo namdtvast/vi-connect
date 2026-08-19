@@ -1,10 +1,10 @@
 # QUY ƯỚC ĐẶT TÊN VÀ LƯU TRỮ FILE VI CONNECT
 
 **Mã tài liệu:** VC-QT-001  
-**Phiên bản:** v1.2  
-**Ngày ban hành:** 2026-08-17  
+**Phiên bản:** v1.3  
+**Ngày ban hành:** 2026-08-19  
 **Trạng thái:** Áp dụng  
-**Nơi lưu chuẩn:** `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.2_20260817.md`
+**Nơi lưu chuẩn:** `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md`
 
 ## 1. Mục đích
 
@@ -88,10 +88,26 @@ Các file điều hướng hoặc cấu hình theo thông lệ GitHub được m
 ### 4.3. Quy tắc cấp và dành số
 
 - `001–009`: tài liệu tổng thể, baseline hoặc quy định cấp nhóm.
-- `010–099`: tài liệu hoặc cấu phần chi tiết; với kiến trúc nghiệp vụ, `011–021` được dành cho cấu phần 01–11.
+- `010–099`: tài liệu hoặc cấu phần chi tiết; với kiến trúc nghiệp vụ (`NV`), `011–021` được dành cho cấu phần 01–11.
 - `100–899`: tài liệu phát sinh theo nghiệp vụ hoặc dự án.
 - `900–999`: chỉ dùng cho biểu mẫu đặc biệt hoặc mã tạm khi có phê duyệt của quản trị repo.
 - Phải kiểm tra `VC-QT-003` trước khi cấp mã mới; không suy đoán rằng số trống là số chưa được sử dụng.
+
+**Quy tắc riêng cho nhóm kiến trúc kỹ thuật (`KT`) — tương ứng số với `NV`:**
+để tránh nhầm lẫn giữa kiến trúc nghiệp vụ (cái gì/vì sao) và kiến trúc kỹ thuật
+(bằng cách nào) của cùng một cấu phần, nhóm `KT` áp dụng riêng dải số sau, không
+theo quy tắc `010–099` chung ở trên:
+
+- `001–010`: tài liệu kỹ thuật **dùng chung/xuyên suốt**, không gắn riêng một
+  cấu phần nào (hạ tầng, phân quyền nền tảng, bảo mật kỹ thuật, giám sát...).
+- `011–021`: tài liệu kỹ thuật **của riêng một cấu phần cụ thể**, đánh số
+  **trùng đúng số cấu phần tương ứng bên `NV`** (VD: kiến trúc nghiệp vụ cấu
+  phần 03 là `VC-NV-013` thì kiến trúc kỹ thuật cấu phần 03 là `VC-KT-013`,
+  không phải số kế tiếp theo thứ tự tạo file).
+- Không bắt buộc mọi cấu phần phải có tài liệu `KT` riêng ngay từ đầu — chỉ tạo
+  khi cấu phần đó chuẩn bị được code hoá hoặc cần thiết kế trước một cách có
+  chủ đích, đúng nguyên tắc từng-giai-đoạn của đề án (`docs/SCOPE.md`); không
+  viết trước `KT` cho cả 11 cấu phần chỉ để cho đủ bộ.
 
 ## 5. Quy tắc phiên bản
 

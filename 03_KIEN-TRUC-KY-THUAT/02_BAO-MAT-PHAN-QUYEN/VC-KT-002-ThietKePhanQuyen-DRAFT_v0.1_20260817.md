@@ -262,13 +262,17 @@ Không bật `funding.review`, `funding.approve`, `investment.decision`,
 
 | Permission        | SUPERADMIN | ADMIN | EXPERT | ENTERPRISE | VIEWER |
 | ----------------- | ---------- | ----- | ------ | ---------- | ------ |
-| `kpi.view`      | P          | O⁴   | —     | —         | —     |
+| `kpi.view`      | P          | P⁴   | P⁴    | P⁴        | P⁴    |
 | `auditLog.view` | P          | —    | —     | —         | —     |
 
-⁴ KPI theo scope tổ chức (`kpi.view = O` cho `ADMIN`) là **mục tiêu thiết kế**;
-cần đối chiếu với dashboard KPI hiện tại (`11 — KPI Dashboard`) xem có đang tính
-theo toàn platform hay đã lọc theo tổ chức — nằm ngoài phạm vi tài liệu này, ghi
-là việc cần kiểm tra riêng.
+⁴ Quyết định Product Owner (2026-08-20, rà cấu phần 11): giữ nguyên hành vi
+thật của `app/dashboard/page.tsx` — dashboard tổng quan mở cho **mọi người đã
+đăng nhập**, không lọc theo tổ chức/vai trò. Coi đây là bảng minh bạch chung
+của cả hệ sinh thái (giống tinh thần đã chọn cho `fundingSource.view`, B13),
+không phải dữ liệu nội bộ nhạy cảm — số liệu chỉ là tổng hợp (đếm/tổng), không
+lộ chi tiết giao dịch từng tổ chức. Khác `fundingSource.view`: ở đây đổi thẳng
+từ `O`/`—` (mục tiêu thiết kế cũ) thành `P`, không giữ khác biệt theo vai trò,
+vì chính README/mô tả trang đã gọi đây là "Tổng quan điều hành" dùng chung.
 
 ## 8. Quy tắc hiển thị theo trạng thái xuất bản (thay cho PUBLIC/INTERNAL/SHARED/RESTRICTED của yêu cầu gốc §21-22)
 
@@ -532,8 +536,9 @@ này**, cần PR riêng sau khi thiết kế được duyệt.
 | B19 | `components/projects/milestone-panel.tsx`, `components/projects/agreement-panel.tsx` | Cùng dạng B15: nút `setMilestoneStatusAction`/`createAgreementAction`/`signAgreementAction` hiện cho mọi người xem trang, không `try/catch`, phát hiện khi mở rộng trang chi tiết dự án cho B16-B18 | Trung bình (UX âm thầm lỗi) | **Đã vá** (2026-08-20) — thêm `canManage` tính ở `app/dashboard/projects/[id]/page.tsx` (dùng `partyOrganizationIdsOfMatch`), bọc `try/catch` toàn bộ nút trong 2 panel |
 | B20 | `components/experts/identity-panel.tsx` (`IdentityMatchSection`), `lib/actions/identity.ts` (`computeIdentityMatchesAction`) | Chỉ có nút "Hợp nhất" cho candidate nghi trùng danh tính — không có cách bác bỏ 1 candidate sai; nó tồn tại mãi và hiện lại y hệt mỗi lần bấm "Tính lại candidate trùng" vì `upsert` ghi đè `status` mỗi lần tính toán, không phân biệt candidate đã được con người xem xét hay chưa | Trung bình (thiếu chức năng, không phải IDOR) | **Đã vá** (2026-08-20) — thêm `dismissIdentityMatchAction` (gán `status: DIFFERENT_PERSON`, ghi `decidedById`); sửa `computeIdentityMatchesAction` bỏ qua (không ghi đè) match đã có `decidedById`; lọc `DIFFERENT_PERSON` khỏi query hiển thị ở `app/dashboard/experts/[id]/page.tsx` |
 | B21 | `app/dashboard/supplies/page.tsx` | `where: { status: "PUBLISHED" }` cứng — vi phạm đúng quy tắc Mục 8 (`DRAFT`/`ARCHIVED` chỉ tổ chức sở hữu mới thấy, không phải "không ai thấy"); phát hiện khi vá B8 phần `Supply` — nếu thêm action lưu trữ mà không sửa query, nguồn cung tự lưu trữ sẽ biến mất khỏi mắt chính chủ, không ai mở lại được | Trung bình (mất chức năng, cùng dạng B12) | **Đã vá** (2026-08-20) — query đổi thành `PUBLISHED` (mọi người) hợp `organizationId` khớp phiên đăng nhập (chủ sở hữu thấy mọi trạng thái), `SUPERADMIN` thấy tất cả |
+| B22 | `app/dashboard/page.tsx` (Tổng quan KPI, cấu phần 11) | Đúng câu hỏi mở ghi ở Mục 7.5 chú thích ⁴: trang không kiểm tra vai trò/tổ chức nào — mọi người đăng nhập, kể cả `EXPERT`/`VIEWER` (thiết kế cũ ghi `—`, không có quyền), đều thấy đầy đủ số liệu toàn nền tảng gồm tổng giá trị hợp đồng đã ký | Không phải lỗ hổng — tài liệu/code lệch nhau, cùng dạng B13 | **Đã xử lý bằng cách sửa tài liệu** — Product Owner xác nhận (2026-08-20) giữ nguyên hành vi mở toàn nền tảng (coi là dashboard minh bạch chung, số liệu chỉ tổng hợp không lộ chi tiết từng tổ chức); Mục 7.5 cập nhật `kpi.view` từ `P/O/—/—/—` thành `P` cho mọi vai trò (chú thích ⁴ viết lại) |
 
-Đã vá B1-B4, B7, B10 (phần đường code), B11-B21. B11 (đổi tên role) áp dụng trên toàn hệ thống trong
+Đã vá B1-B4, B7, B10 (phần đường code), B11-B22. B11 (đổi tên role) áp dụng trên toàn hệ thống trong
 một lần — schema, migration, mọi server action, route handler, trang dashboard,
 component, seed và tài liệu liên quan (31 file) — không chia theo giai đoạn.
 `npm run check` (lint, typecheck, test, prisma validate, build) đã chạy qua sau

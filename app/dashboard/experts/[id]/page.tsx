@@ -86,7 +86,10 @@ export default async function ExpertDetailPage({
       : Promise.resolve([]),
     canManage
       ? db.identityMatch.findMany({
-          where: { OR: [{ profileAId: id }, { profileBId: id }], status: { not: "MERGED" } },
+          where: {
+            OR: [{ profileAId: id }, { profileBId: id }],
+            status: { notIn: ["MERGED", "DIFFERENT_PERSON"] },
+          },
           include: {
             profileA: { include: { user: true, organization: true } },
             profileB: { include: { user: true, organization: true } },

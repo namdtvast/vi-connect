@@ -23,6 +23,7 @@ import {
   computeIdentityMatchesAction,
   decideClaimAction,
   decideFieldProposalAction,
+  dismissIdentityMatchAction,
   grantConsentAction,
   revokeConsentAction,
   rollbackMergeAction,
@@ -845,6 +846,16 @@ export function IdentityMatchSection({
                     }
                   >
                     Hợp nhất vào hồ sơ này
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={pending}
+                    onClick={() =>
+                      startTransition(() => dismissIdentityMatchAction(m.id, expertProfileId))
+                    }
+                  >
+                    Không phải, đây là người khác
                   </Button>
                 </div>
               )}

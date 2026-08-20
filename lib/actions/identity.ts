@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import {
   assertOrgScope,
+  ForbiddenError,
   requireExpertProfileOwnerOrAdmin,
   requireRole,
   requireUser,
@@ -369,6 +370,9 @@ export async function claimProfileAction(expertProfileId: string) {
   if (profile.userId) {
     throw new Error("Hồ sơ này đã có người nhận.");
   }
+  if (user.organizationId !== profile.organizationId) {
+    throw new Error("Chỉ có thể nhận hồ sơ thuộc tổ chức của bạn.");
+  }
 
   const existingClaim = await db.profileClaim.findFirst({
     where: { expertProfileId, status: "PENDING" },
@@ -400,13 +404,20 @@ export async function decideClaimAction(claimId: string, approve: boolean) {
   }
 
   if (approve) {
-    const claimantProfile = await db.expertProfile.findUnique({
-      where: { userId: claim.claimantUserId },
-    });
+    const [claimantProfile, claimant] = await Promise.all([
+      db.expertProfile.findUnique({ where: { userId: claim.claimantUserId } }),
+      db.user.findUniqueOrThrow({ where: { id: claim.claimantUserId } }),
+    ]);
     if (claimantProfile) {
       throw new Error(
         "Người yêu cầu đã có hồ sơ chuyên gia — dùng luồng Identity Match/Merge thay vì claim trực tiếp."
       );
+    }
+    // Chốt chặn thứ 2 — claimProfileAction đã kiểm tra lúc gửi yêu cầu, nhưng
+    // duyệt là nơi thật sự ghi userId nên phải kiểm tra lại (VC-KT-002 B10:
+    // không để User.organizationId và ExpertProfile.organizationId lệch nhau).
+    if (claimant.organizationId !== profile.organizationId) {
+      throw new Error("Người yêu cầu không thuộc cùng tổ chức với hồ sơ này.");
     }
   }
 
@@ -672,6 +683,14 @@ export async function computeIdentityMatchesAction(expertProfileId: string) {
 
     const [profileAId, profileBId] = [expertProfileId, candidate.id].sort();
 
+    // Con người đã quyết định (bác bỏ/hợp nhất) thì không tính toán lại đè lên —
+    // tránh 1 candidate đã bị bác bỏ "Không phải, đây là người khác" quay lại
+    // xuất hiện y hệt cũ mỗi lần bấm "Tính lại candidate trùng".
+    const existing = await db.identityMatch.findUnique({
+      where: { profileAId_profileBId: { profileAId, profileBId } },
+    });
+    if (existing?.decidedById) continue;
+
     const match = await db.identityMatch.upsert({
       where: { profileAId_profileBId: { profileAId, profileBId } },
       create: { profileAId, profileBId, score: breakdown.score, signals: breakdown.signals, status },
@@ -691,6 +710,36 @@ export async function computeIdentityMatchesAction(expertProfileId: string) {
   });
 
   return matchIds;
+}
+
+/** Bác bỏ 1 candidate nghi trùng — trước đây chỉ có "Hợp nhất", không có cách nào loại một
+ * candidate sai khỏi danh sách; nó sẽ hiện lại mãi mỗi lần tính lại (đã vá ở
+ * computeIdentityMatchesAction bằng cách tôn trọng decidedById). */
+export async function dismissIdentityMatchAction(matchId: string, expertProfileId: string) {
+  const user = await requireRole("SUPERADMIN", "ADMIN");
+  const profile = await db.expertProfile.findUniqueOrThrow({ where: { id: expertProfileId } });
+  assertOrgScope(user, profile.organizationId);
+
+  const match = await db.identityMatch.findUniqueOrThrow({ where: { id: matchId } });
+  if (match.profileAId !== expertProfileId && match.profileBId !== expertProfileId) {
+    throw new ForbiddenError("Candidate trùng không thuộc hồ sơ này.");
+  }
+
+  await db.identityMatch.update({
+    where: { id: matchId },
+    data: { status: "DIFFERENT_PERSON", decidedById: user.id, decidedAt: new Date() },
+  });
+
+  await db.auditLog.create({
+    data: {
+      userId: user.id,
+      action: "IDENTITY_MATCH_DISMISSED",
+      entity: "IdentityMatch",
+      entityId: matchId,
+    },
+  });
+
+  revalidatePath(`/dashboard/experts/${expertProfileId}`);
 }
 
 type MergeSnapshot = {

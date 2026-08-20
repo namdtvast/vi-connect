@@ -7,6 +7,7 @@ import { fieldLabel } from "@/lib/taxonomy";
 import { formatVnd } from "@/lib/utils";
 import { SubmitSolutionForm } from "@/components/challenges/submit-solution-form";
 import { ReviewSolutionActions } from "@/components/challenges/review-solution-actions";
+import { ChallengeStatusActions } from "@/components/challenges/challenge-status-actions";
 import { CHALLENGE_STATUS_LABEL, SOLUTION_BADGE, SOLUTION_STATUS_LABEL } from "@/lib/challenge-labels";
 
 export default async function ChallengeDetailPage({
@@ -44,7 +45,11 @@ export default async function ChallengeDetailPage({
           <h1 className="text-xl font-semibold">{challenge.title}</h1>
           <p className="text-sm text-muted mt-1">{challenge.organization.name}</p>
         </div>
-        <Badge variant="brand">{CHALLENGE_STATUS_LABEL[challenge.status]}</Badge>
+        {canReview ? (
+          <ChallengeStatusActions challengeId={challenge.id} status={challenge.status} />
+        ) : (
+          <Badge variant="brand">{CHALLENGE_STATUS_LABEL[challenge.status]}</Badge>
+        )}
       </div>
 
       <Card>

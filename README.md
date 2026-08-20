@@ -74,8 +74,9 @@ khoản demo khác trong `prisma/seed.ts`.
   qua Crossref để tự điền tiêu đề/tác giả/năm, xác minh (Maker-Checker nhẹ, chỉ
   `SUPERADMIN`/`ADMIN` — chưa mở `EXPERT` tự đăng). Patent/Dataset/Knowledge/Evidence
   vẫn ở backlog (xem `VC-KT-013`).
-- **04 — Bài toán & Nhu cầu**: đăng nhu cầu, ngân hàng bài toán đầy đủ vòng đời (tiếp
-  nhận → công bố → nhận giải pháp → đánh giá).
+- **04 — Bài toán & Nhu cầu**: đăng nhu cầu (đóng/mở lại được, có bộ lọc trạng thái),
+  ngân hàng bài toán đầy đủ vòng đời (tiếp nhận → công bố → nhận giải pháp → đánh giá,
+  đổi trạng thái qua giao diện thật, ghi audit log).
 - **05 — Tìm kiếm & Ghép nối**: bộ chấm điểm giải thích được (`lib/matching.ts`) —
   không gọi API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh
   nghiệm. Mỗi đề xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật

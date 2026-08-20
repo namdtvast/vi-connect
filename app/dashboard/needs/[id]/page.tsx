@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { fieldLabel } from "@/lib/taxonomy";
 import { formatVnd } from "@/lib/utils";
 import { GenerateMatchesButton } from "@/components/matching/generate-matches-button";
+import { NeedStatusActions } from "@/components/matching/need-status-actions";
 import { MatchCard } from "@/components/matching/match-card";
+import { NEED_STATUS_BADGE, NEED_STATUS_LABEL } from "@/lib/need-labels";
 import type { MatchReason } from "@/lib/matching";
 
 export default async function NeedDetailPage({
@@ -28,18 +30,25 @@ export default async function NeedDetailPage({
 
   if (!need) notFound();
 
-  // Cùng điều kiện với generateMatchesAction (lib/actions/matching.ts) — chỉ
-  // hiện nút khi chắc chắn thao tác được, tránh lỗi quyền không xử lý được.
-  const canGenerateMatches =
+  // Cùng điều kiện với generateMatchesAction/updateNeedStatusAction
+  // (lib/actions/matching.ts) — chỉ hiện nút khi chắc chắn thao tác được,
+  // tránh lỗi quyền không xử lý được.
+  const canManage =
     session?.user.role === "SUPERADMIN" ||
     ((session?.user.role === "ADMIN" || session?.user.role === "ENTERPRISE") &&
       session.user.organizationId === need.organizationId);
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-xl font-semibold">{need.title}</h1>
-        <p className="text-sm text-muted mt-1">{need.organization.name}</p>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold">{need.title}</h1>
+            <Badge variant={NEED_STATUS_BADGE[need.status]}>{NEED_STATUS_LABEL[need.status]}</Badge>
+          </div>
+          <p className="text-sm text-muted mt-1">{need.organization.name}</p>
+        </div>
+        {canManage && <NeedStatusActions needId={need.id} status={need.status} />}
       </div>
 
       <Card>
@@ -62,7 +71,7 @@ export default async function NeedDetailPage({
         <h2 className="font-semibold">
           Đề xuất ghép nối ({need.matches.length}) — cấu phần 05
         </h2>
-        {canGenerateMatches && <GenerateMatchesButton needId={need.id} />}
+        {canManage && <GenerateMatchesButton needId={need.id} />}
       </div>
 
       <div className="space-y-3">

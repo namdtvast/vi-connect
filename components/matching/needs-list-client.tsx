@@ -5,17 +5,21 @@ import Link from "next/link";
 import { FileText, Link2, Paperclip, Wallet } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select } from "@/components/ui/field";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SearchFilterBar } from "@/components/dashboard/search-filter-bar";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { fieldLabel } from "@/lib/taxonomy";
 import { formatVnd } from "@/lib/utils";
+import { NEED_STATUS_BADGE, NEED_STATUS_LABEL } from "@/lib/need-labels";
+import type { NeedStatus } from "@/lib/generated/prisma/enums";
 
 type NeedRow = {
   id: string;
   title: string;
   description: string;
   fields: string[];
+  status: NeedStatus;
   budgetVnd: bigint | null;
   attachmentPath: string | null;
   attachmentName: string | null;
@@ -25,17 +29,20 @@ type NeedRow = {
 
 export function NeedsListClient({ needs }: { needs: NeedRow[] }) {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return needs;
-    return needs.filter(
-      (n) =>
+    return needs.filter((n) => {
+      if (statusFilter !== "ALL" && n.status !== statusFilter) return false;
+      if (!q) return true;
+      return (
         n.title.toLowerCase().includes(q) ||
         n.description.toLowerCase().includes(q) ||
         n.organization.name.toLowerCase().includes(q)
-    );
-  }, [needs, search]);
+      );
+    });
+  }, [needs, search, statusFilter]);
 
   const withBudget = needs.filter((n) => n.budgetVnd).length;
   const withAttachment = needs.filter((n) => n.attachmentPath).length;
@@ -54,6 +61,16 @@ export function NeedsListClient({ needs }: { needs: NeedRow[] }) {
         searchValue={search}
         onSearchChange={setSearch}
         searchPlaceholder="Tìm theo tên, mô tả, tổ chức..."
+        filters={
+          <Select className="w-auto" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="ALL">Tất cả trạng thái</option>
+            {Object.entries(NEED_STATUS_LABEL).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>
+        }
       />
 
       {filtered.length === 0 ? (
@@ -69,7 +86,10 @@ export function NeedsListClient({ needs }: { needs: NeedRow[] }) {
               <CardContent>
                 <div className="flex items-start justify-between gap-2">
                   <div className="font-medium">{n.title}</div>
-                  <Badge variant="brand">{n._count.matches} đề xuất</Badge>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant={NEED_STATUS_BADGE[n.status]}>{NEED_STATUS_LABEL[n.status]}</Badge>
+                    <Badge variant="brand">{n._count.matches} đề xuất</Badge>
+                  </div>
                 </div>
                 <div className="text-xs text-muted mt-1">{n.organization.name}</div>
                 <p className="text-sm text-muted mt-2 line-clamp-2">{n.description}</p>

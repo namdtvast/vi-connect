@@ -76,6 +76,16 @@ export async function setChallengeStatusAction(challengeId: string, status: Chal
   assertOrgScope(user, challenge.organizationId);
 
   await db.challenge.update({ where: { id: challengeId }, data: { status } });
+
+  await db.auditLog.create({
+    data: {
+      userId: user.id,
+      action: `CHALLENGE_STATUS_${status}`,
+      entity: "Challenge",
+      entityId: challengeId,
+    },
+  });
+
   revalidatePath(`/dashboard/challenges/${challengeId}`);
 }
 

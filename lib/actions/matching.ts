@@ -8,7 +8,7 @@ import { scoreNeedAgainstExpert, scoreNeedAgainstSupply } from "@/lib/matching";
 import { saveUploadedFile } from "@/lib/uploads";
 import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
-import type { MatchStage } from "@/lib/generated/prisma/enums";
+import type { MatchStage, NeedStatus } from "@/lib/generated/prisma/enums";
 
 const needSchema = z.object({
   title: z.string().min(5, "Tiêu đề tối thiểu 5 ký tự"),
@@ -64,6 +64,22 @@ export async function createNeedAction(
 
   revalidatePath("/dashboard/needs");
   return { success: true };
+}
+
+/** Cấu phần 04: đóng/mở lại nhu cầu — vòng đời trước đây chỉ có tạo, chưa có cập nhật trạng thái (VC-KT-002 Phụ lục B8). */
+export async function updateNeedStatusAction(needId: string, status: NeedStatus) {
+  const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
+  const need = await db.need.findUniqueOrThrow({ where: { id: needId } });
+  assertOrgScope(user, need.organizationId);
+
+  await db.need.update({ where: { id: needId }, data: { status } });
+
+  await db.auditLog.create({
+    data: { userId: user.id, action: `NEED_STATUS_${status}`, entity: "Need", entityId: needId },
+  });
+
+  revalidatePath(`/dashboard/needs/${needId}`);
+  revalidatePath("/dashboard/needs");
 }
 
 const supplySchema = z.object({

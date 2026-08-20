@@ -1,7 +1,7 @@
 # DANH MỤC TÀI LIỆU VI CONNECT
 
 **Mã tài liệu:** VC-QT-003  
-**Phiên bản:** v1.9  
+**Phiên bản:** v1.10  
 **Ngày cập nhật:** 2026-08-20  
 **Trạng thái:** APPROVED
 
@@ -13,7 +13,7 @@
 |---|---|---|---|---|---|
 | VC-QT-001 | Quy ước đặt tên và lưu trữ file | Quản trị | APPROVED | v1.3 | `00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md` |
 | VC-QT-002 | Báo cáo chuẩn hoá thư mục và file | Quản trị | APPROVED | v1.3 | `00_QUAN-TRI/VC-QT-002-BaoCaoChuanHoaThuMucVaFile-APPROVED_v1.3_20260817.md` |
-| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.9 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.9_20260820.md` |
+| VC-QT-003 | Danh mục tài liệu | Quản trị | APPROVED | v1.10 | `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.10_20260820.md` |
 | VC-DA-001 | Thuyết minh đề án | Đề án | DRAFT | v0.6 | `01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx` |
 | VC-NV-001 | Baseline 11 cấu phần, DATA và ISO | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md` |
 | VC-NV-011 | Hồ sơ và định danh | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/01_ho-so-dinh-danh/VC-NV-011-HoSoDinhDanh-APPROVED_v1.0_20260817.md` |
@@ -23,7 +23,7 @@
 | VC-NV-015 | Tìm kiếm và ghép nối | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/05_tim-kiem-ghep-noi/VC-NV-015-TimKiemGhepNoi-APPROVED_v1.0_20260817.md` |
 | VC-NV-016 | Nguồn lực và tài trợ | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/06_nguon-luc-tai-tro/VC-NV-016-NguonLucTaiTro-APPROVED_v1.0_20260817.md` |
 | VC-NV-017 | Dự án và giao dịch | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/07_du-an-giao-dich/VC-NV-017-DuAnGiaoDich-APPROVED_v1.0_20260817.md` |
-| VC-NV-018 | Thẩm định và đánh giá | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/08_tham-dinh-danh-gia/VC-NV-018-ThamDinhDanhGia-APPROVED_v1.0_20260817.md` |
+| VC-NV-018 | Thẩm định và đánh giá | Kiến trúc nghiệp vụ | APPROVED | v1.1 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/08_tham-dinh-danh-gia/VC-NV-018-ThamDinhDanhGia-APPROVED_v1.1_20260820.md` |
 | VC-NV-019 | Cộng tác và mạng lưới | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/09_cong-tac-mang-luoi/VC-NV-019-CongTacMangLuoi-APPROVED_v1.0_20260817.md` |
 | VC-NV-020 | Quản trị và tuân thủ | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/10_quan-tri-tuan-thu/VC-NV-020-QuanTriTuanThu-APPROVED_v1.0_20260817.md` |
 | VC-NV-021 | Phân tích và tác động | Kiến trúc nghiệp vụ | APPROVED | v1.0 | `02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/11_phan-tich-tac-dong/VC-NV-021-PhanTichTacDong-APPROVED_v1.0_20260817.md` |
@@ -58,6 +58,14 @@ Các phiên bản `v0.0`, `v0.1`, `v0.3.0`, `v0.3.1`, `v0.3.2`, `v0.4` và `v0.5
 ## Lịch sử VC-PL-003
 
 Phiên bản `v0.1` có trạng thái `SUPERSEDED`, được giữ tại `06_PHAP-LY-TUAN-THU/BQ_TAC_GIA/01_HO_SO_DANG_KY/` để truy vết; phiên bản hiện hành là `DRAFT v0.2`.
+
+## Lịch sử VC-NV-018
+
+Phiên bản `v1.0` có trạng thái `SUPERSEDED` (giữ nguyên tại
+`02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/08_tham-dinh-danh-gia/` để truy vết) —
+`v1.1` bổ sung Mục "Trạng thái triển khai" ghi quyết định phạm vi v1 chỉ xây
+`Evaluation`, không đổi baseline taxonomy/DATA group/ánh xạ ISO đã duyệt ở
+`v1.0`.
 
 ## Quy tắc cập nhật danh mục
 

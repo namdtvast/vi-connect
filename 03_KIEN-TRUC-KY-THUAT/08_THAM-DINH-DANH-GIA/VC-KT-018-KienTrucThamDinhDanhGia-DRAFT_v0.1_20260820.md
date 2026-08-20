@@ -129,4 +129,4 @@ dùng ở cấu phần 07.
 ---
 
 *Tài liệu này ở trạng thái `DRAFT`, code hoá cùng đợt theo đúng phạm vi Mục 3.
-Đăng ký tại `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.9_20260820.md`.*
+Đăng ký tại `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.10_20260820.md`.*

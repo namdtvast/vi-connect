@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   Database,
   FileText,
+  HelpCircle,
   LayoutGrid,
   Link2,
   Package,
@@ -31,6 +32,7 @@ type NavGroup = { group: string; items: NavItem[] };
 // từng dự án (07) — nên cùng trỏ về /dashboard/projects, chỉ khác nhãn để
 // người dùng biết tính năng đó nằm ở đâu (VC-KT-018, VC-KT-019).
 const OVERVIEW: NavItem = { href: "/dashboard", label: "Tổng quan (KPI)", icon: LayoutGrid };
+const HELP: NavItem = { href: "/dashboard/help", label: "Trợ giúp & hướng dẫn", icon: HelpCircle };
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -142,6 +144,14 @@ export function SidebarNav({ role }: { role: Role }) {
           </div>
         );
       })}
+      <div className="space-y-1 pt-2 border-t border-border">
+        <NavLink
+          href={HELP.href}
+          label={HELP.label}
+          icon={HELP.icon}
+          active={isActive(pathname, HELP.href)}
+        />
+      </div>
     </nav>
   );
 }

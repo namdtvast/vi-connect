@@ -130,11 +130,13 @@ export default async function AuditLogPage({
                     <th className="text-left px-4 py-3">Người thực hiện</th>
                     <th className="text-left px-4 py-3">Hành động</th>
                     <th className="text-left px-4 py-3">Đối tượng</th>
+                    <th className="text-left px-4 py-3">Chi tiết</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.map((log) => {
                     const { icon: ActionIcon, className } = actionIcon(log.action);
+                    const meta = log.meta as Record<string, unknown> | null;
                     return (
                       <tr key={log.id} className="border-t border-border">
                         <td className="px-4 py-3 whitespace-nowrap text-muted">
@@ -159,6 +161,20 @@ export default async function AuditLogPage({
                         <td className="px-4 py-3 text-muted">
                           {log.entity}
                           {log.entityId ? ` · ${log.entityId}` : ""}
+                        </td>
+                        <td className="px-4 py-3">
+                          {meta && Object.keys(meta).length > 0 ? (
+                            <details>
+                              <summary className="cursor-pointer text-xs text-brand hover:underline">
+                                Xem chi tiết
+                              </summary>
+                              <pre className="mt-1.5 max-w-xs whitespace-pre-wrap break-all rounded border border-border bg-background px-2 py-1.5 text-xs text-muted">
+                                {JSON.stringify(meta, null, 2)}
+                              </pre>
+                            </details>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
                         </td>
                       </tr>
                     );

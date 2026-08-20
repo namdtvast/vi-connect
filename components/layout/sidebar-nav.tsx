@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   BookOpen,
   Building2,
+  ClipboardCheck,
   Database,
   FileText,
   LayoutGrid,
@@ -13,6 +14,7 @@ import {
   ScrollText,
   ShieldCheck,
   Users,
+  Users2,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
@@ -24,8 +26,10 @@ type NavGroup = { group: string; items: NavItem[] };
 
 // Sắp xếp theo kiến trúc nghiệp vụ 11 cấu phần VI-CONNECT (baseline
 // VC-NV-001, 02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN). Chỉ liệt kê các cấu phần
-// đã có trang triển khai thật; cấu phần chưa xây (08, 09) chưa xuất hiện
-// trong menu để tránh liên kết chết.
+// đã có trang triển khai thật. 08 (Đánh giá dự án) và 09 (Đội thực hiện)
+// không có trang danh sách riêng — nội dung nằm lồng trong trang chi tiết
+// từng dự án (07) — nên cùng trỏ về /dashboard/projects, chỉ khác nhãn để
+// người dùng biết tính năng đó nằm ở đâu (VC-KT-018, VC-KT-019).
 const OVERVIEW: NavItem = { href: "/dashboard", label: "Tổng quan (KPI)", icon: LayoutGrid };
 
 const NAV_GROUPS: NavGroup[] = [
@@ -50,7 +54,11 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     group: "EXECUTE",
-    items: [{ href: "/dashboard/projects", label: "07 · Dự án & hợp đồng", icon: FileText }],
+    items: [
+      { href: "/dashboard/projects", label: "07 · Dự án & hợp đồng", icon: FileText },
+      { href: "/dashboard/projects", label: "08 · Đánh giá dự án", icon: ClipboardCheck },
+      { href: "/dashboard/projects", label: "09 · Đội thực hiện", icon: Users2 },
+    ],
   },
   {
     group: "GOVERN & IMPACT",
@@ -124,7 +132,7 @@ export function SidebarNav({ role }: { role: Role }) {
             </div>
             {items.map((item) => (
               <NavLink
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 label={item.label}
                 icon={item.icon}

@@ -30,7 +30,7 @@ type NavGroup = { group: string; items: NavItem[] };
 // không có trang danh sách riêng — nội dung nằm lồng trong trang chi tiết
 // từng dự án (07) — nên cùng trỏ về /dashboard/projects, chỉ khác nhãn để
 // người dùng biết tính năng đó nằm ở đâu (VC-KT-018, VC-KT-019).
-const OVERVIEW: NavItem = { href: "/dashboard", label: "Tổng quan (KPI)", icon: LayoutGrid };
+const OVERVIEW: NavItem = { href: "/dashboard", label: "11 · Tổng quan (KPI)", icon: LayoutGrid };
 
 const NAV_GROUPS: NavGroup[] = [
   {

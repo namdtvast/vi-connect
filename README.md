@@ -79,8 +79,10 @@ khoản demo khác trong `prisma/seed.ts`.
   đổi trạng thái qua giao diện thật, ghi audit log).
 - **05 — Tìm kiếm & Ghép nối**: bộ chấm điểm giải thích được (`lib/matching.ts`) —
   không gọi API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh
-  nghiệm. Mỗi đề xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật
-  sau này mà không đổi schema hay giao diện gọi.
+  nghiệm. Mỗi đề xuất hiển thị lý do và trọng số. Match Funnel đi hết 7 trạng thái
+  thật (đề xuất → xem → chấp nhận → liên hệ → hợp tác → dự án, hoặc từ chối), nút
+  hành động chỉ hiện đúng người có quyền. Có thể thay bằng embedding/LLM thật sau
+  này mà không đổi schema hay giao diện gọi.
 - **06 — Nguồn lực & Tài trợ**: danh mục nguồn lực/chương trình tài trợ do tổ chức tự
   công bố (`FundingSource`) — chỉ theo dõi danh mục, chưa có due diligence hay giải
   ngân thật.

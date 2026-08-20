@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateMatchStageAction } from "@/lib/actions/matching";
 import { convertMatchToProjectAction } from "@/lib/actions/projects";
@@ -17,23 +17,38 @@ type MatchCardProps = {
   stage: MatchStage;
   label: string;
   sublabel: string;
+  /** Chỉ hiện nút hành động khi chắc chắn thao tác được — cùng điều kiện với
+   * updateMatchStageAction/convertMatchToProjectAction (assertOrgScope/
+   * assertPartyScope), tránh hiện nút rồi ném ForbiddenError im lặng. */
+  canManage: boolean;
 };
 
-export function MatchCard({ id, score, reasons, stage, label, sublabel }: MatchCardProps) {
+export function MatchCard({ id, score, reasons, stage, label, sublabel, canManage }: MatchCardProps) {
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   function setStage(next: MatchStage) {
+    setError(null);
     startTransition(async () => {
-      await updateMatchStageAction(id, next);
-      router.refresh();
+      try {
+        await updateMatchStageAction(id, next);
+        router.refresh();
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Không thể cập nhật trạng thái.");
+      }
     });
   }
 
   function convertToProject() {
+    setError(null);
     startTransition(async () => {
-      const projectId = await convertMatchToProjectAction(id);
-      router.push(`/dashboard/projects/${projectId}`);
+      try {
+        const projectId = await convertMatchToProjectAction(id);
+        router.push(`/dashboard/projects/${projectId}`);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Không thể tạo dự án.");
+      }
     });
   }
 
@@ -60,24 +75,47 @@ export function MatchCard({ id, score, reasons, stage, label, sublabel }: MatchC
 
       <div className="flex items-center justify-between mt-3">
         <Badge>{MATCH_STAGE_LABEL[stage]}</Badge>
-        <div className="flex gap-2">
-          {stage === "SUGGESTED" && (
-            <Button size="sm" variant="outline" disabled={pending} onClick={() => setStage("ACCEPTED")}>
-              Chấp nhận
-            </Button>
-          )}
-          {(stage === "ACCEPTED" || stage === "CONTACTED" || stage === "COLLABORATING") && (
-            <Button size="sm" disabled={pending} onClick={convertToProject}>
-              Tạo dự án
-            </Button>
-          )}
-          {stage !== "REJECTED" && stage !== "CONVERTED_PROJECT" && (
-            <Button size="sm" variant="ghost" disabled={pending} onClick={() => setStage("REJECTED")}>
-              Từ chối
-            </Button>
-          )}
-        </div>
+        {canManage && (
+          <div className="flex gap-2">
+            {stage === "SUGGESTED" && (
+              <Button size="sm" variant="ghost" disabled={pending} onClick={() => setStage("VIEWED")}>
+                Đã xem
+              </Button>
+            )}
+            {(stage === "SUGGESTED" || stage === "VIEWED") && (
+              <Button size="sm" variant="outline" disabled={pending} onClick={() => setStage("ACCEPTED")}>
+                Chấp nhận
+              </Button>
+            )}
+            {stage === "ACCEPTED" && (
+              <Button size="sm" variant="outline" disabled={pending} onClick={() => setStage("CONTACTED")}>
+                Đã liên hệ
+              </Button>
+            )}
+            {stage === "CONTACTED" && (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={pending}
+                onClick={() => setStage("COLLABORATING")}
+              >
+                Đang hợp tác
+              </Button>
+            )}
+            {(stage === "ACCEPTED" || stage === "CONTACTED" || stage === "COLLABORATING") && (
+              <Button size="sm" disabled={pending} onClick={convertToProject}>
+                Tạo dự án
+              </Button>
+            )}
+            {stage !== "REJECTED" && stage !== "CONVERTED_PROJECT" && (
+              <Button size="sm" variant="ghost" disabled={pending} onClick={() => setStage("REJECTED")}>
+                Từ chối
+              </Button>
+            )}
+          </div>
+        )}
       </div>
+      {error && <p className="text-xs text-danger mt-2">{error}</p>}
     </div>
   );
 }

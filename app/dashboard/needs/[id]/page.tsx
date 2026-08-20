@@ -84,6 +84,7 @@ export default async function NeedDetailPage({
             stage={m.stage}
             label={m.supply ? m.supply.title : (m.expertProfile?.user?.name ?? "—")}
             sublabel={m.supply ? "Công nghệ / giải pháp" : "Chuyên gia"}
+            canManage={canManage}
           />
         ))}
         {need.matches.length === 0 && (

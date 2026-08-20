@@ -10,7 +10,7 @@ phần nghiệp vụ không chia theo giai đoạn dự án — chỉ khác nhau
 ## Bắt đầu từ đâu
 
 - [Quy ước quản lý file](00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md)
-- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.10_20260820.md)
+- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.11_20260820.md)
 - [Thuyết minh đề án hiện hành](01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx)
 - [Kiến trúc nghiệp vụ 11 cấu phần](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md)
 - [Kiến trúc ứng dụng](ARCHITECTURE.md)
@@ -94,6 +94,9 @@ khoản demo khác trong `prisma/seed.ts`.
 - **08 — Thẩm định & Đánh giá**: đánh giá hiệu quả dự án có cấu trúc (điểm 0-100%,
   tiêu chí, ghi chú), append-only, gắn với `Project` — chỉ `Evaluation`, xem
   `VC-KT-018`. `Review`/`Assessment`/`DueDiligence` vẫn ở backlog.
+- **09 — Cộng tác & Mạng lưới**: đội thực hiện dự án (`ProjectMember`) — thêm/gỡ
+  thành viên thuộc 1 trong 2 tổ chức liên quan, gắn vai trò tự do. Chỉ `Team`,
+  xem `VC-KT-019`. `Partnership`/`Network`/`Collaboration` vẫn ở backlog.
 - **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `SUPERADMIN`
   xem được toàn bộ — chưa có màn hình chính sách/rủi ro/quy trình phê duyệt.
 - **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực
@@ -108,7 +111,8 @@ chưa có giao dịch thật" của đề án)
   danh mục cơ bản — xem mục scope ở trên).
 - **08 đầy đủ**: `Review` (tổng quát hoá các luồng duyệt rải rác), `Assessment`,
   `DueDiligence` — hiện chỉ có `Evaluation`, xem `VC-KT-018` Mục 7.
-- **09 — Cộng tác & Mạng lưới**: chưa có model/trang riêng (partnership, team, network).
+- **09 đầy đủ**: `Partnership`, `Network`, `Collaboration` — hiện chỉ có `Team`
+  (`ProjectMember`), xem `VC-KT-019` Mục 7.
 - **10 đầy đủ**: AI Governance, Risk & Compliance, Forecasting dashboards — hiện chỉ có
   nhật ký audit thô, chưa có chính sách/quy trình phê duyệt/đánh giá rủi ro.
 - Tích hợp thật ORCID/OpenAlex/ROR/Techmart Vietnam (hiện chỉ có trường lưu định danh).

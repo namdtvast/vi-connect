@@ -7,6 +7,7 @@ import { PROJECT_STATUS_LABEL } from "@/lib/project-labels";
 import { MilestonePanel } from "@/components/projects/milestone-panel";
 import { AgreementPanel } from "@/components/projects/agreement-panel";
 import { EvaluationPanel } from "@/components/projects/evaluation-panel";
+import { TeamPanel } from "@/components/projects/team-panel";
 import { ProjectStatusActions } from "@/components/projects/project-status-actions";
 import { partyOrganizationIdsOfMatch } from "@/lib/rbac";
 
@@ -22,6 +23,7 @@ export default async function ProjectDetailPage({
       milestones: { include: { deliverables: true }, orderBy: { createdAt: "asc" } },
       agreement: true,
       evaluations: { include: { evaluatedBy: true }, orderBy: { createdAt: "desc" } },
+      members: { include: { user: true }, orderBy: { addedAt: "asc" } },
       match: {
         include: { need: { include: { organization: true } }, supply: true, expertProfile: true },
       },
@@ -38,6 +40,14 @@ export default async function ProjectDetailPage({
     (["ADMIN", "ENTERPRISE"].includes(session?.user.role ?? "") &&
       !!session?.user.organizationId &&
       partyOrgIds.includes(session.user.organizationId));
+
+  const eligibleUsers = canManage
+    ? await db.user.findMany({
+        where: { organizationId: { in: partyOrgIds } },
+        select: { id: true, name: true, organizationId: true },
+        orderBy: { name: "asc" },
+      })
+    : [];
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -91,6 +101,20 @@ export default async function ProjectDetailPage({
           <EvaluationPanel
             projectId={project.id}
             evaluations={project.evaluations}
+            canManage={canManage}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Đội thực hiện (cấu phần 09)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TeamPanel
+            projectId={project.id}
+            members={project.members}
+            eligibleUsers={eligibleUsers}
             canManage={canManage}
           />
         </CardContent>

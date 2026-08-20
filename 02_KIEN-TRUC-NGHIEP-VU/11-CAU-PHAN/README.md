@@ -20,6 +20,6 @@ Baseline hiện hành:
 | 06 | [`06_nguon-luc-tai-tro/`](06_nguon-luc-tai-tro/VC-NV-016-NguonLucTaiTro-APPROVED_v1.0_20260817.md) | MOBILIZE |
 | 07 | [`07_du-an-giao-dich/`](07_du-an-giao-dich/VC-NV-017-DuAnGiaoDich-APPROVED_v1.0_20260817.md) | EXECUTE |
 | 08 | [`08_tham-dinh-danh-gia/`](08_tham-dinh-danh-gia/VC-NV-018-ThamDinhDanhGia-APPROVED_v1.1_20260820.md) | EXECUTE |
-| 09 | [`09_cong-tac-mang-luoi/`](09_cong-tac-mang-luoi/VC-NV-019-CongTacMangLuoi-APPROVED_v1.0_20260817.md) | EXECUTE |
+| 09 | [`09_cong-tac-mang-luoi/`](09_cong-tac-mang-luoi/VC-NV-019-CongTacMangLuoi-APPROVED_v1.1_20260820.md) | EXECUTE |
 | 10 | [`10_quan-tri-tuan-thu/`](10_quan-tri-tuan-thu/VC-NV-020-QuanTriTuanThu-APPROVED_v1.0_20260817.md) | GOVERN & IMPACT |
 | 11 | [`11_phan-tich-tac-dong/`](11_phan-tich-tac-dong/VC-NV-021-PhanTichTacDong-APPROVED_v1.0_20260817.md) | GOVERN & IMPACT |

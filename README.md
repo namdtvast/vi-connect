@@ -86,8 +86,11 @@ khoản demo khác trong `prisma/seed.ts`.
 - **06 — Nguồn lực & Tài trợ**: danh mục nguồn lực/chương trình tài trợ do tổ chức tự
   công bố (`FundingSource`) — chỉ theo dõi danh mục, chưa có due diligence hay giải
   ngân thật.
-- **07 — Dự án & Giao dịch**: chuyển match đã chấp nhận thành dự án, mốc thực hiện,
-  hợp đồng/thỏa thuận (chỉ theo dõi trạng thái, chưa xử lý thanh toán thật).
+- **07 — Dự án & Giao dịch**: chuyển match đã chấp nhận thành dự án, đổi trạng thái
+  dự án đầy đủ vòng đời (lập kế hoạch → triển khai → tạm dừng/hoàn thành/chấm dứt),
+  mốc thực hiện có nộp/nghiệm thu sản phẩm bàn giao (`Deliverable`), hợp đồng/thỏa
+  thuận đủ vòng đời (dự thảo → ký → hoàn tất/chấm dứt) — chỉ theo dõi trạng thái,
+  chưa xử lý thanh toán thật.
 - **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `SUPERADMIN`
   xem được toàn bộ — chưa có màn hình chính sách/rủi ro/quy trình phê duyệt.
 - **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực

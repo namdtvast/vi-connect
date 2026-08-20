@@ -1,26 +1,41 @@
 import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PROJECT_STATUS_LABEL } from "@/lib/project-labels";
 import { MilestonePanel } from "@/components/projects/milestone-panel";
 import { AgreementPanel } from "@/components/projects/agreement-panel";
+import { ProjectStatusActions } from "@/components/projects/project-status-actions";
+import { partyOrganizationIdsOfMatch } from "@/lib/rbac";
 
 export default async function ProjectDetailPage({
   params,
 }: PageProps<"/dashboard/projects/[id]">) {
   const { id } = await params;
+  const session = await auth();
 
   const project = await db.project.findUnique({
     where: { id },
     include: {
-      milestones: { orderBy: { createdAt: "asc" } },
+      milestones: { include: { deliverables: true }, orderBy: { createdAt: "asc" } },
       agreement: true,
-      match: { include: { need: { include: { organization: true } } } },
+      match: {
+        include: { need: { include: { organization: true } }, supply: true, expertProfile: true },
+      },
     },
   });
 
   if (!project) notFound();
+
+  // Cùng điều kiện với các action trong lib/actions/projects.ts (assertPartyScope)
+  // — chỉ hiện nút khi chắc chắn thao tác được, tránh lỗi quyền không xử lý được.
+  const partyOrgIds = partyOrganizationIdsOfMatch(project.match);
+  const canManage =
+    session?.user.role === "SUPERADMIN" ||
+    (["ADMIN", "ENTERPRISE"].includes(session?.user.role ?? "") &&
+      !!session?.user.organizationId &&
+      partyOrgIds.includes(session.user.organizationId));
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -33,7 +48,11 @@ export default async function ProjectDetailPage({
             </p>
           )}
         </div>
-        <Badge variant="brand">{PROJECT_STATUS_LABEL[project.status]}</Badge>
+        {canManage ? (
+          <ProjectStatusActions projectId={project.id} status={project.status} />
+        ) : (
+          <Badge variant="brand">{PROJECT_STATUS_LABEL[project.status]}</Badge>
+        )}
       </div>
 
       {project.summary && (
@@ -49,7 +68,7 @@ export default async function ProjectDetailPage({
           <CardTitle>Mốc thực hiện (cấu phần 07)</CardTitle>
         </CardHeader>
         <CardContent>
-          <MilestonePanel projectId={project.id} milestones={project.milestones} />
+          <MilestonePanel projectId={project.id} milestones={project.milestones} canManage={canManage} />
         </CardContent>
       </Card>
 
@@ -58,7 +77,7 @@ export default async function ProjectDetailPage({
           <CardTitle>Hợp đồng / thỏa thuận (cấu phần 07)</CardTitle>
         </CardHeader>
         <CardContent>
-          <AgreementPanel projectId={project.id} agreement={project.agreement} />
+          <AgreementPanel projectId={project.id} agreement={project.agreement} canManage={canManage} />
         </CardContent>
       </Card>
     </div>

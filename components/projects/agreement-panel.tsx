@@ -1,11 +1,15 @@
 "use client";
 
-import { useTransition } from "react";
-import { createAgreementAction, signAgreementAction } from "@/lib/actions/projects";
+import { useState, useTransition } from "react";
+import {
+  createAgreementAction,
+  signAgreementAction,
+  updateAgreementStatusAction,
+} from "@/lib/actions/projects";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FieldGroup, Input, Label, Select } from "@/components/ui/field";
-import { AGREEMENT_STATUS_LABEL } from "@/lib/project-labels";
+import { AGREEMENT_STATUS_BADGE, AGREEMENT_STATUS_LABEL } from "@/lib/project-labels";
 import { formatVnd, formatDate } from "@/lib/utils";
 import type { AgreementStatus, AgreementType } from "@/lib/generated/prisma/enums";
 
@@ -27,17 +31,33 @@ type Agreement = {
 export function AgreementPanel({
   projectId,
   agreement,
+  canManage,
 }: {
   projectId: string;
   agreement: Agreement;
+  canManage: boolean;
 }) {
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const run = (fn: () => Promise<unknown>) =>
+    startTransition(async () => {
+      setError(null);
+      try {
+        await fn();
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Không thể thực hiện thao tác.");
+      }
+    });
 
   if (!agreement) {
+    if (!canManage) {
+      return <p className="text-sm text-muted">Chưa khởi tạo hợp đồng / thỏa thuận.</p>;
+    }
     return (
       <form
         action={(formData: FormData) =>
-          startTransition(() =>
+          run(() =>
             createAgreementAction(
               projectId,
               formData.get("type") as AgreementType,
@@ -64,6 +84,7 @@ export function AgreementPanel({
         <Button type="submit" size="sm" disabled={pending}>
           Khởi tạo
         </Button>
+        {error && <p className="text-xs text-danger">{error}</p>}
       </form>
     );
   }
@@ -72,7 +93,7 @@ export function AgreementPanel({
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{TYPE_LABEL[agreement.type]}</span>
-        <Badge variant={agreement.status === "SIGNED" ? "success" : "warning"}>
+        <Badge variant={AGREEMENT_STATUS_BADGE[agreement.status]}>
           {AGREEMENT_STATUS_LABEL[agreement.status]}
         </Badge>
       </div>
@@ -82,15 +103,31 @@ export function AgreementPanel({
       {agreement.signedAt && (
         <div className="text-xs text-muted">Ký ngày: {formatDate(agreement.signedAt)}</div>
       )}
-      {agreement.status === "DRAFT" && (
-        <Button
-          size="sm"
-          disabled={pending}
-          onClick={() => startTransition(() => signAgreementAction(projectId))}
-        >
+      {canManage && agreement.status === "DRAFT" && (
+        <Button size="sm" disabled={pending} onClick={() => run(() => signAgreementAction(projectId))}>
           Ghi nhận đã ký
         </Button>
       )}
+      {canManage && agreement.status === "SIGNED" && (
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            disabled={pending}
+            onClick={() => run(() => updateAgreementStatusAction(projectId, "COMPLETED"))}
+          >
+            Đánh dấu hoàn tất
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={pending}
+            onClick={() => run(() => updateAgreementStatusAction(projectId, "TERMINATED"))}
+          >
+            Chấm dứt
+          </Button>
+        </div>
+      )}
+      {error && <p className="text-xs text-danger">{error}</p>}
       <p className="text-xs text-muted/70">
         Lưu ý: hiện chỉ theo dõi trạng thái hợp đồng, chưa xử lý thanh toán/giải
         ngân thật (thuộc cấu phần 08 — backlog).

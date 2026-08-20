@@ -44,3 +44,13 @@ export const AGREEMENT_STATUS_LABEL: Record<AgreementStatus, string> = {
   COMPLETED: "Hoàn tất",
   TERMINATED: "Chấm dứt",
 };
+
+export const AGREEMENT_STATUS_BADGE: Record<
+  AgreementStatus,
+  "default" | "success" | "warning" | "danger"
+> = {
+  DRAFT: "warning",
+  SIGNED: "success",
+  COMPLETED: "success",
+  TERMINATED: "danger",
+};

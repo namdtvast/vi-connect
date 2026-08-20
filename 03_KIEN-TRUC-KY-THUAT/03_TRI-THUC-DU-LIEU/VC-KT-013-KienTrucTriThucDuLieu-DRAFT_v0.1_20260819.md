@@ -14,14 +14,17 @@ Dữ liệu** (`VC-NV-013`), sao cho khớp với baseline 11 cấu phần (`VC-
 không phá vỡ những gì 10 cấu phần còn lại đã hoặc sẽ dùng.
 
 **Đây là tài liệu thiết kế, không phải lệnh code hoá.** `README.md` (mục
-"Backlog Giai đoạn 2-3") và `docs/SCOPE.md` xếp cấu phần 03 vào phần **chưa xây**
-của Giai đoạn 1 — hiện chưa có model/trang (`Publication`, `Patent`, `Dataset`,
-`Knowledge`, `Evidence`...), đúng nguyên tắc "không mở rộng chỉ vì hoàn thành
-phần mềm" mà chính đề án đặt ra. Tài liệu này chuẩn bị sẵn kiến trúc mục tiêu để
-khi đề án phê duyệt mở Giai đoạn kế tiếp, việc code hoá đi thẳng vào PR theo
-đúng kế hoạch Mục 12, không phải thiết kế lại từ đầu — cùng tinh thần tách
-"thiết kế" khỏi "code hoá" đã áp dụng ở `VC-KT-002`/`VC-KT-003`. Không migration,
-không route, không action nào được tạo ra từ tài liệu này.
+"Backlog") và `docs/SCOPE.md` xếp cấu phần 03 vào phần **chưa xây** — hiện chưa
+có model/trang (`Publication`, `Patent`, `Dataset`, `Knowledge`, `Evidence`...),
+đúng nguyên tắc "không mở rộng chỉ vì hoàn thành phần mềm" mà chính đề án đặt
+ra. 11 cấu phần không chia theo mốc thời gian "Giai đoạn N" — chỉ khác nhau ở
+mức độ đã triển khai (đã code thật / backlog), nên "chưa xây" ở đây là trạng
+thái hiện tại, không phải một giai đoạn dự án cụ thể sẽ tự động đến. Tài liệu
+này chuẩn bị sẵn kiến trúc mục tiêu để khi chủ đề án phê duyệt code hoá cấu
+phần này, việc code hoá đi thẳng vào PR theo đúng kế hoạch Mục 12, không phải
+thiết kế lại từ đầu — cùng tinh thần tách "thiết kế" khỏi "code hoá" đã áp dụng
+ở `VC-KT-002`/`VC-KT-003`. Không migration, không route, không action nào được
+tạo ra từ tài liệu này.
 
 Phạm vi tài liệu: vị trí cấu phần 03 trong kiến trúc 11 cấu phần (Mục 4), hiện
 trạng mã nguồn đã liên quan tới "tri thức/bằng chứng" dù chưa gán đúng cấu phần
@@ -34,7 +37,8 @@ và điều kiện mở (Mục 11), kế hoạch triển khai kỹ thuật nếu
 - `VC-NV-001` — baseline 11 cấu phần, nhóm DATA và ánh xạ ISO của từng cấu phần.
 - `VC-NV-013` — mô tả nghiệp vụ cấu phần 03 (nhóm DATA: `Publication`, `Patent`,
   `Dataset`, `Knowledge`, `Evidence`; ISO 56001:2024 Clause 7, ISO 56006:2021).
-- `README.md`, `docs/SCOPE.md` — xác nhận cấu phần 03 thuộc Backlog Giai đoạn 2-3.
+- `README.md`, `docs/SCOPE.md` — xác nhận cấu phần 03 hiện ở trạng thái backlog
+  (chưa code thật).
 - `ARCHITECTURE.md` — ranh giới MANLAB-AIOS, quy tắc `lib/domain`/`lib/actions`/
   `lib/integrations`.
 - `docs/MANLAB-AIOS-MAPPING.md` — dòng "Tri thức và taxonomy → M26 Tri thức
@@ -61,7 +65,7 @@ và điều kiện mở (Mục 11), kế hoạch triển khai kỹ thuật nếu
    phân quyền riêng cho cấu phần 03.
 4. Đối chiếu hiện trạng thật (đã có gì, ở file/dòng nào) trước khi đề xuất mới —
    cùng nguyên tắc `VC-KT-003` Mục 3, điểm 2.
-5. Tương xứng quy mô Giai đoạn 1-2 (152 hội thành viên, 624 tổ chức KH&CN theo
+5. Tương xứng quy mô hiện tại (152 hội thành viên, 624 tổ chức KH&CN theo
    `docs/SCOPE.md`) — không dựng knowledge graph/search engine chuyên dụng khi
    số bản ghi còn nhỏ; bắt đầu bằng bảng quan hệ + index, đúng tinh thần
    `VC-KT-002` Mục 3, điểm 8 ("không tổng quát hoá quá mức khi số lượng còn nhỏ").
@@ -504,7 +508,7 @@ chứng nhận.
 
 ## 11. Khoảng trống & điều kiện mở (đọc trước khi cấp phép code hoá)
 
-1. **Phê duyệt mở Giai đoạn kế tiếp** — điều kiện tiên quyết, thuộc thẩm quyền
+1. **Phê duyệt code hoá cấu phần này** — điều kiện tiên quyết, thuộc thẩm quyền
    chủ đề án/Product Owner, không phải quyết định kỹ thuật (`docs/SCOPE.md`).
 2. **Phạm vi `Knowledge` chưa chốt** — 2 câu hỏi ở Mục 6.2 phải có câu trả lời
    trước khi lên `v1.0`.
@@ -538,7 +542,7 @@ chứng nhận.
 
 *Tài liệu này ở trạng thái `DRAFT`. Trước khi chuyển `APPROVED`/`v1.0`: (1) Product
 Owner trả lời 2 câu hỏi Mục 6.2 và câu hỏi Mục 11 điểm 5, (2) xác nhận Mục 11
-điểm 1 (phê duyệt mở giai đoạn), (3) `06_PHAP-LY-TUAN-THU` xác nhận Mục 11 điểm
+điểm 1 (phê duyệt code hoá cấu phần này), (3) `06_PHAP-LY-TUAN-THU` xác nhận Mục 11 điểm
 3. Sau khi duyệt, cập nhật
 `00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.7_20260820.md` theo đúng quy
 trình `VC-QT-001` Mục 8.*

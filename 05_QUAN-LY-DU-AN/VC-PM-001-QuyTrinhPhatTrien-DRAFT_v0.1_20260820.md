@@ -15,11 +15,11 @@ chung). Mục tiêu: bất kỳ ai (người hoặc coding agent) bắt đầu m
 trên VI CONNECT đều biết đầu ra của bước trước là gì, làm ở đâu, và điều kiện gì
 mới được sang bước sau — tránh tình trạng nhảy thẳng vào code khi thiết kế chưa
 đủ rõ, hoặc nhầm lẫn giữa lớp "thiết kế nghiệp vụ" và "thiết kế kỹ thuật" như đã
-xảy ra ở cấu phần 03 (xem Mục 3.2).
+xảy ra ở cấu phần 03 (xem Mục 4.2).
 
 Phạm vi: quy trình cấp dự án/tính năng (feature-level), không thay thế quy trình
 quản trị tài liệu chi tiết đã có ở `VC-QT-001`, cũng không thay thế nguyên tắc
-phạm vi Giai đoạn của `docs/SCOPE.md` — tài liệu này **tuân theo** cả hai, chỉ
+phạm vi cố định của `docs/SCOPE.md` — tài liệu này **tuân theo** cả hai, chỉ
 sắp xếp lại thành một vòng đời dễ theo dõi.
 
 ## 2. Căn cứ
@@ -27,8 +27,9 @@ sắp xếp lại thành một vòng đời dễ theo dõi.
 - `VC-QT-001` (v1.3) — quy ước đặt tên/lưu trữ, mã nhóm tài liệu, dải số `NV`↔`KT`.
 - `docs/SCOPE.md` — nguyên tắc *"không mở rộng chỉ vì hoàn thành phần mềm"*.
 - `ARCHITECTURE.md` — ranh giới thư mục mã nguồn, ranh giới MANLAB-AIOS.
-- `AGENTS.md` — lệnh kiểm tra bắt buộc (`npm run check`), giới hạn phạm vi MVP
-  Giai đoạn 1.
+- `AGENTS.md` — lệnh kiểm tra bắt buộc (`npm run check`), phạm vi cố định của
+  MVP thí điểm (11 cấu phần không chia theo giai đoạn dự án, chỉ khác nhau ở
+  mức độ đã triển khai — đã code thật / backlog).
 - `CONTRIBUTING.md` — luồng nhánh Git, Conventional Commits.
 - `.github/workflows/ci.yml`, `docs/DEPLOYMENT.md`, `deploy/` — cơ chế Test/Deploy
   đã cấu hình thật.
@@ -53,7 +54,7 @@ sắp xếp lại thành một vòng đời dễ theo dõi.
                                                                         │
                                               quay lại đúng bước phát sinh vấn đề
                                               (2a / 2b / 3 / 4) — không tự mở rộng
-                                                    sang cấu phần/giai đoạn mới
+                                                sang cấu phần ngoài baseline 11
 ```
 
 `Loop` không phải bước cuối cùng đơn thuần — đó là **điểm quyết định**: đi tiếp
@@ -96,7 +97,7 @@ tránh tồn kho tài liệu thiết kế không ai dùng.
 | Nơi | `app/` (route/page/server action), `components/` (UI, không quyết định phân quyền), `lib/domain/` (quy tắc thuần, có unit test), `lib/actions/` (workflow + audit), `lib/integrations/` (adapter ngoài), `prisma/` (schema/migration/seed) — đúng `ARCHITECTURE.md` |
 | Nhánh Git | `feat/<slug>`, `fix/<slug>`, `docs/<slug>` từ `main` (`CONTRIBUTING.md`) |
 | Commit | Conventional Commits tiếng Việt |
-| Ràng buộc | Không tự mở rộng ngoài phạm vi Giai đoạn 1 (`AGENTS.md`); không sửa/xoá migration đã chia sẻ — tạo migration mới; không hard-code secret; không copy nguyên module MANLAB-AIOS |
+| Ràng buộc | Không tự mở rộng ngoài phạm vi cố định của MVP thí điểm (`AGENTS.md`) — không thêm cấu phần thứ 12, không tự mở khoá nghiệp vụ bị cấm (giải ngân/đầu tư/AI tự quyết định); không sửa/xoá migration đã chia sẻ — tạo migration mới; không hard-code secret; không copy nguyên module MANLAB-AIOS |
 | Điều kiện sang Test | Code chạy được cục bộ; với UI phải thử qua trình duyệt thật trước khi coi là xong, không chỉ dựa test tự động |
 
 ### 4.4 Test
@@ -120,15 +121,15 @@ tránh tồn kho tài liệu thiết kế không ai dùng.
 
 ## 5. Loop — quy tắc rẽ nhánh
 
-Sau Test, chọn đúng 1 trong 3 nhánh, không được "vừa merge vừa để treo" một hạng
-mục chưa rõ trạng thái:
+Sau Test, chọn đúng 1 trong các nhánh dưới đây, không được "vừa merge vừa để
+treo" một hạng mục chưa rõ trạng thái:
 
 | Tình huống phát hiện ở Test/Review | Quay lại bước | Ghi chú |
 |---|---|---|
 | Lỗi code, sai logic, thiếu test case | **3. Code** | Sửa trong cùng nhánh Git, không cần đổi tài liệu thiết kế |
 | Thiết kế kỹ thuật sai/thiếu (schema, permission, API) | **2b. Thiết kế kỹ thuật** | Cập nhật `KT` bằng **phiên bản mới** (`v0.1 → v0.2`...), không sửa đè bản đã dùng làm căn cứ (`VC-QT-001` Mục 8) |
 | Giả định nghiệp vụ sai (VD entity không đúng thực tế, ISO map sai) | **2a. Thiết kế nghiệp vụ** | Cùng nguyên tắc tăng phiên bản, không sửa đè `APPROVED` |
-| Phát sinh nhu cầu mở rộng phạm vi (cấu phần mới, giai đoạn mới) | **1. Nghiên cứu** | Bắt buộc — đúng nguyên tắc *"không mở rộng chỉ vì hoàn thành phần mềm"* (`docs/SCOPE.md`); không tự quyết định mở rộng ở bước Code/Test |
+| Muốn code hoá một cấu phần đang ở trạng thái backlog, hoặc thêm cấu phần thứ 12 ngoài baseline 11 | **1. Nghiên cứu** | Bắt buộc — đúng nguyên tắc *"không mở rộng chỉ vì hoàn thành phần mềm"* (`docs/SCOPE.md`); backlog không tự động được code hoá chỉ vì đã rảnh tay, phải qua lại đúng vòng đời; không tự quyết định mở rộng ở bước Code/Test |
 | Đạt yêu cầu, đúng phạm vi thiết kế đã duyệt | **6. Deploy** (hoặc merge `main`, chờ đợt phát hành) | — |
 
 `Loop` cũng là nơi dọn khoảng trống đã ghi nhận nhưng chưa xử lý — ví dụ mục

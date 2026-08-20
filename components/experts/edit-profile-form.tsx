@@ -5,7 +5,7 @@ import { updateProfileAction } from "@/lib/actions/experts";
 import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Textarea } from "@/components/ui/field";
-import { FIELDS } from "@/lib/taxonomy";
+import { FieldsCheckboxGrid } from "@/components/ui/fields-checkbox-grid";
 
 const initialState: ActionState = {};
 
@@ -68,19 +68,7 @@ export function EditProfileForm({
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực chuyên môn</Label>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          {FIELDS.map((f) => (
-            <label key={f.code} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="fields"
-                value={f.code}
-                defaultChecked={fields.includes(f.code)}
-              />
-              {f.label}
-            </label>
-          ))}
-        </div>
+        <FieldsCheckboxGrid defaultChecked={fields} />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="skills">Kỹ năng (cách nhau bởi dấu phẩy)</Label>

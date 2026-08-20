@@ -4,9 +4,13 @@
 export const FIELDS = [
   { code: "cntt", label: "Công nghệ thông tin" },
   { code: "ai_ml", label: "Trí tuệ nhân tạo / Machine Learning" },
+  { code: "toan_hoc", label: "Toán học" },
+  { code: "vat_ly", label: "Vật lý" },
+  { code: "hoa_hoc", label: "Hóa học" },
   { code: "vat_lieu", label: "Vật liệu mới" },
   { code: "sinh_hoc", label: "Công nghệ sinh học" },
   { code: "moi_truong", label: "Môi trường" },
+  { code: "khoa_hoc_bien", label: "Khoa học biển / Hải dương học" },
   { code: "nang_luong", label: "Năng lượng" },
   { code: "nong_nghiep", label: "Nông nghiệp công nghệ cao" },
   { code: "y_duoc", label: "Y dược" },

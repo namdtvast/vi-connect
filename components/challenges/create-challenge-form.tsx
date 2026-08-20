@@ -5,7 +5,7 @@ import { createChallengeAction } from "@/lib/actions/challenges";
 import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Textarea } from "@/components/ui/field";
-import { FIELDS } from "@/lib/taxonomy";
+import { FieldsCheckboxGrid } from "@/components/ui/fields-checkbox-grid";
 import { Paperclip } from "lucide-react";
 
 const initialState: ActionState = {};
@@ -39,14 +39,7 @@ export function CreateChallengeForm() {
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực</Label>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          {FIELDS.map((f) => (
-            <label key={f.code} className="flex items-center gap-2">
-              <input type="checkbox" name="fields" value={f.code} />
-              {f.label}
-            </label>
-          ))}
-        </div>
+        <FieldsCheckboxGrid />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="attachment" className="flex items-center gap-1.5">

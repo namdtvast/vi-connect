@@ -5,7 +5,7 @@ import { createFundingSourceAction } from "@/lib/actions/funding";
 import type { ActionState } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FormError, Input, Label, Textarea } from "@/components/ui/field";
-import { FIELDS } from "@/lib/taxonomy";
+import { FieldsCheckboxGrid } from "@/components/ui/fields-checkbox-grid";
 
 const initialState: ActionState = {};
 
@@ -23,14 +23,7 @@ export function CreateFundingSourceForm() {
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực ưu tiên</Label>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          {FIELDS.map((f) => (
-            <label key={f.code} className="flex items-center gap-2">
-              <input type="checkbox" name="fields" value={f.code} />
-              {f.label}
-            </label>
-          ))}
-        </div>
+        <FieldsCheckboxGrid />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="note">Ghi chú (điều kiện, quy mô, đầu mối liên hệ...)</Label>

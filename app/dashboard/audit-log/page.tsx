@@ -79,7 +79,7 @@ export default async function AuditLogPage({
       <PageHeader
         title="Quản trị & Tuân thủ"
         badge="Cấu phần 10"
-        description="Nhật ký audit hệ thống — mọi thao tác tạo/ghép nối/thay đổi trạng thái quan trọng đều được ghi lại tự động, phục vụ truy vết và tuân thủ. Chỉ SUPERADMIN xem được toàn bộ nhật ký. Giai đoạn 1 chưa có màn hình chính sách/rủi ro/quy trình phê duyệt — thuộc backlog Giai đoạn 2-3."
+        description="Nhật ký audit hệ thống — mọi thao tác tạo/ghép nối/thay đổi trạng thái quan trọng đều được ghi lại tự động, phục vụ truy vết và tuân thủ. Chỉ SUPERADMIN xem được toàn bộ nhật ký. Màn hình chính sách/rủi ro/quy trình phê duyệt thuộc backlog."
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

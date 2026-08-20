@@ -11,7 +11,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # VI CONNECT — quy tắc làm việc cho Codex và coding agents
 
 Đọc `README.md`, `ARCHITECTURE.md` và `docs/SCOPE.md` trước khi thay đổi phạm vi.
-Đây là MVP Giai đoạn 1; không tự mở rộng sang giải ngân, đầu tư hoặc AI tự quyết định.
+Đây là MVP thí điểm với phạm vi cố định; không tự mở rộng sang giải ngân, đầu tư hoặc
+AI tự quyết định. 11 cấu phần nghiệp vụ không chia theo giai đoạn dự án — chỉ khác
+nhau ở mức độ đã triển khai (đã code thật / backlog).
 
 ## Lệnh kiểm tra bắt buộc
 

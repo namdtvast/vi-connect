@@ -71,8 +71,8 @@ export default async function DashboardHomePage() {
     <div className="space-y-8">
       <PageHeader
         title="Tổng quan điều hành"
-        badge="Cấu phần 11 — rút gọn Giai đoạn 1"
-        description="KPI theo năm bước Connect – Match – Mobilize – Execute – Impact. AI Governance, Risk & Compliance, Forecasting là backlog Giai đoạn 2-3."
+        badge="Cấu phần 11"
+        description="KPI theo năm bước Connect – Match – Mobilize – Execute – Impact. AI Governance, Risk & Compliance, Forecasting thuộc backlog."
       />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">

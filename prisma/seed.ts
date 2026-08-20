@@ -32,7 +32,7 @@ async function main() {
       type: "HOI_THANH_VIEN",
       status: "ACTIVE",
       province: "Hà Nội",
-      description: "Hội thành viên thí điểm Giai đoạn 1 (dữ liệu demo).",
+      description: "Hội thành viên thí điểm (dữ liệu demo).",
     },
   });
 
@@ -43,7 +43,7 @@ async function main() {
       type: "HOI_THANH_VIEN",
       status: "ACTIVE",
       province: "Cao Bằng",
-      description: "Hội thành viên thí điểm Giai đoạn 1 (dữ liệu demo).",
+      description: "Hội thành viên thí điểm (dữ liệu demo).",
     },
   });
 

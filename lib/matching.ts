@@ -1,8 +1,8 @@
-// Explainable local matching engine (cấu phần 05, rút gọn Phase 1).
+// Explainable local matching engine (cấu phần 05, phạm vi hiện tại).
 // No external AI/LLM API — deterministic scoring so every suggestion can show
 // *why* it was made (yêu cầu 5.2 "giải thích lý do đề xuất"). The interface
 // (score 0..1 + structured `reasons`) is designed so a real embedding/LLM
-// model can be swapped in later (Giai đoạn 2) without changing callers.
+// model can be swapped in later without changing callers.
 
 export type MatchReason = {
   factor: string;

@@ -4,6 +4,14 @@ Các thay đổi đáng chú ý của VI CONNECT được ghi tại đây. Phiê
 
 ## [Unreleased]
 
+### Changed
+
+- Bỏ nhãn "Giai đoạn 1/2/3" trong tài liệu làm việc (README, AGENTS.md, docs/SCOPE.md,
+  docs/DEPLOYMENT.md) và giao diện app (dashboard, sidebar) — 11 cấu phần nghiệp vụ
+  không còn trình bày theo mốc thời gian dự án, chỉ phân biệt theo mức độ đã triển
+  khai (đã code thật / backlog). Không đổi phạm vi chức năng hay quy tắc "không tự mở
+  rộng sang giải ngân, đầu tư, AI tự quyết định" — chỉ đổi cách gọi tên.
+
 ### Added
 
 - Hợp nhất mã nguồn, tài liệu quản trị, đề án, kiến trúc, pháp lý và tài liệu tham khảo vào một repo Git.

@@ -21,7 +21,7 @@ export default async function FundingSourcesPage() {
       <PageHeader
         title="Nguồn lực & Tài trợ"
         badge="Cấu phần 06"
-        description="Danh mục nguồn lực, chương trình tài trợ do hội thành viên, tổ chức KH&CN, doanh nghiệp hoặc quỹ đầu tư công bố trên mạng lưới. Giai đoạn 1 chỉ theo dõi danh mục — due diligence và giải ngân thật thuộc backlog Giai đoạn 2-3."
+        description="Danh mục nguồn lực, chương trình tài trợ do hội thành viên, tổ chức KH&CN, doanh nghiệp hoặc quỹ đầu tư công bố trên mạng lưới. Hiện chỉ theo dõi danh mục — due diligence và giải ngân thật thuộc backlog."
       />
 
       {canCreate && (

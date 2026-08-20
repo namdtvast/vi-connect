@@ -1,5 +1,5 @@
-// Minimal field/domain taxonomy for Phase 1.
-// A real taxonomy (aligned to VAST/OECD Frascati fields) is Phase 2 backlog —
+// Minimal field/domain taxonomy for the current scope.
+// A real taxonomy (aligned to VAST/OECD Frascati fields) is backlog —
 // this fixed list is enough to make matching explainable and demo-able now.
 export const FIELDS = [
   { code: "cntt", label: "Công nghệ thông tin" },

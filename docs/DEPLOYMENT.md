@@ -5,7 +5,7 @@ của VI CONNECT (Next.js 16, Prisma 7 + PostgreSQL, NextAuth v5) lên VPS riên
 gắn với tên miền **viconnect.manai.vn**.
 
 Trạng thái nguồn: repo GitHub `namdtvast/vi-connect`, nhánh `main` (đã merge PR
-#1 — MVP Giai đoạn 1 + trang chủ thiết kế lại). Đây là **bản thí điểm/demo**,
+#1 — MVP thí điểm + trang chủ thiết kế lại). Đây là **bản thí điểm/demo**,
 chưa phải bản chính thức của tổ chức chủ quản — xem `README.md` mục "Ghi chú
 dữ liệu" và `docs/SCOPE.md` trước khi công bố rộng rãi.
 
@@ -171,7 +171,7 @@ sudo systemctl restart vi-connect
 
 ## Ghi chú quan trọng
 
-- Đây là **Giai đoạn 1 (thí điểm)** theo `docs/SCOPE.md` — chưa xử lý thanh
+- Đây là **bản thí điểm** theo `docs/SCOPE.md` — chưa xử lý thanh
   toán/giải ngân thật, AI matching là bộ chấm điểm rule-based có giải thích
   (`lib/matching.ts`), không gọi API AI ngoài.
 - Không dùng dữ liệu trong `prisma/seed.ts` làm bằng chứng số liệu chính thức

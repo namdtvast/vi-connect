@@ -1,9 +1,11 @@
-# VI CONNECT — Giai đoạn 1 (MVP thí điểm)
+# VI CONNECT — MVP thí điểm
 
 Nền tảng số kết nối tri thức, công nghệ và nguồn lực đầu tư — do Trung tâm Đổi mới
 sáng tạo công nghệ cao (HTIC) đề xuất, thuộc Viện Hàn lâm Khoa học và Công nghệ Việt
-Nam (VAST). Xây dựng theo tài liệu `VC-DA-001`, phạm vi rút gọn về đúng Giai đoạn
-1 (Năm 1) mà chính đề án tự quy định — xem `docs/SCOPE.md` để biết lý do.
+Nam (VAST). Xây dựng theo tài liệu `VC-DA-001`, phạm vi rút gọn về đúng phạm vi ưu
+tiên (Năm 1) mà chính đề án tự quy định — xem `docs/SCOPE.md` để biết lý do. 11 cấu
+phần nghiệp vụ không chia theo giai đoạn dự án — chỉ khác nhau ở mức độ đã triển khai
+(đã code thật / backlog).
 
 ## Bắt đầu từ đâu
 
@@ -59,7 +61,7 @@ npx prisma db seed
 Đăng nhập demo: `admin@vi-connect.demo` / `Password123!` (SUPERADMIN). Xem thêm tài
 khoản demo khác trong `prisma/seed.ts`.
 
-## Trong scope Giai đoạn 1 (đã code thật, không mock)
+## Trong phạm vi hiện tại (đã code thật, không mock)
 
 Đánh số theo đúng baseline 11 cấu phần
 ([VC-NV-001](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/VC-NV-001-11CauPhanDataIso-APPROVED_v1.0_20260817.md)):
@@ -73,7 +75,7 @@ khoản demo khác trong `prisma/seed.ts`.
 - **05 — Tìm kiếm & Ghép nối**: bộ chấm điểm giải thích được (`lib/matching.ts`) —
   không gọi API AI ngoài, dựa trên trùng lĩnh vực + tương đồng từ khóa + TRL/kinh
   nghiệm. Mỗi đề xuất hiển thị lý do và trọng số. Có thể thay bằng embedding/LLM thật
-  ở Giai đoạn 2 mà không đổi schema hay giao diện gọi.
+  sau này mà không đổi schema hay giao diện gọi.
 - **06 — Nguồn lực & Tài trợ**: danh mục nguồn lực/chương trình tài trợ do tổ chức tự
   công bố (`FundingSource`) — chỉ theo dõi danh mục, chưa có due diligence hay giải
   ngân thật.
@@ -84,7 +86,7 @@ khoản demo khác trong `prisma/seed.ts`.
 - **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực
   tiếp từ dữ liệu sống, Match Funnel theo đúng mô hình đề án.
 
-## Backlog Giai đoạn 2-3 (chưa xây, theo đúng nguyên tắc "không mở rộng khi lớp trước
+## Backlog (chưa xây, theo đúng nguyên tắc "không mở rộng khi lớp trước
 chưa có giao dịch thật" của đề án)
 
 - **03 — Tri thức & Dữ liệu**: chưa có model/trang (Publication, Patent, Dataset...).

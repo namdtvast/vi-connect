@@ -92,8 +92,8 @@ export function AgreementPanel({
         </Button>
       )}
       <p className="text-xs text-muted/70">
-        Lưu ý: Giai đoạn 1 chỉ theo dõi trạng thái hợp đồng, chưa xử lý thanh toán/giải
-        ngân thật (thuộc cấu phần 08 — backlog Giai đoạn 2).
+        Lưu ý: hiện chỉ theo dõi trạng thái hợp đồng, chưa xử lý thanh toán/giải
+        ngân thật (thuộc cấu phần 08 — backlog).
       </p>
     </div>
   );

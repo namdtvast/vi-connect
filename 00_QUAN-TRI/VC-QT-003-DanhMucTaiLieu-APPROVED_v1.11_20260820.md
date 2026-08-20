@@ -75,6 +75,14 @@ Phiên bản `v1.0` có trạng thái `SUPERSEDED` (giữ nguyên tại
 `v1.1` bổ sung Mục "Trạng thái triển khai" ghi quyết định phạm vi v1 chỉ xây
 `Team`, không đổi baseline taxonomy/DATA group/ánh xạ ISO đã duyệt ở `v1.0`.
 
+## Lịch sử VC-QT-003 (chính tài liệu này)
+
+Phiên bản `v1.7` bị bỏ sót ở trạng thái `APPROVED` do một đợt cập nhật song
+song (tổ chức lại `06_PHAP-LY-TUAN-THU/`) tạo file `v1.8` mới trực tiếp thay
+vì nối tiếp từ `v1.7` đang có — dẫn tới 2 file cùng "đang hiện hành" một lúc,
+vi phạm quy tắc Mục 2 dưới đây. Đã đổi trạng thái `v1.7` thành `SUPERSEDED`
+(2026-08-20) để chỉ còn đúng 1 bản hiện hành (`v1.11`).
+
 ## Quy tắc cập nhật danh mục
 
 1. Cập nhật bảng này trong cùng thay đổi Git khi cấp mã hoặc đổi phiên bản tài liệu.

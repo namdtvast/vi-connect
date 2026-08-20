@@ -69,7 +69,9 @@ khoản demo khác trong `prisma/seed.ts`.
 - **01 — Hồ sơ & Định danh**: đăng ký/xác minh hồ sơ chuyên gia, danh mục hội thành
   viên/tổ chức KH&CN, delegated administration theo tổ chức (`ADMIN` chỉ thấy dữ
   liệu của mình).
-- **02 — Công nghệ & Giải pháp**: đăng nguồn cung công nghệ/giải pháp kèm TRL.
+- **02 — Công nghệ & Giải pháp**: đăng nguồn cung công nghệ/giải pháp kèm TRL,
+  lưu trữ/mở lại được (đóng khi không còn chào nữa), bộ lọc trạng thái, tổ chức
+  sở hữu luôn thấy nguồn cung của mình dù đã lưu trữ.
 - **03 — Tri thức & Dữ liệu**: đăng công bố khoa học (`Publication`), tra DOI thật
   qua Crossref để tự điền tiêu đề/tác giả/năm, xác minh (Maker-Checker nhẹ, chỉ
   `SUPERADMIN`/`ADMIN` — chưa mở `EXPERT` tự đăng). Patent/Dataset/Knowledge/Evidence

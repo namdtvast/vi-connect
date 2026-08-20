@@ -1,15 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { Award, Lightbulb, Package, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/field";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SearchFilterBar } from "@/components/dashboard/search-filter-bar";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { CreateSupplyForm } from "@/components/matching/create-supply-form";
 import { fieldLabel } from "@/lib/taxonomy";
+import { updateSupplyStatusAction } from "@/lib/actions/matching";
+import { SUPPLY_STATUS_BADGE, SUPPLY_STATUS_LABEL } from "@/lib/supply-labels";
+import type { Role, SupplyStatus } from "@/lib/generated/prisma/enums";
 
 const TYPE_LABEL: Record<string, string> = {
   TECHNOLOGY: "Công nghệ",
@@ -23,25 +27,67 @@ type SupplyRow = {
   title: string;
   description: string;
   type: string;
+  status: SupplyStatus;
   fields: string[];
   trl: number | null;
+  organizationId: string | null;
   organization: { name: string } | null;
 };
+
+function SupplyStatusActions({ supply }: { supply: SupplyRow }) {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const setStatus = (next: SupplyStatus) =>
+    startTransition(async () => {
+      setError(null);
+      try {
+        await updateSupplyStatusAction(supply.id, next);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Không thể cập nhật trạng thái.");
+      }
+    });
+
+  return (
+    <div className="mt-2">
+      {supply.status === "ARCHIVED" ? (
+        <Button size="sm" variant="outline" disabled={pending} onClick={() => setStatus("PUBLISHED")}>
+          Mở lại
+        </Button>
+      ) : (
+        <Button size="sm" variant="outline" disabled={pending} onClick={() => setStatus("ARCHIVED")}>
+          Lưu trữ
+        </Button>
+      )}
+      {error && <p className="text-xs text-danger mt-1">{error}</p>}
+    </div>
+  );
+}
 
 export function SuppliesListClient({
   supplies,
   canPost,
+  viewerRole,
+  viewerOrganizationId,
 }: {
   supplies: SupplyRow[];
   canPost: boolean;
+  viewerRole: Role | null;
+  viewerOrganizationId: string | null;
 }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("ALL");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+
+  const canManage = (s: SupplyRow) =>
+    viewerRole === "SUPERADMIN" ||
+    (viewerRole === "ADMIN" && !!viewerOrganizationId && viewerOrganizationId === s.organizationId);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return supplies.filter((s) => {
       if (typeFilter !== "ALL" && s.type !== typeFilter) return false;
+      if (statusFilter !== "ALL" && s.status !== statusFilter) return false;
       if (!q) return true;
       return (
         s.title.toLowerCase().includes(q) ||
@@ -49,7 +95,7 @@ export function SuppliesListClient({
         (s.organization?.name.toLowerCase().includes(q) ?? false)
       );
     });
-  }, [supplies, search, typeFilter]);
+  }, [supplies, search, typeFilter, statusFilter]);
 
   const techCount = supplies.filter((s) => s.type === "TECHNOLOGY").length;
   const solutionCount = supplies.filter((s) => s.type === "SOLUTION").length;
@@ -80,14 +126,28 @@ export function SuppliesListClient({
         onSearchChange={setSearch}
         searchPlaceholder="Tìm theo tên, mô tả, tổ chức..."
         filters={
-          <Select className="w-auto" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-            <option value="ALL">Tất cả loại</option>
-            {Object.entries(TYPE_LABEL).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
+          <div className="flex gap-2">
+            <Select className="w-auto" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+              <option value="ALL">Tất cả loại</option>
+              {Object.entries(TYPE_LABEL).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+            <Select
+              className="w-auto"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="ALL">Tất cả trạng thái</option>
+              {Object.entries(SUPPLY_STATUS_LABEL).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </div>
         }
       />
 
@@ -104,7 +164,10 @@ export function SuppliesListClient({
               <CardContent>
                 <div className="flex items-start justify-between gap-2">
                   <div className="font-medium">{s.title}</div>
-                  <Badge variant="brand">{TYPE_LABEL[s.type]}</Badge>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant={SUPPLY_STATUS_BADGE[s.status]}>{SUPPLY_STATUS_LABEL[s.status]}</Badge>
+                    <Badge variant="brand">{TYPE_LABEL[s.type]}</Badge>
+                  </div>
                 </div>
                 <div className="text-xs text-muted mt-1">{s.organization?.name}</div>
                 <p className="text-sm text-muted mt-2 line-clamp-2">{s.description}</p>
@@ -114,6 +177,7 @@ export function SuppliesListClient({
                   ))}
                   {s.trl && <Badge variant="success">TRL {s.trl}</Badge>}
                 </div>
+                {canManage(s) && <SupplyStatusActions supply={s} />}
               </CardContent>
             </Card>
           ))}

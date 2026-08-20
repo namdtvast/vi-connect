@@ -3,12 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { assertOrgScope, requireRole } from "@/lib/rbac";
+import { assertOrgScope, ForbiddenError, requireRole } from "@/lib/rbac";
 import { scoreNeedAgainstExpert, scoreNeedAgainstSupply } from "@/lib/matching";
 import { saveUploadedFile } from "@/lib/uploads";
 import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
-import type { MatchStage, NeedStatus } from "@/lib/generated/prisma/enums";
+import type { MatchStage, NeedStatus, SupplyStatus } from "@/lib/generated/prisma/enums";
 
 const needSchema = z.object({
   title: z.string().min(5, "Tiêu đề tối thiểu 5 ký tự"),
@@ -124,6 +124,25 @@ export async function createSupplyAction(
 
   revalidatePath("/dashboard/supplies");
   return { success: true };
+}
+
+/** Cấu phần 02: lưu trữ/mở lại nguồn cung — vòng đời trước đây chỉ có tạo, chưa
+ * có cập nhật trạng thái (cùng dạng đã vá cho Need ở cấu phần 04). */
+export async function updateSupplyStatusAction(supplyId: string, status: SupplyStatus) {
+  const user = await requireRole("SUPERADMIN", "ADMIN");
+  const supply = await db.supply.findUniqueOrThrow({ where: { id: supplyId } });
+  if (!supply.organizationId) {
+    throw new ForbiddenError("Nguồn cung này không gắn với tổ chức nào.");
+  }
+  assertOrgScope(user, supply.organizationId);
+
+  await db.supply.update({ where: { id: supplyId }, data: { status } });
+
+  await db.auditLog.create({
+    data: { userId: user.id, action: `SUPPLY_STATUS_${status}`, entity: "Supply", entityId: supplyId },
+  });
+
+  revalidatePath("/dashboard/supplies");
 }
 
 /** Cấu phần 05: chạy lại đề xuất ghép nối cho 1 nhu cầu (explainable scoring). */

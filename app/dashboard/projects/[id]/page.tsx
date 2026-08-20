@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { PROJECT_STATUS_LABEL } from "@/lib/project-labels";
 import { MilestonePanel } from "@/components/projects/milestone-panel";
 import { AgreementPanel } from "@/components/projects/agreement-panel";
+import { EvaluationPanel } from "@/components/projects/evaluation-panel";
 import { ProjectStatusActions } from "@/components/projects/project-status-actions";
 import { partyOrganizationIdsOfMatch } from "@/lib/rbac";
 
@@ -20,6 +21,7 @@ export default async function ProjectDetailPage({
     include: {
       milestones: { include: { deliverables: true }, orderBy: { createdAt: "asc" } },
       agreement: true,
+      evaluations: { include: { evaluatedBy: true }, orderBy: { createdAt: "desc" } },
       match: {
         include: { need: { include: { organization: true } }, supply: true, expertProfile: true },
       },
@@ -78,6 +80,19 @@ export default async function ProjectDetailPage({
         </CardHeader>
         <CardContent>
           <AgreementPanel projectId={project.id} agreement={project.agreement} canManage={canManage} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Đánh giá dự án (cấu phần 08)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EvaluationPanel
+            projectId={project.id}
+            evaluations={project.evaluations}
+            canManage={canManage}
+          />
         </CardContent>
       </Card>
     </div>

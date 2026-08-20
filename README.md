@@ -10,7 +10,7 @@ phần nghiệp vụ không chia theo giai đoạn dự án — chỉ khác nhau
 ## Bắt đầu từ đâu
 
 - [Quy ước quản lý file](00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md)
-- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.7_20260820.md)
+- [Danh mục tài liệu trung tâm](00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.9_20260820.md)
 - [Thuyết minh đề án hiện hành](01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx)
 - [Kiến trúc nghiệp vụ 11 cấu phần](02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md)
 - [Kiến trúc ứng dụng](ARCHITECTURE.md)
@@ -29,7 +29,7 @@ phần nghiệp vụ không chia theo giai đoạn dự án — chỉ khác nhau
 | `03_KIEN-TRUC-KY-THUAT/` | Hệ thống, dữ liệu, API, bảo mật và hạ tầng |
 | `04_SAN-PHAM-THUONG-HIEU/` | Sản phẩm truyền thông và infographic quản lý như hồ sơ |
 | `05_QUAN-LY-DU-AN/` | Kế hoạch, rủi ro, biên bản, nghiệm thu và bàn giao |
-| `06_PHAP-LY-TUAN-THU/` | Pháp lý, dữ liệu cá nhân, sở hữu trí tuệ và hợp đồng |
+| `06_PHAP-LY-TUAN-THU/` | Pháp lý; tách riêng `SO_HUU_TRI_TUE/` và `BQ_TAC_GIA/` |
 | `07_DU-LIEU-VA-DANH-MUC/` | Data dictionary, taxonomy và schema trao đổi |
 | `08_NGHIEN-CUU-THAM-KHAO/` | Nguồn nghiên cứu, tiêu chuẩn và đối sánh |
 | `09_PHAT-HANH/` | Manifest phát hành gắn với commit/tag Git |
@@ -91,6 +91,9 @@ khoản demo khác trong `prisma/seed.ts`.
   mốc thực hiện có nộp/nghiệm thu sản phẩm bàn giao (`Deliverable`), hợp đồng/thỏa
   thuận đủ vòng đời (dự thảo → ký → hoàn tất/chấm dứt) — chỉ theo dõi trạng thái,
   chưa xử lý thanh toán thật.
+- **08 — Thẩm định & Đánh giá**: đánh giá hiệu quả dự án có cấu trúc (điểm 0-100%,
+  tiêu chí, ghi chú), append-only, gắn với `Project` — chỉ `Evaluation`, xem
+  `VC-KT-018`. `Review`/`Assessment`/`DueDiligence` vẫn ở backlog.
 - **10 — Quản trị & Tuân thủ**: nhật ký audit hệ thống (`AuditLog`), chỉ `SUPERADMIN`
   xem được toàn bộ — chưa có màn hình chính sách/rủi ro/quy trình phê duyệt.
 - **11 — Phân tích & Tác động**: KPI Dashboard Connect/Match/Mobilize/Impact tính trực
@@ -103,8 +106,8 @@ chưa có giao dịch thật" của đề án)
   `CapabilityEvidence`) — hiện chỉ có `Publication`, xem `VC-KT-013`.
 - **06 đầy đủ**: Funding & Investment Hub, due diligence, giải ngân thật (hiện chỉ có
   danh mục cơ bản — xem mục scope ở trên).
-- **08 — Thẩm định & Đánh giá**: chưa có model/trang riêng (review, due diligence,
-  evaluation có cấu trúc).
+- **08 đầy đủ**: `Review` (tổng quát hoá các luồng duyệt rải rác), `Assessment`,
+  `DueDiligence` — hiện chỉ có `Evaluation`, xem `VC-KT-018` Mục 7.
 - **09 — Cộng tác & Mạng lưới**: chưa có model/trang riêng (partnership, team, network).
 - **10 đầy đủ**: AI Governance, Risk & Compliance, Forecasting dashboards — hiện chỉ có
   nhật ký audit thô, chưa có chính sách/quy trình phê duyệt/đánh giá rủi ro.

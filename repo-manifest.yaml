@@ -16,7 +16,7 @@ agents:
 quality_gate: npm run check
 documentation:
   policy: 00_QUAN-TRI/VC-QT-001-QuyUocDatTenVaLuuTruFile-APPROVED_v1.3_20260819.md
-  registry: 00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.7_20260820.md
+  registry: 00_QUAN-TRI/VC-QT-003-DanhMucTaiLieu-APPROVED_v1.9_20260820.md
   proposal_current: 01_CHIEN-LUOC-DE-AN/02_DANG-SOAN-THAO/VC-DA-001-ThuyetMinhDeAn-DRAFT_v0.6_20260817.docx
   business_architecture: 02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN/README.md
   application_architecture: ARCHITECTURE.md

@@ -6,6 +6,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/dashboard/organizations": "Tổ chức & Hội thành viên",
   "/dashboard/experts": "Hồ sơ chuyên gia",
   "/dashboard/supplies": "Công nghệ & giải pháp",
+  "/dashboard/publications": "Tri thức & dữ liệu",
   "/dashboard/needs": "Nhu cầu",
   "/dashboard/challenges": "Ngân hàng bài toán",
   "/dashboard/matches": "Ghép nối",

@@ -70,6 +70,10 @@ khoản demo khác trong `prisma/seed.ts`.
   viên/tổ chức KH&CN, delegated administration theo tổ chức (`ADMIN` chỉ thấy dữ
   liệu của mình).
 - **02 — Công nghệ & Giải pháp**: đăng nguồn cung công nghệ/giải pháp kèm TRL.
+- **03 — Tri thức & Dữ liệu**: đăng công bố khoa học (`Publication`), tra DOI thật
+  qua Crossref để tự điền tiêu đề/tác giả/năm, xác minh (Maker-Checker nhẹ, chỉ
+  `SUPERADMIN`/`ADMIN` — chưa mở `EXPERT` tự đăng). Patent/Dataset/Knowledge/Evidence
+  vẫn ở backlog (xem `VC-KT-013`).
 - **04 — Bài toán & Nhu cầu**: đăng nhu cầu, ngân hàng bài toán đầy đủ vòng đời (tiếp
   nhận → công bố → nhận giải pháp → đánh giá).
 - **05 — Tìm kiếm & Ghép nối**: bộ chấm điểm giải thích được (`lib/matching.ts`) —
@@ -89,7 +93,8 @@ khoản demo khác trong `prisma/seed.ts`.
 ## Backlog (chưa xây, theo đúng nguyên tắc "không mở rộng khi lớp trước
 chưa có giao dịch thật" của đề án)
 
-- **03 — Tri thức & Dữ liệu**: chưa có model/trang (Publication, Patent, Dataset...).
+- **03 đầy đủ**: `Patent`, `Dataset`, `Knowledge`, `Evidence` (hợp nhất
+  `CapabilityEvidence`) — hiện chỉ có `Publication`, xem `VC-KT-013`.
 - **06 đầy đủ**: Funding & Investment Hub, due diligence, giải ngân thật (hiện chỉ có
   danh mục cơ bản — xem mục scope ở trên).
 - **08 — Thẩm định & Đánh giá**: chưa có model/trang riêng (review, due diligence,

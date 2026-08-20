@@ -54,6 +54,7 @@ model Organization {
   challenges     Challenge[]
   fundingSources FundingSource[]
   affiliations   Affiliation[]
+  publications   Publication[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -419,6 +420,49 @@ model MergeHistory {
   @@index([targetProfileId])
 }
 
+// ---------- CAU PHAN 03: TRI THUC & DU LIEU (VC-NV-013 / VC-KT-013) ----------
+// V1: chi Publication, ADMIN/SUPERADMIN tao (chua mo EXPERT tu dang - quyet
+// dinh Product Owner 2026-08-20). Tac gia luu String[] (nameRaw tho, khop
+// thang voi CrossrefWork.authors) thay vi bang PublicationAuthor rieng vi
+// chua can lien ket ExpertProfile khi chua co self-service — xem VC-KT-013
+// Muc 6.1, 11 diem 5. Patent/Dataset/Knowledge/Evidence van la backlog.
+
+enum PublicationType {
+  JOURNAL_ARTICLE
+  CONFERENCE_PAPER
+  BOOK
+  BOOK_CHAPTER
+  PREPRINT
+  TECHNICAL_REPORT
+  OTHER
+}
+
+model Publication {
+  id             String          @id @default(cuid())
+  title          String
+  abstract       String?
+  type           PublicationType @default(OTHER)
+  containerTitle String?
+  year           Int?
+  fields         String[]
+  authors        String[]
+
+  doi        String?            @unique
+  sourceType ExternalSourceType @default(INTERNAL)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  verifiedById       String?
+  verifiedAt         DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([verificationStatus, type])
+}
+
 // ---------- DISCOVER & MATCH ----------
 
 enum NeedStatus {
@@ -660,7 +704,7 @@ model Agreement {
   updatedAt DateTime @updatedAt
 }
 
-// ---------- MOBILIZE (stub only — full module is Phase 2 backlog) ----------
+// ---------- MOBILIZE (stub only — Funding & Investment Hub thật là backlog) ----------
 
 model FundingSource {
   id             String       @id @default(cuid())

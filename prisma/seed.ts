@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { db } from "../lib/db";
 import { scoreNeedAgainstExpert, scoreNeedAgainstSupply } from "../lib/matching";
 
-// All data below is clearly-labeled DEMO data for the Phase-1 pilot sandbox.
+// All data below is clearly-labeled DEMO data for the pilot sandbox.
 // It is NOT the real membership figures cited in the proposal (those are
 // flagged in the proposal itself as unverified survey snapshots) — do not
 // treat this seed as production data.
@@ -202,6 +202,39 @@ async function main() {
       trl: 5,
       organizationId: hoiHaNoi.id,
       status: "PUBLISHED",
+    },
+  });
+
+  // ---- Publications (cấu phần 03 — Tri thức & Dữ liệu, v1: chỉ Publication) ----
+  await db.publication.create({
+    data: {
+      title: "Explainable rule-based matching for regional innovation ecosystems",
+      abstract:
+        "Đề xuất bộ chấm điểm ghép nối giải thích được giữa nhu cầu và nguồn cung công nghệ, không phụ thuộc mô hình hộp đen.",
+      type: "JOURNAL_ARTICLE",
+      containerTitle: "Tạp chí Khoa học và Công nghệ Việt Nam",
+      year: 2025,
+      fields: ["ai_ml", "chinh_sach"],
+      authors: ["Nguyễn Văn A", "Trần Thị B"],
+      doi: "10.15625/vjste.2025.0001",
+      sourceType: "CROSSREF",
+      organizationId: hoiHaNoi.id,
+      verificationStatus: "VERIFIED",
+    },
+  });
+
+  await db.publication.create({
+    data: {
+      title: "Ứng dụng cảm biến IoT trong quan trắc chất lượng nước thải công nghiệp",
+      abstract:
+        "Khảo sát triển khai thí điểm mạng cảm biến IoT giám sát chỉ tiêu nước thải theo thời gian thực tại một số khu công nghiệp phía Bắc.",
+      type: "CONFERENCE_PAPER",
+      containerTitle: "Hội thảo Quốc gia về Công nghệ Môi trường",
+      year: 2024,
+      fields: ["moi_truong", "do_luong"],
+      authors: ["Lê Văn C"],
+      organizationId: hoiHaNoi.id,
+      verificationStatus: "UNVERIFIED",
     },
   });
 

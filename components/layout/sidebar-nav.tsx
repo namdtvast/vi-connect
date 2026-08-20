@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BookOpen,
   Building2,
   Database,
   FileText,
@@ -23,7 +24,7 @@ type NavGroup = { group: string; items: NavItem[] };
 
 // Sắp xếp theo kiến trúc nghiệp vụ 11 cấu phần VI-CONNECT (baseline
 // VC-NV-001, 02_KIEN-TRUC-NGHIEP-VU/11-CAU-PHAN). Chỉ liệt kê các cấu phần
-// đã có trang triển khai thật; cấu phần chưa xây (03, 08, 09) chưa xuất hiện
+// đã có trang triển khai thật; cấu phần chưa xây (08, 09) chưa xuất hiện
 // trong menu để tránh liên kết chết.
 const OVERVIEW: NavItem = { href: "/dashboard", label: "Tổng quan (KPI)", icon: LayoutGrid };
 
@@ -34,6 +35,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/dashboard/organizations", label: "01 · Tổ chức & hội thành viên", icon: Building2 },
       { href: "/dashboard/experts", label: "01 · Chuyên gia", icon: Users },
       { href: "/dashboard/supplies", label: "02 · Công nghệ & giải pháp", icon: Package },
+      { href: "/dashboard/publications", label: "03 · Tri thức & dữ liệu", icon: BookOpen },
       { href: "/dashboard/needs", label: "04 · Nhu cầu", icon: FileText },
       { href: "/dashboard/challenges", label: "04 · Ngân hàng bài toán", icon: Database },
     ],

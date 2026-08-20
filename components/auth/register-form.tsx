@@ -71,7 +71,7 @@ export function RegisterForm({
       </FieldGroup>
       <FieldGroup>
         <Label>Lĩnh vực chuyên môn</Label>
-        <FieldsCheckboxGrid />
+        <FieldsCheckboxGrid columns={2} />
       </FieldGroup>
       <FieldGroup>
         <Label htmlFor="bio">Giới thiệu ngắn</Label>

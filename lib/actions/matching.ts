@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { assertOrgScope, ForbiddenError, requireRole } from "@/lib/rbac";
-import { scoreNeedAgainstExpert, scoreNeedAgainstSupply } from "@/lib/matching";
+import { scoreNeedAgainstExpert, scoreNeedAgainstSupply, type MatchReason } from "@/lib/matching";
+import {
+  cosineSimilarity,
+  embedText,
+  EMBEDDING_MODEL,
+  isEmbeddingsConfigured,
+} from "@/lib/integrations/embeddings";
 import { saveUploadedFile } from "@/lib/uploads";
 import { FIELDS } from "@/lib/taxonomy";
 import type { ActionState } from "@/lib/actions/auth";
@@ -145,7 +151,25 @@ export async function updateSupplyStatusAction(supplyId: string, status: SupplyS
   revalidatePath("/dashboard/supplies");
 }
 
-/** Cấu phần 05: chạy lại đề xuất ghép nối cho 1 nhu cầu (explainable scoring). */
+/** Số ứng viên tối đa được gửi qua embedding API mỗi lần chạy — chặn số lệnh
+ * gọi mạng bất kể pool dữ liệu lớn cỡ nào, bảo vệ hạn mức free tier. */
+const SEMANTIC_RERANK_TOP_K = 15;
+
+type MatchCandidate = {
+  supplyId?: string;
+  expertProfileId?: string;
+  score: number;
+  reasons: MatchReason[];
+  /** Text gửi cho embedding API khi AI hỗ trợ được bật (GEMINI_API_KEY). */
+  embeddingText: string;
+  recompute: (semanticSimilarity: number) => { score: number; reasons: MatchReason[] };
+};
+
+/** Cấu phần 05: chạy lại đề xuất ghép nối cho 1 nhu cầu (explainable scoring,
+ * tuỳ chọn tăng cường bằng độ tương đồng ngữ nghĩa AI — xem lib/matching.ts
+ * và lib/integrations/embeddings.ts. AI chỉ bổ sung 1 reason có giải thích,
+ * không tự động chuyển trạng thái match — con người vẫn quyết định qua
+ * updateMatchStageAction/convertMatchToProjectAction). */
 export async function generateMatchesAction(needId: string) {
   const user = await requireRole("SUPERADMIN", "ADMIN", "ENTERPRISE");
 
@@ -161,26 +185,80 @@ export async function generateMatchesAction(needId: string) {
     db.expertProfile.findMany({ where: { verificationStatus: { in: ["VERIFIED", "PENDING"] } } }),
   ]);
 
-  const created: { score: number }[] = [];
+  const candidates: MatchCandidate[] = [
+    ...supplies.map((supply): MatchCandidate => {
+      const { score, reasons } = scoreNeedAgainstSupply(need, supply);
+      return {
+        supplyId: supply.id,
+        score,
+        reasons,
+        embeddingText: `${supply.title} ${supply.description}`,
+        recompute: (semanticSimilarity) =>
+          scoreNeedAgainstSupply(need, supply, { semanticSimilarity }),
+      };
+    }),
+    ...experts.map((expert): MatchCandidate => {
+      const { score, reasons } = scoreNeedAgainstExpert(need, expert);
+      return {
+        expertProfileId: expert.id,
+        score,
+        reasons,
+        embeddingText: `${expert.bio ?? ""} ${expert.skills.join(" ")}`,
+        recompute: (semanticSimilarity) =>
+          scoreNeedAgainstExpert(need, expert, { semanticSimilarity }),
+      };
+    }),
+  ];
 
-  for (const supply of supplies) {
-    const { score, reasons } = scoreNeedAgainstSupply(need, supply);
-    if (score > 0.15) {
-      await db.match.create({
-        data: { needId, supplyId: supply.id, score, reasons, stage: "SUGGESTED" },
+  // Tuỳ chọn: tăng cường top-K ứng viên bằng embedding AI. Không cấu hình
+  // GEMINI_API_KEY, hoặc bất kỳ lệnh gọi nào lỗi/timeout, đều fallback im
+  // lặng về điểm số xác định (deterministic) ở trên — không bao giờ chặn
+  // việc tạo đề xuất ghép nối.
+  let augmentedCount = 0;
+  if (isEmbeddingsConfigured()) {
+    const needEmbedding = await embedText(`${need.title} ${need.description}`);
+    if (needEmbedding) {
+      const topK = [...candidates].sort((a, b) => b.score - a.score).slice(0, SEMANTIC_RERANK_TOP_K);
+      const candidateEmbeddings = await Promise.all(topK.map((c) => embedText(c.embeddingText)));
+
+      topK.forEach((candidate, i) => {
+        const candidateEmbedding = candidateEmbeddings[i];
+        if (!candidateEmbedding) return;
+        const semanticSimilarity = cosineSimilarity(needEmbedding, candidateEmbedding);
+        const recomputed = candidate.recompute(semanticSimilarity);
+        candidate.score = recomputed.score;
+        candidate.reasons = recomputed.reasons;
+        augmentedCount++;
       });
-      created.push({ score });
     }
   }
 
-  for (const expert of experts) {
-    const { score, reasons } = scoreNeedAgainstExpert(need, expert);
-    if (score > 0.15) {
-      await db.match.create({
-        data: { needId, expertProfileId: expert.id, score, reasons, stage: "SUGGESTED" },
-      });
-      created.push({ score });
-    }
+  const created: { score: number }[] = [];
+  for (const candidate of candidates) {
+    if (candidate.score <= 0.15) continue;
+    await db.match.create({
+      data: {
+        needId,
+        supplyId: candidate.supplyId,
+        expertProfileId: candidate.expertProfileId,
+        score: candidate.score,
+        reasons: candidate.reasons,
+        stage: "SUGGESTED",
+      },
+    });
+    created.push({ score: candidate.score });
+  }
+
+  if (augmentedCount > 0) {
+    await db.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "MATCH_AI_ASSISTED",
+        entity: "Need",
+        entityId: needId,
+        meta: { model: EMBEDDING_MODEL, candidatesAugmented: augmentedCount },
+      },
+    });
   }
 
   revalidatePath(`/dashboard/needs/${needId}`);
